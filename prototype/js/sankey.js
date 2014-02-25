@@ -59,8 +59,8 @@ d3.sankey = function() {
           xi = d3.interpolateNumber(x0, x1),
           x2 = xi(curvature),
           x3 = xi(1 - curvature),
-          y0 = d.source.y + d.sy + d.dy / 2,
-          y1 = d.target.y + d.ty + d.dy / 2;
+          y0 = d.source.y + d.sy + d.sdy / 2,
+          y1 = d.target.y + d.ty + d.tdy / 2;
       return "M" + x0 + "," + y0
            + "C" + x2 + "," + y0
            + " " + x3 + "," + y1
@@ -97,8 +97,8 @@ d3.sankey = function() {
   function computeNodeValues() {
     nodes.forEach(function(node) {
       node.value = Math.max(
-        d3.sum(node.sourceLinks, value),
-        d3.sum(node.targetLinks, value)
+        d3.sum(node.sourceLinks, svalue),
+        d3.sum(node.targetLinks, tvalue)
       );
     });
   }
@@ -181,8 +181,11 @@ d3.sankey = function() {
         });
       });
 
+      // Set the height of each link (link.dy), using link.value
       links.forEach(function(link) {
         link.dy = link.value * ky;
+        link.sdy = link.svalue * ky;
+        link.tdy = link.tvalue * ky;
       });
     }
 
@@ -190,14 +193,14 @@ d3.sankey = function() {
       nodesByBreadth.forEach(function(nodes, breadth) {
         nodes.forEach(function(node) {
           if (node.targetLinks.length) {
-            var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, value);
+            var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, svalue);
             node.y += (y - center(node)) * alpha;
           }
         });
       });
 
       function weightedSource(link) {
-        return center(link.source) * link.value;
+        return center(link.source) * link.svalue;
       }
     }
 
@@ -205,14 +208,14 @@ d3.sankey = function() {
       nodesByBreadth.slice().reverse().forEach(function(nodes) {
         nodes.forEach(function(node) {
           if (node.sourceLinks.length) {
-            var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, value);
+            var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, tvalue);
             node.y += (y - center(node)) * alpha;
           }
         });
       });
 
       function weightedTarget(link) {
-        return center(link.target) * link.value;
+        return center(link.target) * link.tvalue;
       }
     }
 
@@ -256,18 +259,18 @@ d3.sankey = function() {
 
   function computeLinkDepths() {
     nodes.forEach(function(node) {
-      node.sourceLinks.sort(ascendingTargetDepth);
-      node.targetLinks.sort(ascendingSourceDepth);
+      //node.sourceLinks.sort(ascendingTargetDepth);
+      //node.targetLinks.sort(ascendingSourceDepth);
     });
     nodes.forEach(function(node) {
       var sy = 0, ty = 0;
       node.sourceLinks.forEach(function(link) {
         link.sy = sy;
-        sy += link.dy;
+        sy += link.sdy;
       });
       node.targetLinks.forEach(function(link) {
         link.ty = ty;
-        ty += link.dy;
+        ty += link.tdy;
       });
     });
 
@@ -286,6 +289,14 @@ d3.sankey = function() {
 
   function value(link) {
     return link.value;
+  }
+
+  function svalue(link) {
+    return link.svalue;
+  }
+
+  function tvalue(link) {
+    return link.tvalue;
   }
 
   return sankey;

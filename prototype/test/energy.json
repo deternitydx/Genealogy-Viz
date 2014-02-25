@@ -8,9 +8,9 @@
 
 ],
 "links":[
-{"source":0,"target":2,"value":1},
-{"source":1,"target":2,"value":1},
-{"source":2,"target":5,"value":1},
-{"source":3,"target":5,"value":1},
-{"source":4,"target":5,"value":1}
+{"source":0,"target":2,"value":1, "svalue":1, "tvalue":0.5, "type":1, "name": "Smith, John"},
+{"source":1,"target":2,"value":1, "svalue":1, "tvalue":0.5, "type":2, "name": "Jones, Mary"},
+{"source":2,"target":5,"value":1, "svalue":1, "tvalue":0.34, "type":1, "name": "Smith, Tom"},
+{"source":3,"target":5,"value":1, "svalue":1, "tvalue":0.33, "type":2, "name": "Bowls, Debra"},
+{"source":4,"target":5,"value":1, "svalue":1, "tvalue":0.33, "type":2, "name": "Carter, Rebekah"}
 ]}
