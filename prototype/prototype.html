@@ -33,7 +33,7 @@ svg {
 
 </style>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
    <script>
 	// jQuery to handle dialog
 	$(function() {
@@ -54,15 +54,23 @@ svg {
  
   });
   
-  function show_info(id){
-    document.getElementById('moreinfo').src = "chord.html?id="+id;
+  function show_info(node){
+	var dialog = d3.select("#dialog");
+	dialog.text(""); // empty it out
+	dialog.append("iframe")
+		.attr("src", "chord.html?id="+node.name)
+		.attr("frameborder", "0")
+		.attr("width", 600)
+		.attr("height", 600)
+		.style("overflow", "hidden");
+	//    document.getElementById('moreinfo').src = "chord.html?id="+id;
     
 	// open the dialog window with jQuery
 	$("#dialog").dialog("option", "title", "");
 	$("#dialog").dialog("open"); 
 }
 </script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 
 </head>
@@ -119,11 +127,11 @@ d3.json("test/energy.json", function(energy) {
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .on("click", show_info)
     .call(d3.behavior.drag()
       .origin(function(d) { return d; })
       .on("dragstart", function() { this.parentNode.appendChild(this); })
-      .on("drag", dragmove))
-      .on("click", show_info(function(d) {return d.name;}));
+      .on("drag", dragmove));
 
   node.append("circle")
       .attr("r", function(d) { return d.dy / 2; })
@@ -155,8 +163,8 @@ d3.json("test/energy.json", function(energy) {
 </script>
 
 <div id="dialog" class="dialog" style="overflow: hidden">
-<iframe frameborder="0" scrolling="no" width="600" height="600" id="moreinfo" style="overflow: hidden">
-</iframe>
+<!--<iframe frameborder="0" scrolling="no" width="600" height="600" id="moreinfo" style="overflow: hidden">
+</iframe>-->
 </div>
 
 </body>
