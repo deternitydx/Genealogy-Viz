@@ -128,8 +128,10 @@ d3.json("test/energy.json", function(energy) {
       .sort(function(a, b) { return b.dy - a.dy; });
       
   $('.link').tipsy({ 
-        gravity: 's', 
+        gravity: 'c', 
         html: true, 
+        offset: 0,
+        hoverlock: true,
         title: function() {
           var d = this.__data__;
           return d.name; 
