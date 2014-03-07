@@ -1,0 +1,168 @@
+function ChordDisplay(element) {
+
+var _this = this;
+this.element = element;
+
+this.matrix = [];
+
+this.labelOf = function(i) {
+	console.log(i);
+	switch(i) {
+		case 0: return "Female Child";
+		case 1: return "Male Child";
+		case 2:
+		case 3: return "Female Child";
+		case 4: return "Second Wife";
+		case 5: return "First Wife";
+		case 6: return "Husband";
+	}
+};
+
+var getColor = function (gender, role) {
+	if (gender === "male" && role === "parent")
+		return "#DF0101";
+	if (gender === "female" && role === "parent")
+		return "#2E64FE";
+	if (gender === "male" && role === "child")
+		return "#F5A9A9";
+	if (gender === "female" && role === "child")
+		return "#81DAF5";
+}
+    
+
+this.width = 600,
+this.height = 500,
+this.innerRadius = Math.min(this.width, this.height) * .31,
+this.outerRadius = this.innerRadius * 1.3;
+
+    
+    
+// drawing code below:
+this.drawChord = function(munit) {
+
+var json_location = "test/" + munit + ".json";
+
+d3.json(json_location, function(data) {
+
+// fix up the matrix for this particular data set
+// we must get the reverse of the elements of the parents because of how the chord diagram works
+var parents = data.parents.reverse();
+var children = data.children;
+
+var parPerc = 100.0 / parents.length;
+var chiPerc = 100.0 / children.length;
+
+var people = children.concat(parents);
+var numPeople = parents.length + children.length;
+
+
+_this.matrix = new Array();
+for (var i=0; i < numPeople; i++) {
+	_this.matrix[i] = new Array();
+	for (var j=0; j < numPeople; j++) {
+		if (i === j) {
+			if (i < children.length)			// first entries are children
+				_this.matrix[i][j] = chiPerc;
+			else								// last entries are parents
+				_this.matrix[i][j] = parPerc;
+		} else {
+				_this.matrix[i][j] = 0;			// right now, set the connections to none
+		}
+	}
+}
+
+// set up the colors properly based on the type of person
+var colorList = new Array();
+for (var i=0; i < numPeople; i++) {
+	if (i < children.length)
+		colorList[i] = getColor(children[i].gender, "child");
+	else
+		colorList[i] = getColor(parents[i - children.length].gender, "parent");
+}
+
+_this.fill = d3.scale.ordinal()
+    .domain(d3.range(4))
+    .range(colorList);
+
+
+_this.chord = d3.layout.chord()
+    .padding(.01)
+    //.sortSubgroups(d3.descending)
+    .matrix(_this.matrix); 
+    
+console.log(_this.chord.groups);
+    
+
+_this.svg = d3.select(_this.element).append("svg")
+    .attr("width", _this.width)
+    .attr("height", _this.height)
+  .append("g")
+    .attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
+
+_this.svg.append("g").selectAll("path")
+    .data(_this.chord.groups)
+  .enter().append("path")
+  	.attr("class", "chordperson")
+    .style("fill", function(d) { return _this.fill(d.index); })
+    .style("stroke", function(d) { if (d.index > 4) return '#000000'; else return _this.fill(d.index); })
+    .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
+    .on("mouseover", fade(.1))
+    .on("mouseout", fade(1));
+    
+    $('.chordperson').tipsy({ 
+        gravity: 'c', 
+        html: true, 
+        offset: 0,
+        hoverlock: true,
+        title: function() {
+          var d = this.__data__;
+          return people[d.index].name; 
+        }
+      });
+
+/*
+_this.ticks = svg.append("g").selectAll("g")
+    .data(_this.chord.groups)
+  .enter().append("g").selectAll("g")
+    .data(_this.groupTicks)
+  .enter().append("g")
+    .attr("transform", function(d) {
+      return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+          + "translate(" + outerRadius + ",0)";
+    });
+    */
+/*
+ticks.append("text")
+    .attr("x", 8)
+    .attr("dy", ".35em")
+    .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
+    .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+    .text(function(d) { console.log(d); return labelOf(d.index); });
+*/
+
+_this.svg.append("g")
+    .attr("class", "chord")
+  .selectAll("path")
+    .data(_this.chord.chords)
+  .enter().append("path")
+  	.attr("class", "chordpath")
+    .attr("d", d3.svg.chord().radius(_this.innerRadius))
+    .style("fill", function(d) { return _this.fill(d.target.index); })
+    .style("opacity", 1);
+    
+
+    
+}); // end of json call
+} // end of drawChord
+
+// Returns an event handler for fading a given chord group.
+function fade(opacity) {
+  return function(g, i) {
+    _this.svg.selectAll(".chord path")
+        .filter(function(d) { return d.source.index != i && d.target.index != i; })
+      .transition()
+        .style("opacity", opacity);
+  };
+}
+
+} // end ChordDsiplay

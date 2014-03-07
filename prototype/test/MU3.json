@@ -1,0 +1,13 @@
+{
+
+"parents": [
+	{"name": "Smith, John", "gender": "male"},
+	{"name": "Jones, Mary", "gender": "female"}
+],
+
+"children": [
+	{"name": "Smith, Tom", "gender": "male"}
+]
+
+
+}

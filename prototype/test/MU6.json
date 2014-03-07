@@ -1,0 +1,17 @@
+{
+
+"parents": [
+	{"name": "Smith, Tom", "gender": "male"},
+	{"name": "Bowls, Debra", "gender": "female"},
+	{"name": "Carter, Rebekah", "gender": "female"}
+],
+
+"children": [
+	{"name": "Smith, Rachel", "gender": "female"},
+	{"name": "Smith, Matthew", "gender": "male"},
+	{"name": "Smith, Martha", "gender": "female"},
+	{"name": "Smith, Christine", "gender": "female"}
+]
+
+
+}

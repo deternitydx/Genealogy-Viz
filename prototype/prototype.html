@@ -37,6 +37,12 @@ svg {
   stroke-opacity: .5;
 }
 
+.chord path {
+  fill-opacity: .67;
+  stroke: #000;
+  stroke-width: .5px;
+}
+
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/tipsy.css" />
@@ -72,16 +78,18 @@ svg {
   function show_info(node){
 	var dialog = d3.select("#dialog");
 	dialog.text(""); // empty it out
-	dialog.append("iframe")
+	
+	/*dialog.append("iframe")
 		.attr("src", "chord.html?id="+node.name)
 		.attr("frameborder", "0")
 		.attr("width", 600)
 		.attr("height", 600)
-		.style("overflow", "hidden");
+		.style("overflow", "hidden"); */
 	//    document.getElementById('moreinfo').src = "chord.html?id="+id;
     
+    chordDiagram.drawChord(node.name);
 	// open the dialog window with jQuery
-	$("#dialog").dialog("option", "title", "");
+	$("#dialog").dialog("option", "title", node.name);
 	$("#dialog").dialog("open"); 
 }
 </script>
@@ -96,12 +104,15 @@ svg {
 <script src="http://d3js.org/d3.v2.min.js?2.9.1"></script>
 <script src="js/sankey.js"></script>
 <script src="js/display_sankey.js"></script>
+<script src="js/display_chord.js"></script>
 <script>
 	// Instantiate the sankey display, selecting the chart object as the target
 	var sankeyDiagram = new SankeyDisplay("#chart");
 
 	// Draw the sankey diagram with the given json file
 	sankeyDiagram.drawDiagram("test/energy.json");
+	
+	var chordDiagram = new ChordDisplay("#dialog");
 
 </script>
 <div id="dialog" class="dialog" style="overflow: hidden">
