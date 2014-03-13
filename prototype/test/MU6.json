@@ -11,6 +11,13 @@
 	{"name": "Smith, Matthew", "gender": "male"},
 	{"name": "Smith, Martha", "gender": "female"},
 	{"name": "Smith, Christine", "gender": "female"}
+],
+
+"relationships": [
+	{"desc": "First marriage", "type": "marriage", "from": "Smith, Tom", "to": "Bowls, Debra"},
+	{"desc": "Second marriage", "type": "marriage", "from": "Smith, Tom", "to": "Carter, Rebekah"},
+	{"desc": "Referred as Aunt", "type": "nickname", "from": "Smith, Christine", "to": "Carter, Rebekah"}
+	
 ]
 
 

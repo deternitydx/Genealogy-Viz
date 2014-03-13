@@ -40,7 +40,11 @@ this.outerRadius = this.innerRadius * 1.3;
 // drawing code below:
 this.drawChord = function(munit) {
 
-var json_location = "test/" + munit + ".json";
+
+function noCache() {
+  return new String((new Date().getTime()));
+}
+var json_location = "test/" + munit + ".json?nocache=" + noCache();
 
 d3.json(json_location, function(data) {
 
@@ -48,12 +52,17 @@ d3.json(json_location, function(data) {
 // we must get the reverse of the elements of the parents because of how the chord diagram works
 var parents = data.parents.reverse();
 var children = data.children;
+var relationships = data.relationships;
+
+console.log(data);
 
 var parPerc = 100.0 / parents.length;
 var chiPerc = 100.0 / children.length;
 
 var people = children.concat(parents);
 var numPeople = parents.length + children.length;
+
+
 
 
 _this.matrix = new Array();
@@ -71,6 +80,40 @@ for (var i=0; i < numPeople; i++) {
 	}
 }
 
+// update the matrix based on the relationships between people
+people.forEach(function(person) {
+	person.numRels = 0;
+});
+
+relationships.forEach(function (rel) {
+	people.forEach(function(person, i) {
+		if (rel.from === person.name) {
+			person.numRels++;
+			rel.fromId = i;
+		}
+		if (rel.to === person.name) {
+			person.numRels++;
+			rel.toId = i;
+		}
+	});
+});
+
+relationships.forEach(function (rel) {
+	// for each relationship, add a part of the matrix
+	var i = rel.fromId;
+	var j = rel.toId;
+	
+	var iPerc = (i < children.length) ? chiPerc / people[i].numRels : parPerc / people[i].numRels;
+	var jPerc = (j < children.length) ? chiPerc / people[j].numRels : parPerc / people[j].numRels;
+	
+	_this.matrix[i][i] -= iPerc;
+	_this.matrix[j][j] -= jPerc;
+	_this.matrix[i][j] = iPerc;
+	_this.matrix[j][i] = jPerc;
+});
+
+
+
 // set up the colors properly based on the type of person
 var colorList = new Array();
 for (var i=0; i < numPeople; i++) {
@@ -83,14 +126,16 @@ for (var i=0; i < numPeople; i++) {
 _this.fill = d3.scale.ordinal()
     .domain(d3.range(4))
     .range(colorList);
+    
+_this.fillType = d3.scale.ordinal()
+	.domain(d3.range(2))
+	.range(["#f7fcb9", "#addd8e"]);
 
 
 _this.chord = d3.layout.chord()
     .padding(.01)
     //.sortSubgroups(d3.descending)
     .matrix(_this.matrix); 
-    
-console.log(_this.chord.groups);
     
 
 _this.svg = d3.select(_this.element).append("svg")
@@ -99,15 +144,19 @@ _this.svg = d3.select(_this.element).append("svg")
   .append("g")
     .attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
 
-_this.svg.append("g").selectAll("path")
+var g = _this.svg.append("g");
+
+g.selectAll("path")
     .data(_this.chord.groups)
   .enter().append("path")
   	.attr("class", "chordperson")
     .style("fill", function(d) { return _this.fill(d.index); })
     .style("stroke", function(d) { if (d.index > 4) return '#000000'; else return _this.fill(d.index); })
     .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
-    .on("mouseover", fade(.1))
-    .on("mouseout", fade(1));
+    .on("mouseover", fadePerson(.1))
+    .on("mouseout", fadePerson(1))
+    .text("hi");
+
     
     $('.chordperson').tipsy({ 
         gravity: 'c', 
@@ -119,6 +168,19 @@ _this.svg.append("g").selectAll("path")
           return people[d.index].name; 
         }
       });
+      
+/* // Trying to add text to SVG without MouseOver
+   // Does not work correctly yet 
+
+g.selectAll("text")
+	.data(_this.chord.groups)
+	.enter().append("text")
+    .attr("x", function(d) { console.log(d); return "8";})
+    .attr("dy", ".35em")
+    //.attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
+    //.style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+    .text(function(d) { console.log(d); return people[d.index].name; });;
+*/
 
 /*
 _this.ticks = svg.append("g").selectAll("g")
@@ -147,8 +209,44 @@ _this.svg.append("g")
   .enter().append("path")
   	.attr("class", "chordpath")
     .attr("d", d3.svg.chord().radius(_this.innerRadius))
-    .style("fill", function(d) { return _this.fill(d.target.index); })
-    .style("opacity", 1);
+    .style("fill", function(d) { 
+    	var ret = "none";
+    	relationships.forEach(function (rel) {
+          	if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
+          			(rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
+          		ret = _this.fillType(rel.type);
+    	});
+    	
+    	return ret; })
+    .style("stroke", function(d) { 
+    	var ret = "none";
+    	relationships.forEach(function (rel) {
+          	if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
+          			(rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
+          		ret = "#000000";
+    	});
+    	
+    	return ret; })
+    .style("opacity", 1)
+    .on("mouseover", fadeLink(.1))
+    .on("mouseout", fadeLink(1));
+    
+    $('.chordpath').tipsy({ 
+        gravity: 'c', 
+        html: true, 
+        offset: 0,
+        hoverlock: true,
+        title: function() {
+          var d = this.__data__;
+          var ret = "";
+          relationships.forEach(function(rel) {
+          	if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
+          			(rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
+          		ret = rel.desc;
+          });
+          return ret; //people[d.index].name; 
+        }
+      });
     
 
     
@@ -156,7 +254,7 @@ _this.svg.append("g")
 } // end of drawChord
 
 // Returns an event handler for fading a given chord group.
-function fade(opacity) {
+function fadePerson(opacity) {
   return function(g, i) {
     _this.svg.selectAll(".chord path")
         .filter(function(d) { return d.source.index != i && d.target.index != i; })
@@ -165,4 +263,14 @@ function fade(opacity) {
   };
 }
 
-} // end ChordDsiplay
+// Returns an event handler for fading to one chord
+function fadeLink(opacity) {
+  return function(g, i) {
+    _this.svg.selectAll(".chord path")
+        .filter(function(d) { return d.source.index != g.source.index || d.target.index != g.target.index; })
+      .transition()
+        .style("opacity", opacity);
+  };
+}
+
+} // end ChordDisplay
