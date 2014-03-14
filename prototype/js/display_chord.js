@@ -5,24 +5,11 @@ this.element = element;
 
 this.matrix = [];
 
-this.labelOf = function(i) {
-	console.log(i);
-	switch(i) {
-		case 0: return "Female Child";
-		case 1: return "Male Child";
-		case 2:
-		case 3: return "Female Child";
-		case 4: return "Second Wife";
-		case 5: return "First Wife";
-		case 6: return "Husband";
-	}
-};
-
 var getColor = function (gender, role) {
 	if (gender === "male" && role === "parent")
-		return "#DF0101";
+		return "#c97f7f";
 	if (gender === "female" && role === "parent")
-		return "#2E64FE";
+		return "#8d87c7";
 	if (gender === "male" && role === "child")
 		return "#F5A9A9";
 	if (gender === "female" && role === "child")
@@ -34,6 +21,8 @@ this.width = 600,
 this.height = 500,
 this.innerRadius = Math.min(this.width, this.height) * .31,
 this.outerRadius = this.innerRadius * 1.3;
+
+this.embed = false;
 
     
     
@@ -47,6 +36,13 @@ function noCache() {
 var json_location = "test/" + munit + ".json?nocache=" + noCache();
 
 d3.json(json_location, function(data) {
+
+if (!data || !data.parents || !data.children || !data.relationships)
+	return;
+	
+// recalculate the radii
+_this.innerRadius = Math.min(_this.width, _this.height) * .31,
+_this.outerRadius = _this.innerRadius * 1.3;
 
 // fix up the matrix for this particular data set
 // we must get the reverse of the elements of the parents because of how the chord diagram works
@@ -128,8 +124,8 @@ _this.fill = d3.scale.ordinal()
     .range(colorList);
     
 _this.fillType = d3.scale.ordinal()
-	.domain(d3.range(2))
-	.range(["#f7fcb9", "#addd8e"]);
+	.domain(["familial", "nickname", "marriage"])
+	.range(["#f7fcb9", "#addd8e", "#FFCD81"]);
 
 
 _this.chord = d3.layout.chord()
@@ -138,11 +134,30 @@ _this.chord = d3.layout.chord()
     .matrix(_this.matrix); 
     
 
-_this.svg = d3.select(_this.element).append("svg")
-    .attr("width", _this.width)
-    .attr("height", _this.height)
-  .append("g")
-    .attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
+// If we are not embedding, then add an SVG to the element.  If we are, then just add to the element.
+_this.svg = null;
+if (_this.embed) {
+
+	// recalculate the radii
+	_this.innerRadius = Math.min(_this.width, _this.height) * .31,
+	_this.outerRadius = Math.min(_this.width, _this.height) / 2;
+
+	console.log("Drawing the chord");
+	console.log(_this.element);
+	_this.svg = d3.select(_this.element)
+		//.append("g").attr("width", _this.width).attr("height", _this.height)
+		.append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
+//  	  .append("g")
+  //  	.attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
+} else {
+	_this.svg = d3.select(_this.element).append("svg")
+    	.attr("width", _this.width)
+    	.attr("height", _this.height)
+  	  .append("g")
+    	.attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
+}
+
+console.log(_this.width + ", " + _this.height);
 
 var g = _this.svg.append("g");
 
@@ -235,7 +250,7 @@ _this.svg.append("g")
         gravity: 'c', 
         html: true, 
         offset: 0,
-        hoverlock: true,
+        hoverlock: false,
         title: function() {
           var d = this.__data__;
           var ret = "";
