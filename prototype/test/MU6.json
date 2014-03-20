@@ -1,16 +1,16 @@
 {
 
 "parents": [
-	{"name": "Smith, Tom", "gender": "male"},
-	{"name": "Bowls, Debra", "gender": "female"},
-	{"name": "Carter, Rebekah", "gender": "female"}
+	{"name": "Smith, Tom", "gender": "M"},
+	{"name": "Bowls, Debra", "gender": "F"},
+	{"name": "Carter, Rebekah", "gender": "F"}
 ],
 
 "children": [
-	{"name": "Smith, Rachel", "gender": "female"},
-	{"name": "Smith, Matthew", "gender": "male"},
-	{"name": "Smith, Martha", "gender": "female"},
-	{"name": "Smith, Christine", "gender": "female"}
+	{"name": "Smith, Rachel", "gender": "F"},
+	{"name": "Smith, Matthew", "gender": "M"},
+	{"name": "Smith, Martha", "gender": "F"},
+	{"name": "Smith, Christine", "gender": "F"}
 ],
 
 "relationships": [

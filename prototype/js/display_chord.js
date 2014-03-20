@@ -6,13 +6,13 @@ this.element = element;
 this.matrix = [];
 
 var getColor = function (gender, role) {
-	if (gender === "male" && role === "parent")
+	if (gender === "M" && role === "parent")
 		return "#c97f7f";
-	if (gender === "female" && role === "parent")
+	if (gender === "F" && role === "parent")
 		return "#8d87c7";
-	if (gender === "male" && role === "child")
+	if (gender === "M" && role === "child")
 		return "#F5A9A9";
-	if (gender === "female" && role === "child")
+	if (gender === "F" && role === "child")
 		return "#81DAF5";
 }
     
@@ -24,18 +24,17 @@ this.outerRadius = this.innerRadius * 1.3;
 
 this.embed = false;
 
+this.json_location = function(id) { 
+			var noC = new String((new Date().getTime())); 
+			return "test/" + id + ".json?nocache=" + noC;
+};
+
     
     
 // drawing code below:
 this.drawChord = function(munit) {
 
-
-function noCache() {
-  return new String((new Date().getTime()));
-}
-var json_location = "test/" + munit + ".json?nocache=" + noCache();
-
-d3.json(json_location, function(data) {
+d3.json(_this.json_location(munit), function(data) {
 
 if (!data || !data.parents || !data.children || !data.relationships)
 	return;
@@ -124,13 +123,14 @@ _this.fill = d3.scale.ordinal()
     .range(colorList);
     
 _this.fillType = d3.scale.ordinal()
-	.domain(["familial", "nickname", "marriage"])
-	.range(["#f7fcb9", "#addd8e", "#FFCD81"]);
+	.domain(["familial", "nickname", "marriage", "childOf"])
+	.range(["#f7fcb9", "#addd8e", "#FFCD81", "#A1CB87"]);
 
 
 _this.chord = d3.layout.chord()
     .padding(.01)
     //.sortSubgroups(d3.descending)
+    //.sortChords(function (a,b) { console.log(a); })
     .matrix(_this.matrix); 
     
 
@@ -166,7 +166,7 @@ g.selectAll("path")
   .enter().append("path")
   	.attr("class", "chordperson")
     .style("fill", function(d) { return _this.fill(d.index); })
-    .style("stroke", function(d) { if (d.index > 4) return '#000000'; else return _this.fill(d.index); })
+    .style("stroke", function(d) { if (d.index >= people.length - 2) return '#000000'; else return _this.fill(d.index); })
     .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
     .on("mouseover", fadePerson(.1))
     .on("mouseout", fadePerson(1))

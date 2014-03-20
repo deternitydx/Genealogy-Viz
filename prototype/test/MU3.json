@@ -1,12 +1,12 @@
 {
 
 "parents": [
-	{"name": "Smith, John", "gender": "male"},
-	{"name": "Jones, Mary", "gender": "female"}
+	{"name": "Smith, John", "gender": "M"},
+	{"name": "Jones, Mary", "gender": "F"}
 ],
 
 "children": [
-	{"name": "Smith, Tom", "gender": "male"}
+	{"name": "Smith, Tom", "gender": "M"}
 ],
 
 "relationships": []
