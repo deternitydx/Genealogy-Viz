@@ -8,7 +8,7 @@ if (isset($_GET["id"]))
 	$id = $_GET["id"];
 	
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "
 SELECT 
@@ -35,7 +35,7 @@ if (!$result) {
 }
 
 $arr = pg_fetch_all($result);
-
+$names = array();
 $json = array();
 $head = array();
 echo "<table border='1'>";
@@ -58,6 +58,11 @@ foreach ($arr as $i => $mar) {
 		}
 	
 		array_push($json, "<tr><td>" . implode("</td><td>", $resa) . "</td></tr>");
+
+		$name = $mar["Surname"] . ", ". $mar["GivenName"];
+		if (!in_array($name, $names))
+			array_push($names, $name);
+	
 	}
 
 }
@@ -65,6 +70,10 @@ foreach ($arr as $i => $mar) {
 
 echo "</table>";
 
+sort($names);
+foreach ($names as $name)
+	echo "<br>$name";
+echo "<br>".count($names);
 ?>
 
 

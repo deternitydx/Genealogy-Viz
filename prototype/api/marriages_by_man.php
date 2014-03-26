@@ -7,7 +7,7 @@ if (isset($_GET["id"]))
 	$id = $_GET["id"];
 	
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id");
 if (!$result) {
