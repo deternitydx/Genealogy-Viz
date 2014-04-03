@@ -95,7 +95,8 @@ foreach ($marriages as $marriage) {
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
+	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", ".
+		"\"birthDate\":\"".$parent["BirthDateSearchable"]."\", \"deathDate\":\"".$parent["DeathDateSearchable"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
 
@@ -103,7 +104,8 @@ echo "], \"children\": [";
 
 $chiPrint = array();
 foreach ($children as $child) {
-	array_push($chiPrint, "{ \"name\": \"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"gender\": \"". $child["Gender"] ."\"}");
+	array_push($chiPrint, "{ \"name\": \"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", ".
+		"\"birthDate\":\"".$child["BirthDateSearchable"]."\", \"deathDate\":\"".$child["DeathDateSearchable"]."\", \"gender\": \"". $child["Gender"] ."\"}");
 } 
 
 echo implode(",", $chiPrint);
