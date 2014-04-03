@@ -14,6 +14,10 @@ var getColor = function (gender, role) {
 		return "#73A8E9";
 	if (gender === "F" && role === "child")
 		return "#D6757D";
+	if (gender === "M" && role === "divorce")
+		return "#0d233e";
+	if (gender === "F" && role === "divorce")
+		return "#391013";
 }
     
 
@@ -133,8 +137,14 @@ var colorList = new Array();
 for (var i=0; i < numPeople; i++) {
 	if (i < children.length)
 		colorList[i] = getColor(children[i].gender, "child");
-	else
-		colorList[i] = getColor(parents[i - children.length].gender, "parent");
+	else {
+		var cur = parents[i-children.length];
+		if (cur.divorceDate != "")
+			// use divorce method
+			colorList[i] = getColor(cur.gender, "divorce");
+		else
+			colorList[i] = getColor(cur.gender, "parent");
+	}
 }
 
 _this.fill = d3.scale.ordinal()
@@ -199,7 +209,10 @@ g.selectAll("path")
         hoverlock: true,
         title: function() {
           var d = this.__data__;
-          return people[d.index].name; 
+	  var info = "";
+	  if (people[d.index].divorceDate)
+          	info = "<br>Divorced: "+ people[d.index].divorceDate;
+	  return people[d.index].name + info; 
         }
       });
       
