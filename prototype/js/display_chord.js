@@ -7,13 +7,13 @@ this.matrix = [];
 
 var getColor = function (gender, role) {
 	if (gender === "M" && role === "parent")
-		return "#c97f7f";
+		return "#1D5190";
 	if (gender === "F" && role === "parent")
-		return "#8d87c7";
+		return "#C33742";
 	if (gender === "M" && role === "child")
-		return "#F5A9A9";
+		return "#73A8E9";
 	if (gender === "F" && role === "child")
-		return "#81DAF5";
+		return "#D6757D";
 }
     
 
@@ -29,7 +29,26 @@ this.json_location = function(id) {
 			return "test/" + id + ".json?nocache=" + noC;
 };
 
-    
+   
+this.drawLegend = function(element) {
+
+	var cont = d3.select(element);
+
+	cont.append("h3").text("Legend");
+
+	cont.append("h4").text("People");
+	var table = cont.append("table");
+	table.append("tr").append("td").style("background", getColor("M", "parent")).style("color", "#FFFFFF").text("Male Parent");
+	table.append("tr").append("td").style("background", getColor("M", "child")).style("color", "#FFFFFF").text("Male Child");
+	table.append("tr").append("td").style("background", getColor("F", "parent")).style("color", "#FFFFFF").text("Female Parent");
+	table.append("tr").append("td").style("background", getColor("F", "child")).style("color", "#FFFFFF").text("Female Child");
+	
+	cont.append("h4").text("Relations");
+	var table = cont.append("table");
+	table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
+	table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
+	table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
+};
     
 // drawing code below:
 this.drawChord = function(munit) {
@@ -47,7 +66,7 @@ _this.outerRadius = _this.innerRadius * 1.3;
 // we must get the reverse of the elements of the parents because of how the chord diagram works
 var parents = data.parents.reverse();
 var children = data.children;
-var relationships = data.relationships;
+var relationships = data.relationships.reverse();
 
 console.log(data);
 
@@ -123,8 +142,8 @@ _this.fill = d3.scale.ordinal()
     .range(colorList);
     
 _this.fillType = d3.scale.ordinal()
-	.domain(["familial", "nickname", "marriage", "childOf"])
-	.range(["#f7fcb9", "#addd8e", "#FFCD81", "#A1CB87"]);
+	.domain(["colloquial", "adoption", "biological"])
+	.range(["#f7fcb9", "#FFCD81", "#A1CB87"]);
 
 
 _this.chord = d3.layout.chord()

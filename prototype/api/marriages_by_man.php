@@ -9,7 +9,7 @@ if (isset($_GET["id"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id");
+$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id ORDER BY \"MarriageDateSearchable\" ASC");
 if (!$result) {
     echo "An error occurred.\n";
     exit;
@@ -33,8 +33,12 @@ if (!$result) {
 $arr = pg_fetch_all($result);
 
 // got the husband
+$arr[0]["Married"] = "";
+$arr[0]["Divorced"] = "";
 array_push($parents, $arr[0]);
 
+
+// Get the wives and their children and adoptions to this wife
 foreach ($marriages as $marriage) {
 	$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ID\"=" . $marriage["WifeID"]);
 	if (!$result) {
@@ -46,6 +50,8 @@ foreach ($marriages as $marriage) {
 
 	// got the wife
 	$wife = $arr[0];
+	$wife["Married"] = $marriage["MarriageDateSearchable"];
+	$wife["Divorced"] = $marriage["DivorceDate"];
 	array_push($parents,$wife);
 
 
@@ -57,18 +63,39 @@ foreach ($marriages as $marriage) {
 
 	$arr = pg_fetch_all($result);
 
-	// got the children
+	// IDEA: Reverse the order of the children for each wife before adding them to the children array.  This should fix the chord diagram issues.
+
+	$tmpchildren = array();
+	// got the biological children
 	foreach ($arr as $child) {
-		array_push($children, $child);
-		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"childOf\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
+		array_push($tmpchildren, $child);
+		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
 	}
 
+
+	$result = pg_query($db, "SELECT \"Person\".*, \"Adoption\".\"AdoptionDate\" FROM public.\"Person\", public.\"Adoption\" WHERE \"Person\".\"ID\"=\"Adoption\".\"PersonID\" and \"Adoption\".\"MarriageID\"=" . $marriage["ID"]);
+	if (!$result) {
+	    echo "An error occurred.\n";
+	    exit;
+	}
+
+	$arr = pg_fetch_all($result);
+
+	// got the adopted children
+	foreach ($arr as $child) {
+		array_push($tmpchildren, $child);
+		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
+	}
+
+	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
 }
+
+
 
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", \"gender\": \"". $parent["Gender"] ."\"}");
+	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
 

@@ -39,7 +39,7 @@ d3.json(json_location, function(energy) {
       .attr("class", "link")
       .attr("d", _this.path)
       .style("stroke-width", function(d) { return Math.min(d.sdy, d.tdy); })
-      .style("stroke", function(d) { if (d.type === 1) return '#8A0808'; return '#08298A';})
+      .style("stroke", function(d) { if (d.type === 1) return '#1D5190'; return '#C33742';})
       .sort(function(a, b) { return b.dy - a.dy; });
       
   $('.link').tipsy({ 
