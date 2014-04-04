@@ -22,8 +22,12 @@
 	marriages are represented by their actual chord diagrams (this is very browser and memory intensive, and requires extra load time).  
 	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  
 	This version uses sample data in the test/ directory.</li>
-	<li><a href="chord.html">Chord Diagram</a>: Displays a the chord diagram of a marriage.  Given a husband's id (by argument "id") from the
+	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
 	real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.</li>
+	<li><a href="chord_time.html?id=626">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
+	the marriage to view or use a slider to step through the marriage.  Given a husband's id (by argument "id") from the real database, it shows 
+	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
+	status to show  Links are created from women to their children in the marriage.</li>
 </ul>
 
 <h2>Data Views</h2>

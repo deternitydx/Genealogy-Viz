@@ -51,10 +51,12 @@ function ChordDisplay(element) {
 		table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
 		table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
 		
+		var time = "All Time";
 		if (_this.originalTime != null) {
-			cont.append("h4").text("Time Slice");
-			cont.append("p").text(_this.originalTime);
+			time = _this.originalTime;
 		}
+		cont.append("h4").text("Time Slice");
+		cont.append("p").attr("id", "timeText").text(_this.originalTime);
 	};
 
 	this.setMatrix = function(timepoint) {
@@ -109,6 +111,7 @@ function ChordDisplay(element) {
 		});
 
 		_this.relationships.forEach(function (rel) {
+			delete rel.fromId; delete rel.toId;
 			_this.people.forEach(function(person, i) {
 				if (rel.from === person.name) {
 					person.numRels++;
@@ -121,6 +124,8 @@ function ChordDisplay(element) {
 			});
 		});
 
+		var activeRels = new Array();
+
 		_this.relationships.forEach(function (rel) {
 			// Fix up the peopl who are not in a relationship with a living person 
 			if (!rel.hasOwnProperty('fromId') || !rel.hasOwnProperty('toId')) {
@@ -129,24 +134,28 @@ function ChordDisplay(element) {
 				if (rel.hasOwnProperty('fromId') && !rel.hasOwnProperty('toId'))
 					_this.people[rel.fromId].numRels--;
 				return;
-			}
+			} else
+				activeRels.push(rel);
 		});
 
+		_this.relationships = activeRels;
+
 		_this.relationships.forEach(function (rel) {
-			if (!rel.hasOwnProperty('fromId') || !rel.hasOwnProperty('toId'))
-				return;
+			if (rel.hasOwnProperty('fromId') && rel.hasOwnProperty('toId')) {
+	
 
-			// for each relationship, add a part of the matrix
-			var i = rel.fromId;
-			var j = rel.toId;
-
-			var iPerc = (i < _this.children.length) ? _this.chiPerc / _this.people[i].numRels : _this.parPerc / _this.people[i].numRels;
-			var jPerc = (j < _this.children.length) ? _this.chiPerc / _this.people[j].numRels : _this.parPerc / _this.people[j].numRels;
-
-			_this.matrix[i][i] -= iPerc;
-			_this.matrix[j][j] -= jPerc;
-			_this.matrix[i][j] = iPerc;
-			_this.matrix[j][i] = jPerc;
+				// for each relationship, add a part of the matrix
+				var i = rel.fromId;
+				var j = rel.toId;
+	
+				var iPerc = (i < _this.children.length) ? _this.chiPerc / _this.people[i].numRels : _this.parPerc / _this.people[i].numRels;
+				var jPerc = (j < _this.children.length) ? _this.chiPerc / _this.people[j].numRels : _this.parPerc / _this.people[j].numRels;
+	
+				_this.matrix[i][i] -= iPerc;
+				_this.matrix[j][j] -= jPerc;
+				_this.matrix[i][j] = iPerc;
+				_this.matrix[j][i] = jPerc;
+			}	
 		});
 
 
@@ -162,26 +171,7 @@ function ChordDisplay(element) {
 
 	};
 
-	// drawing code below:
-	this.drawChord = function(munit) {
-
-		d3.json(_this.json_location(munit), function(data) {
-
-			if (!data || !data.parents || !data.children || !data.relationships)
-				return;
-
-			// recalculate the radii
-			_this.innerRadius = Math.min(_this.width, _this.height) * .31,
-			_this.outerRadius = _this.innerRadius * 1.3;
-
-			// fix up the matrix for this particular data set
-			// we must get the reverse of the elements of the _this.parents because of how the chord diagram works
-			
-			data.parents = data.parents.reverse();
-			_this.data = data
-
-			_this.setMatrix(_this.originalTime);
-			//_this.setMatrix("1846-02-10");
+	this.draw = function() {
 
 			_this.fill = d3.scale.ordinal()
 			.domain(d3.range(4))
@@ -194,8 +184,6 @@ function ChordDisplay(element) {
 
 			_this.chord = d3.layout.chord()
 			.padding(.01)
-			//.sortSubgroups(d3.descending)
-			//.sortChords(function (a,b) { console.log(a); })
 			.matrix(_this.matrix); 
 
 
@@ -210,11 +198,9 @@ function ChordDisplay(element) {
 				console.log("Drawing the chord");
 				console.log(_this.element);
 				_this.svg = d3.select(_this.element)
-				//.append("g").attr("width", _this.width).attr("height", _this.height)
 				.append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
-				//  	  .append("g")
-				//  	.attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
 			} else {
+				d3.select(_this.element).html("");
 				_this.svg = d3.select(_this.element).append("svg")
 				.attr("width", _this.width)
 				.attr("height", _this.height)
@@ -249,38 +235,6 @@ function ChordDisplay(element) {
 				}
 			});
 
-			/* // Trying to add text to SVG without MouseOver
-			// Does not work correctly yet 
-
-			g.selectAll("text")
-			.data(_this.chord.groups)
-			.enter().append("text")
-			.attr("x", function(d) { console.log(d); return "8";})
-			.attr("dy", ".35em")
-			//.attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
-			//.style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-			.text(function(d) { console.log(d); return _this.people[d.index].name; });;
-			*/
-
-			/*
-			   _this.ticks = svg.append("g").selectAll("g")
-			   .data(_this.chord.groups)
-			   .enter().append("g").selectAll("g")
-			   .data(_this.groupTicks)
-			   .enter().append("g")
-			   .attr("transform", function(d) {
-			   return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-			   + "translate(" + outerRadius + ",0)";
-			   });
-			   */
-			/*
-			   ticks.append("text")
-			   .attr("x", 8)
-			   .attr("dy", ".35em")
-			   .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
-			   .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-			   .text(function(d) { console.log(d); return labelOf(d.index); });
-			   */
 
 			_this.svg.append("g")
 			.attr("class", "chord")
@@ -327,8 +281,41 @@ function ChordDisplay(element) {
 				}
 			});
 
+	}
+
+	// drawing code below:
+	this.drawChord = function(munit) {
+
+		d3.json(_this.json_location(munit), function(data) {
+
+			if (!data || !data.parents || !data.children || !data.relationships)
+				return;
+
+			// recalculate the radii
+			_this.innerRadius = Math.min(_this.width, _this.height) * .31,
+			_this.outerRadius = _this.innerRadius * 1.3;
+
+			data.parents = data.parents.reverse();
+			_this.data = data
+
+			_this.setMatrix(_this.originalTime);
+
+			_this.draw();
+
+			// Add the time slider
+			var min = 1830, max = 1870;
+        		var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
+			var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
+			d3.select("#bottom").append("div").call(d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw));
 		}); // end of json call
 	} // end of drawChord
+
+
+	this.redraw = function(event, time) {
+		_this.setMatrix(time + "-01-01");
+		_this.draw();
+		d3.select("#timeText").html(time + "-01-01");
+	}
 
 	// Returns an event handler for fading a given chord group.
 	function fadePerson(opacity) {

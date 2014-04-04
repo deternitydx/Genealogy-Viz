@@ -13,9 +13,6 @@ body {
   stroke-width: .5px;
 }
 
-</style>
-<style>
-
 	h1 {
 		font-family: sans-serif;
 		font-weight: normal;
@@ -46,17 +43,28 @@ body {
 		margin: 1px;
 		padding:1px;
 	}
-svg {
+/*svg {
 	font: 10px sans-serif;
 	padding: 0px;
 	margin: 0px;
 	max-height: 100%;
-}
+}*/
 
 #chordID {
 	float:left;
 	clear: none;
 	padding: 0px;
+}
+
+#bottom {
+	float:left;
+	clear:both;
+	color: #000000;
+	margin: 50px;
+}
+
+#bottom svg {
+	overflow: visible;
 }
 
 .node rect {
@@ -104,15 +112,18 @@ td, tr {
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/tipsy.css" />
+<link rel="stylesheet" href="js/slider/d3.slider.css" />  
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="js/jquery.tipsy.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/slider/d3.slider.js"></script>
 <script src="js/display_chord_time.js"></script>
 </head>
 <body>
-<div id="chordID"></div>
 <div id="legend"></div>
+<div id="chordID"></div>
+<div id="bottom"></div>
 <script>
 var QueryString = function () {
   // This function is anonymous, is executed immediately and 
@@ -142,6 +153,8 @@ chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id="
 chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 50);
 chordDiagram.drawLegend("#legend");
+
+
 
 </script>
 </body>
