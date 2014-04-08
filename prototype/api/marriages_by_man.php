@@ -9,7 +9,7 @@ if (isset($_GET["id"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id ORDER BY \"MarriageDateSearchable\" ASC");
+$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id ORDER BY \"MarriageDate\" ASC");
 if (!$result) {
     echo "An error occurred.\n";
     exit;
@@ -50,7 +50,7 @@ foreach ($marriages as $marriage) {
 
 	// got the wife
 	$wife = $arr[0];
-	$wife["Married"] = $marriage["MarriageDateSearchable"];
+	$wife["Married"] = $marriage["MarriageDate"];
 	$wife["Divorced"] = $marriage["DivorceDate"];
 	array_push($parents,$wife);
 
@@ -68,6 +68,7 @@ foreach ($marriages as $marriage) {
 	$tmpchildren = array();
 	// got the biological children
 	foreach ($arr as $child) {
+		$child["AdoptionDate"] = "";
 		array_push($tmpchildren, $child);
 		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
 	}
@@ -96,7 +97,7 @@ echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
 	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", ".
-		"\"birthDate\":\"".$parent["BirthDateSearchable"]."\", \"deathDate\":\"".$parent["DeathDateSearchable"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
+		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
 
@@ -105,7 +106,8 @@ echo "], \"children\": [";
 $chiPrint = array();
 foreach ($children as $child) {
 	array_push($chiPrint, "{ \"name\": \"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", ".
-		"\"birthDate\":\"".$child["BirthDateSearchable"]."\", \"deathDate\":\"".$child["DeathDateSearchable"]."\", \"gender\": \"". $child["Gender"] ."\"}");
+		"\"birthDate\":\"".$child["BirthDate"]."\", \"deathDate\":\"".$child["DeathDate"]."\", ".
+		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
 } 
 
 echo implode(",", $chiPrint);

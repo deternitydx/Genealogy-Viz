@@ -13,8 +13,8 @@ $result = pg_query($db, "SELECT
 	  \"Marriage\".\"HusbandID\", 
 	    \"Person\".\"Surname\", 
 	      \"Person\".\"GivenName\", 
-	        \"Person\".\"BirthDateSearchable\", 
-		  \"Person\".\"DeathDateSearchable\",
+	        \"Person\".\"BirthDate\", 
+		  \"Person\".\"DeathDate\",
 		    count(*) as Wives
 		    FROM 
 		      public.\"Marriage\", 
@@ -25,8 +25,8 @@ $result = pg_query($db, "SELECT
 			    \"Marriage\".\"HusbandID\", 
 			      \"Person\".\"Surname\", 
 			        \"Person\".\"GivenName\", 
-				  \"Person\".\"BirthDateSearchable\", 
-				    \"Person\".\"DeathDateSearchable\"
+				  \"Person\".\"BirthDate\", 
+				    \"Person\".\"DeathDate\"
 				    ORDER BY Wives desc;");
 
 if (!$result) {
@@ -37,16 +37,15 @@ if (!$result) {
 $arr = pg_fetch_all($result);
 
 echo "<table border='1'>";
-echo "<tr><td>ID</td><td>Surname</td><td>Given Name</td><td>Birth Date</td><td>Death Date</td><td>Number of Wives</td></tr>";
+echo "<tr><td>ID</td><td>Links</td><td>Surname</td><td>Given Name</td><td>Birth Date</td><td>Death Date</td><td>Number of Wives</td></tr>";
 $json = array();
 foreach ($arr as $mar) {
 	$resa = array();
 	foreach ($mar as $k=>$v) {
 		//array_push($resa,"\"$k\": \"$v\"");
-		if ($k == "HusbandID")
-			array_push($resa, "<a href=\"http://ford.cs.virginia.edu/nauvoo/chord.html?id=$v\">$v</a>");
-		else
-			array_push($resa, "$v");
+		array_push($resa, "$v");
+		if ($k == "HusbandID") 
+			array_push($resa, "<a href=\"http://ford.cs.virginia.edu/nauvoo/chord.html?id=$v\">static</a> <a href=\"http://ford.cs.virginia.edu/nauvoo/chord_time.html?id=$v\">temporal</a>");
 	}
 	
 	

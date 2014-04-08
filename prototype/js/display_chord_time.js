@@ -73,7 +73,8 @@ function ChordDisplay(element) {
 			    		parents.push(parent);
 			});
 			_this.data.children.forEach(function(child) {
-				if (child.birthDate <= timepoint && child.deathDate >= timepoint) // child is alive
+				if ((child.adoptionDate != "" && child.adoptionDate <= timepoint) || // child has been adopted
+				    (child.adoptionDate == "" && child.birthDate <= timepoint && child.deathDate >= timepoint)) // child is alive
 					children.push(child);
 			});
 		}

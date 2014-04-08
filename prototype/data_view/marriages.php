@@ -18,15 +18,22 @@ if (!$result) {
 $arr = pg_fetch_all($result);
 
 echo "<table border='1'>";
-echo "<tr><td>ID</td><td>Husband</td><td>Wife</td><td>Date</td><td>Date</td><td>Place</td><td>Comments</td></tr>";
+echo "<tr><td>ID</td><td>Husband</td><td>Wife</td><td>MarriageDate</td><td>AutoMarriageDate</td><td>BYUMarriageDate</td><td>Place</td><td>Comments</td></tr>";
 $json = array();
 foreach ($arr as $mar) {
 	$resa = array();
 	foreach ($mar as $k=>$v) {
 		//array_push($resa,"\"$k\": \"$v\"");
 		array_push($resa, "$v");
+		if ($k == "MarriageDateText")
+			if ($v == "")
+				array_push($resa, "");
+			else {
+				if (strlen($v) == 4) // likely a year
+					$v = $v . "-01-01";
+				array_push($resa, date_format(date_create($v), "Y-m-d"));
+			}	
 	}
-	
 	
 	array_push($json, "<tr><td>" . implode("</td><td>", $resa) . "</td></tr>");
 
