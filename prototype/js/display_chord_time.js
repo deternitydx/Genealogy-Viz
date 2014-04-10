@@ -26,6 +26,8 @@ function ChordDisplay(element) {
 
 	this.embed = false;
 
+	this.slider = null;
+
 	this.json_location = function(id) { 
 		var noC = new String((new Date().getTime())); 
 		return "test/" + id + ".json?nocache=" + noC;
@@ -303,19 +305,43 @@ function ChordDisplay(element) {
 
 			_this.draw();
 
+			var stepperdiv = d3.select("#bottom").append("div").style("margin-top", "30px");
+			stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
+			stepperdiv.append("button").text("All Time").on("click", _this.allTime);
+			stepperdiv.append("button").text("Next").on("click", _this.goNext);
+			
 			// Add the time slider
 			var min = 1830, max = 1870;
         		var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
 			var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
-			d3.select("#bottom").append("div").call(d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw));
+			_this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
+			d3.select("#bottom").append("div").attr("id", "sliderDiv").call(_this.slider);
+
 		}); // end of json call
 	} // end of drawChord
 
+	this.goPrevious = function(event, time) {
+		_this.slider.value(_this.slider.value() - 1);
+		_this.redraw(null, _this.slider.value());
+	}
+	this.allTime = function(event, time) {
+		_this.redraw(null,null);
+	}
+	this.goNext = function(event, time) {
+		_this.slider.value(_this.slider.value() + 1);
+		_this.redraw(null, _this.slider.value());
+	}
 
 	this.redraw = function(event, time) {
-		_this.setMatrix(time + "-01-01");
+
+		if (time === null) {
+			_this.setMatrix(null);
+			d3.select("#timeText").html("All Time");
+		} else {
+			_this.setMatrix(time + "-01-01");
+			d3.select("#timeText").html(time + "-01-01");
+		}
 		_this.draw();
-		d3.select("#timeText").html(time + "-01-01");
 	}
 
 	// Returns an event handler for fading a given chord group.
