@@ -36,6 +36,7 @@
 	<li><a href="data_view/people.php">People</a>: all people in the database.</li>
 	<li><a href="data_view/marriages.php">Marriages</a>: all marriages in the database.</li>
 	<li><a href="data_view/multimarriages.php">Men with Multiple Wives</a>: list of all men and their number of wives (throughout their lifetime).</li>
+	<li><a href="data_view/polyandry.php">Women with Multiple Husbands</a>: list of all women and their number of husbands (throughout their lifetime).</li>
 	<li><a href="data_view/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
 	<li><a href="data_view/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
 	<li><a href="data_view/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
