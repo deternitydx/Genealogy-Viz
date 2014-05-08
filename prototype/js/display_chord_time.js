@@ -71,7 +71,8 @@ function ChordDisplay(element) {
 
 			_this.data.parents.forEach(function(parent) {
 				if (/*parent.birthDate <= timepoint && parent.deathDate >= timepoint &&*/
-				    ((parent.marriageDate <= timepoint && (parent.divorceDate >= timepoint || parent.divorceDate == "")) || parent.gender == "M")) // parent is alive and in marriage
+				    ((parent.marriageDate <= timepoint && (parent.deathDate >= timepoint)
+					    && (parent.divorceDate >= timepoint || parent.divorceDate == "")) || parent.gender == "M")) // parent is alive and in marriage
 			    		parents.push(parent);
 			});
 			_this.data.children.forEach(function(child) {
