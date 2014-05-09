@@ -87,7 +87,7 @@ svg {
 		.style("overflow", "hidden"); */
 	//    document.getElementById('moreinfo').src = "chord.html?id="+id;
     
-    chordDiagram.drawChord(node.name);
+    chordDiagram.drawChord(node.id);
 	// open the dialog window with jQuery
 	$("#dialog").dialog("option", "title", node.name);
 	$("#dialog").dialog("open"); 
@@ -113,6 +113,7 @@ svg {
 	sankeyDiagram.drawDiagram("test/marriages.json");
 	
 	var chordDiagram = new ChordDisplay("#dialog");
+    chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 
 </script>
 <div id="dialog" class="dialog" style="overflow: hidden">

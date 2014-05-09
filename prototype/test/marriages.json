@@ -5,7 +5,7 @@
                 {"id": 1232, "name":"MU3"},
                 {"id": 1233, "name":"MU4"},
                 {"id": 1235, "name":"MU5"},
-                {"id": 1236, "name":"MU6"},
+                {"id": 626, "name":"MU6"},
                 {"id": 1237, "name":"MU7"},
                 {"id": 1238, "name":"MU8"},
                 {"id": 1239, "name":"MU9"},
@@ -15,11 +15,11 @@
         "people":[
                 {"source":1234,"target":1232, "gender":"M", "name": "Smith, John"},
                 {"source":1231,"target":1232, "gender":"F", "name": "Jones, Mary"},
-                {"source":1232,"target":1236, "gender":"M", "name": "Smith, Tom"},
-                {"source":1233,"target":1236, "gender":"F", "name": "Bowls, Debra"},
-                {"source":1235,"target":1236, "gender":"F", "name": "Carter, Rebekah"},
-                {"source":1236,"target":1237, "gender":"F", "name": "Smith, Rachel"},
-                {"source":1236,"target":1238, "gender":"M", "name": "Smith, Matthew"},
-                {"source":1236,"target":1239, "gender":"F", "name": "Smith, Martha"},
-                {"source":1236,"target":1260, "gender":"F", "name": "Smith, Christina"}
+                {"source":1232,"target":626, "gender":"M", "name": "Smith, Tom"},
+                {"source":1233,"target":626, "gender":"F", "name": "Bowls, Debra"},
+                {"source":1235,"target":626, "gender":"F", "name": "Carter, Rebekah"},
+                {"source":626,"target":1237, "gender":"F", "name": "Smith, Rachel"},
+                {"source":626,"target":1238, "gender":"M", "name": "Smith, Matthew"},
+                {"source":626,"target":1239, "gender":"F", "name": "Smith, Martha"},
+                {"source":626,"target":1260, "gender":"F", "name": "Smith, Christina"}
         ]}
