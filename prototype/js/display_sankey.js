@@ -26,20 +26,55 @@ this.path = this.sankey.link();
 
 this.drawDiagram = function(json_location) {
 
-d3.json(json_location, function(energy) {
+d3.json(json_location, function(jsonData) {
+
+    // We must clean up the data now
+    _this.nodes = jsonData.marriageUnits;
+    _this.links = jsonData.people;
+    // Count in and out edges from each marriage unit
+    _this.nodes.forEach(function(mu, index) {
+        mu.inCount = 0;
+        mu.outCount = 0;
+        _this.links.forEach(function(person) {
+            if (person.source === mu.id) { // person is from this MU
+                mu.outCount++;
+                person.sourceMU = mu;
+                person.source = index;
+            }
+            if (person.target === mu.id) { // person goes to this MU
+                mu.inCount++;
+                person.targetMU = mu;
+                person.target = index;
+            }
+        });
+        if (mu.inCount > 0)
+            mu.inPerc = 1 / mu.inCount;
+        else
+            mu.inPerc = 0;
+        if (mu.outCount > 0)
+            mu.outPerc = 1 / mu.outCount;
+        else
+            mu.outPerc = 0;
+    });
+    console.log(_this);
+    _this.links.forEach(function(person) {
+        person.value = 1; // needed for the sankey layout.  Not actually used
+        person.svalue = person.sourceMU.outPerc;
+        person.tvalue = person.targetMU.inPerc;
+    });
 
   _this.sankey
-      .nodes(energy.nodes)
-      .links(energy.links)
+      .nodes(_this.nodes)
+      .links(_this.links)
       .layout(32);
 
   var link = _this.svg.append("g").selectAll(".link")
-      .data(energy.links)
+      .data(_this.links)
     .enter().append("path")
       .attr("class", "link")
       .attr("d", _this.path)
       .style("stroke-width", function(d) { return Math.min(d.sdy, d.tdy); })
-      .style("stroke", function(d) { if (d.type === 1) return '#1D5190'; return '#C33742';})
+      .style("stroke", function(d) { if (d.gender === "M") return '#1D5190'; return '#C33742';})
       .sort(function(a, b) { return b.dy - a.dy; });
       
   $('.link').tipsy({ 
@@ -57,7 +92,7 @@ d3.json(json_location, function(energy) {
      .text(function(d) { return d.name; });*/
 
   var node = _this.svg.append("g").selectAll(".node")
-      .data(energy.nodes)
+      .data(_this.nodes)
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
