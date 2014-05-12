@@ -47,120 +47,116 @@
 
 header('Content-type: application/json');
 
-$id = 50;
+$ids = array( 626, 627, 54057, 60825, 59372, 634, 20792);
 if (isset($_GET["id"]))
-	$id = $_GET["id"];
-	
+	$ids = explode(",",$_GET["id"]);
+
+$marriageUnits = array();
+$people = array();
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id ORDER BY \"MarriageDate\" ASC");
-if (!$result) {
-    echo "An error occurred.\n";
-    exit;
+
+// For each husband id, get the wives
+foreach($ids as $id) {
+    // Get the husband's information    
+    $result = pg_query($db, "SELECT * FROM public.\"Person\"  WHERE \"ID\"=$id");
+    if (!$result) {
+        echo "An error occurred.\n";
+        exit;
+    }
+    $arr = pg_fetch_all($result);
+    $husband = $arr[0];
+
+    if (!isset($husband["ChildOfMarriageID"]) || $husband["ChildOfMarriageID"] == "")
+            $husband["ChildOfMarriageID"] = -1;
+
+    // set up this marriage unit ID as the husband's ID
+    array_push($marriageUnits, array("id"=>$id, "name"=>$husband["Surname"] . ", " . $husband["GivenName"]));
+    array_push($people, array("id"=>$id, "source"=>null, "target"=>$id, "gender"=>"M", "name"=>$husband["Surname"] . ", " . $husband["GivenName"], "childOf"=>$husband["ChildOfMarriageID"]));
+
+    $result = pg_query($db, "SELECT * FROM public.\"Marriage\", public.\"Person\"  WHERE \"Person\".\"ID\" = \"Marriage\".\"WifeID\" AND \"Marriage\".\"HusbandID\"=$id ORDER BY \"MarriageDate\" ASC");
+    if (!$result) {
+        echo "An error occurred.\n";
+        exit;
+    }
+    $arr = pg_fetch_all($result);
+    //print_r($arr);
+    foreach($arr as $wife) {
+        if (!isset($wife["ChildOfMarriageID"]) || $wife["ChildOfMarriageID"] === "")
+            $wife["ChildOfMarriageID"] = -1;
+        array_push($people, array("id"=>$wife["ID"], "source"=> null, "target"=>$id, "gender"=>"F", "name"=>$wife["Surname"] . ", " . $wife["GivenName"], "childOf"=>$wife["ChildOfMarriageID"]));
+    }
 }
 
-$arr = pg_fetch_all($result);
+// For each husband id, get all the children
+foreach($ids as $id) {
+    
+    $result = pg_query($db, "SELECT * FROM public.\"Marriage\", public.\"Person\"  WHERE \"Person\".\"ChildOfMarriageID\" = \"Marriage\".\"ID\" AND \"Marriage\".\"HusbandID\"=$id ORDER BY \"Person\".\"BirthDate\" ASC");
+    if (!$result) {
+        echo "An error occurred.\n";
+        exit;
+    }
+    $arr = pg_fetch_all($result);
+    //print_r($arr);
+    foreach($arr as $child) {
+        $found = false;
+        foreach ($people as $i =>$person) {
+                if ($person["id"] == $child["ID"]) {
+                        // echo "Found person " . $person["id"] . " = " . $child["ID"] . "\n";
+                        $people[$i]["source"] = $id;
+                        $found = true;
+                        
+                }
+        }
+        if (!$found) {
+            if (!isset($child["ChildOfMarriageID"]) || $child["ChildOfMarriageID"] == "")
+                $child["ChildOfMarriageID"] = -1;
+            array_push($people, array("id"=>$child["ID"], "source"=>$id, "target"=>null, "gender"=>$child["Gender"], "name"=>$child["Surname"] . ", " . $child["GivenName"], "childOf"=>$child["ChildOfMarriageID"]));
+        }
+    }
 
-// got the marriage
-$marriages = $arr;
-
-$parents = array();
-$children = array();
-$relations = array();
-
-$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ID\"=" . $marriages[0]["HusbandID"]);
-if (!$result) {
-    echo "An error occurred.\n";
-    exit;
 }
 
-$arr = pg_fetch_all($result);
+$dummyID = 1000000;
+$known = array();
+foreach($people as $i => $person) {
+        if ($person["source"] === null) {
+            if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known))
+                $people[$i]["source"] = $known[$person["childOf"]];
+            else {
+                array_push($marriageUnits, array("id"=>$dummyID, "name"=>""));
+                $people[$i]["source"] = $dummyID;
+                $known[$person["childOf"]] = $dummyID;
+                $dummyID++;
+            }
+        }
 
-// got the husband
-$arr[0]["Married"] = "";
-$arr[0]["Divorced"] = "";
-array_push($parents, $arr[0]);
-
-
-// Get the wives and their children and adoptions to this wife
-foreach ($marriages as $marriage) {
-	$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ID\"=" . $marriage["WifeID"]);
-	if (!$result) {
-	    echo "An error occurred.\n";
-	    exit;
-	}
-
-	$arr = pg_fetch_all($result);
-
-	// got the wife
-	$wife = $arr[0];
-	$wife["Married"] = $marriage["MarriageDate"];
-	$wife["Divorced"] = $marriage["DivorceDate"];
-	array_push($parents,$wife);
-
-
-	$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ChildOfMarriageID\"=" . $marriage["ID"]);
-	if (!$result) {
-	    echo "An error occurred.\n";
-	    exit;
-	}
-
-	$arr = pg_fetch_all($result);
-
-	// IDEA: Reverse the order of the children for each wife before adding them to the children array.  This should fix the chord diagram issues.
-
-	$tmpchildren = array();
-	// got the biological children
-	foreach ($arr as $child) {
-		$child["AdoptionDate"] = "";
-		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
-	}
-
-
-	$result = pg_query($db, "SELECT \"Person\".*, \"Adoption\".\"AdoptionDate\" FROM public.\"Person\", public.\"Adoption\" WHERE \"Person\".\"ID\"=\"Adoption\".\"PersonID\" and \"Adoption\".\"MarriageID\"=" . $marriage["ID"]);
-	if (!$result) {
-	    echo "An error occurred.\n";
-	    exit;
-	}
-
-	$arr = pg_fetch_all($result);
-
-	// got the adopted children
-	foreach ($arr as $child) {
-		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
-	}
-
-	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
+        if ($person["target"] === null) {
+            array_push($marriageUnits, array("id"=>$dummyID, "name"=>""));
+            $people[$i]["target"] = $dummyID;
+            $dummyID++;
+        }
 }
 
+echo "{ \"marriageUnits\":[";
 
+foreach ($marriageUnits as $i => $unit) {
+        echo "{ \"id\":" . $unit["id"] . ", \"name\":\"" . $unit["name"] . "\"}";
+        if ($i < count($marriageUnits) -1) echo ",";
+}
 
-echo "{ \"parents\": [";
-$parPrint = array();
-foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", ".
-		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
-} 
-echo implode(",", $parPrint);
+echo "], \"people\": [";
 
-echo "], \"children\": [";
+foreach ($people as $i => $person) {
+        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\":" . $person["source"]. ", \"target\":" .$person["target"] .", \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
+        if ($i < count($people) -1) echo ",";
+}
 
-$chiPrint = array();
-foreach ($children as $child) {
-	array_push($chiPrint, "{ \"name\": \"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", ".
-		"\"birthDate\":\"".$child["BirthDate"]."\", \"deathDate\":\"".$child["DeathDate"]."\", ".
-		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
-} 
+echo "]}";
+//print_r($marriageUnits);
+//print_r($people);
 
-echo implode(",", $chiPrint);
-
-echo "], \"relationships\": [ " . implode(",", $relations) ."] }";
-
-
-//print_r($arr);
 
 ?>
 

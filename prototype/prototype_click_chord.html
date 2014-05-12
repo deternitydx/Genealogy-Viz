@@ -106,12 +106,39 @@ svg {
 <script src="js/display_sankey.js"></script>
 <script src="js/display_chord.js"></script>
 <script>
-	// Instantiate the sankey display, selecting the chart object as the target
+var QueryString = function () {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    	// If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    	// If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    	// If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  } 
+    return query_string;
+} ();
+
+
+    // Instantiate the sankey display, selecting the chart object as the target
 	var sankeyDiagram = new SankeyDisplay("#chart");
 
-	// Draw the sankey diagram with the given json file
-	sankeyDiagram.drawDiagram("test/marriages.json");
-	
+    // Draw the sankey diagram with the given json file
+    if (QueryString.id)
+	    sankeyDiagram.drawDiagram("api/sankey.php?id=" + QueryString.id);
+    else
+	    sankeyDiagram.drawDiagram("api/sankey.php");
+
 	var chordDiagram = new ChordDisplay("#dialog");
     chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 
