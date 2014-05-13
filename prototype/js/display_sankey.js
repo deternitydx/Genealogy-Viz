@@ -3,6 +3,8 @@ function SankeyDisplay(element) {
 
 var _this = this;
 
+this.container = element;
+
 this.margin = {top: 1, right: 1, bottom: 6, left: 1},
     this.width = 960 - this.margin.left - this.margin.right,
     this.height = 500 - this.margin.top - this.margin.bottom;
@@ -11,11 +13,7 @@ this.formatNumber = d3.format(",.0f"),
     this.format = function(d) { return formatNumber(d) + " TWh"; },
     this.color = d3.scale.category20();
 
-this.svg = d3.select(element).append("svg")
-    .attr("width", this.width + this.margin.left + this.margin.right)
-    .attr("height", this.height + this.margin.top + this.margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+this.svg = null;
 
 this.sankey = d3.sankey()
     .nodeWidth(15)
@@ -66,7 +64,19 @@ d3.json(json_location, function(jsonData) {
   _this.sankey
       .nodes(_this.nodes)
       .links(_this.links)
+      .size([_this.width, _this.height])
       .layout(32);
+  
+  // Clean out the element
+  d3.select(_this.container).text("");
+
+  _this.svg = d3.select(element).append("svg")
+      .attr("width", _this.width + _this.margin.left + _this.margin.right)
+      .attr("height", _this.height + _this.margin.top + _this.margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + _this.margin.left + "," + _this.margin.top + ")");
+
+
 
   var link = _this.svg.append("g").selectAll(".link")
       .data(_this.links)

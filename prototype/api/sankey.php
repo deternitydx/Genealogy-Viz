@@ -44,6 +44,8 @@
 //       NOTE: if two people come from the same marriage (ChildOfMarriageID DB entry will be helpful here, actually)
 // 5. Ignore fixing up out edges.  In that case, we won't display the edge, as people don't have to get married, and we likely
 //       don't have that data.  The in edges will cover all the cases of finding the relations in our data.
+// 6. We need to fix the out edges in the cases where they may go to the same out marriage.  That is, the children of two different
+//       people may end up married in the end.  We need a way to approach this.
 
 header('Content-type: application/json');
 
