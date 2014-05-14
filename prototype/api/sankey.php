@@ -74,7 +74,7 @@ foreach($ids as $id) {
             $husband["ChildOfMarriageID"] = -1;
 
     // set up this marriage unit ID as the husband's ID
-    array_push($marriageUnits, array("id"=>$id, "name"=>$husband["Surname"] . ", " . $husband["GivenName"]));
+    $marriageUnits[$id] = array("id"=>$id, "name"=>$husband["Surname"] . ", " . $husband["GivenName"]);
     array_push($people, array("id"=>$id, "source"=>null, "target"=>$id, "gender"=>"M", "name"=>$husband["Surname"] . ", " . $husband["GivenName"], "childOf"=>$husband["ChildOfMarriageID"]));
 
     $result = pg_query($db, "SELECT * FROM public.\"Marriage\", public.\"Person\"  WHERE \"Person\".\"ID\" = \"Marriage\".\"WifeID\" AND \"Marriage\".\"HusbandID\"=$id ORDER BY \"MarriageDate\" ASC");
@@ -101,7 +101,10 @@ foreach($ids as $id) {
     }
     $arr = pg_fetch_all($result);
     //print_r($arr);
+    
+    // Do things for each child
     foreach($arr as $child) {
+        // Look up each person to see if this person's already here (they are a wife or father), and if so, add this MU as the source of the person.    
         $found = false;
         foreach ($people as $i =>$person) {
                 if ($person["id"] == $child["ID"]) {
@@ -113,9 +116,17 @@ foreach($ids as $id) {
         }
         if (!$found) {
             if (!isset($child["ChildOfMarriageID"]) || $child["ChildOfMarriageID"] == "")
-                $child["ChildOfMarriageID"] = -1;
-            array_push($people, array("id"=>$child["ID"], "source"=>$id, "target"=>null, "gender"=>$child["Gender"], "name"=>$child["Surname"] . ", " . $child["GivenName"], "childOf"=>$child["ChildOfMarriageID"]));
+                    $child["ChildOfMarriageID"] = -1;
+            $target = null;
+
+            // If this person was not already found, then they have a source, but no target.  If we have a boy, he gets his own MU. 
+            if ($child["Gender"] == "M") {
+                 $marriageUnits[$child["ID"]] =  array("id"=>$child["ID"], "name"=>$child["Surname"]);
+                 $target = $child["ID"];
+            }
+            array_push($people, array("id"=>$child["ID"], "source"=>$id, "target"=>$target, "gender"=>$child["Gender"], "name"=>$child["Surname"] . ", " . $child["GivenName"], "childOf"=>$child["ChildOfMarriageID"]));
         }
+
     }
 
 }
@@ -135,17 +146,38 @@ foreach($people as $i => $person) {
         }
 
         if ($person["target"] === null) {
-            array_push($marriageUnits, array("id"=>$dummyID, "name"=>""));
-            $people[$i]["target"] = $dummyID;
-            $dummyID++;
+            $needDummy = true;
+            // check to see if woman, and if so, then let's query to see if she's married one of the men we have
+            if ($person["gender"] == "F") {
+                $result = pg_query($db, "SELECT \"Marriage\".\"HusbandID\" FROM public.\"Marriage\"  WHERE \"WifeID\"={$person['id']}");
+                if (!$result) {
+                    echo "An error occurred.\n";
+                    exit;
+                }
+                $arr = pg_fetch_all($result);
+                foreach ($arr as $target) {
+                        if (array_key_exists($target["HusbandID"], $marriageUnits)) {
+                                $people[$i]["target"] = $target["HusbandID"];
+                                $needDummy = false;
+                        }
+                }
+            }
+            
+            
+            if ($needDummy) {
+                $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
+                $people[$i]["target"] = $dummyID;
+                $dummyID++;
+            }
         }
 }
 
 echo "{ \"marriageUnits\":[";
 
-foreach ($marriageUnits as $i => $unit) {
+$i = 0;
+foreach ($marriageUnits as $unit) {
         echo "{ \"id\":" . $unit["id"] . ", \"name\":\"" . $unit["name"] . "\"}";
-        if ($i < count($marriageUnits) -1) echo ",";
+        if ($i++ < count($marriageUnits) -1) echo ",";
 }
 
 echo "], \"people\": [";
