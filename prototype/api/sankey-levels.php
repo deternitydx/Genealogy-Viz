@@ -46,10 +46,14 @@
 //       don't have that data.  The in edges will cover all the cases of finding the relations in our data.
 // 6. We need to fix the out edges in the cases where they may go to the same out marriage.  That is, the children of two different
 //       people may end up married in the end.  We need a way to approach this.
+//
+// TODO: Fix the Father relation (we need to know the father, as they might have siblings from a different
+//		 marriage, but actually came from the same marriage unit (same father)
+// TODO: Levels: get multiple degrees of separation from the requested people
 
 header('Content-type: application/json');
 
-$ids = array( 626, 627, 54057, 60825, 59372, 634, 20792);
+$ids = array( 626, 627, 54057, 60825, 59372, 634, 20792, 14686, 20092);
 if (isset($_GET["id"]))
 	$ids = explode(",",$_GET["id"]);
 
@@ -67,9 +71,9 @@ function insertPerson($person, $direction, $id) {
         $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>null, "target"=>null, "gender"=>$person["Gender"], "name"=>$person["Surname"] . ", " . $person["GivenName"], "childOf"=>$person["ChildOfMarriageID"]);
         
     // If they don't have a parent marriage, then set this field to -1
-    if (!isset($person["ChildOfMarriageID"]) || $person["ChildOfMarriageID"] == "") {
-            $people[$person["ID"]]["childOf"] = -1;
-    }
+    //if (!isset($person["ChildOfMarriageID"]) || $person["ChildOfMarriageID"] == "") {
+    //        $people[$person["ID"]]["childOf"] = -1;
+    //}
     
     // If we have a boy, he gets his own MU with himself as target. 
     if ($person["Gender"] == "M") {
@@ -77,6 +81,11 @@ function insertPerson($person, $direction, $id) {
             $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Surname"] . ", " . $person["GivenName"]);
         $people[$person["ID"]]["target"] = $person["ID"];
     }
+    
+    if (isset($person["Father"]) && $person["Father"] != "")
+    	$people[$person["ID"]]["childOf"] = $person["Father"];
+	else
+		$people[$person["ID"]]["childOf"] = -1;
     
     // Set the direction we had asked for to the proper id
     $people[$person["ID"]][$direction] = $id;
@@ -106,8 +115,16 @@ foreach($ids as $id) {
     $arr = pg_fetch_all($result);
     //print_r($arr);
     foreach($arr as $wife) {
-        // Try to get the parent if ChildOfMarriageID is set to something.  May also try to do it inside of insertPerson.
-
+        // TODO: Try to get the parent if ChildOfMarriageID is set to something.  May also try to do it inside of insertPerson.
+		if ($wife["ChildOfMarriageID"] != "") {
+			$result = pg_query($db, "SELECT \"Marriage\".\"HusbandID\" as \"Father\" FROM public.\"Marriage\" WHERE  \"Marriage\".\"ID\"= ". $wife["ChildOfMarriageID"]);
+    		if (!$result) {
+        		echo "An error occurred.\n";
+        		exit;
+    		}
+    		$arr = pg_fetch_all($result);
+    		$wife["Father"] = $arr[0]["Father"];
+		}
         insertPerson($wife, "target", $id);    
     }
 }
@@ -130,6 +147,8 @@ foreach($ids as $id) {
 
 }
 
+//print_r($people);
+
 /****
  * Clean up and add dummy nodes to those we don't know about
  */
@@ -139,12 +158,17 @@ foreach($people as $i => $person) {
         if ($person["source"] === null) {
             if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known))
                 $people[$i]["source"] = $known[$person["childOf"]];
-            else {
+            else  if ($person["childOf"] == -1 ) {
                 $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
                 $people[$i]["source"] = $dummyID;
                 $known[$person["childOf"]] = $dummyID;
                 $dummyID++;
+            } else {
+                $marriageUnits[$person["childOf"]] = array("id"=>$person["childOf"], "name"=>"");
+                $people[$i]["source"] = $person["childOf"];
+                $known[$person["childOf"]] = $person["childOf"];
             }
+            
         }
 
         if ($person["target"] === null) {

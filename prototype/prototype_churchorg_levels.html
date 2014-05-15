@@ -133,8 +133,8 @@ var QueryString = function () {
     // Instantiate the sankey display, selecting the chart object as the target
 	var sankeyDiagram = new SankeyDisplay("#chart");
 
-    sankeyDiagram.width = 5000;
-    sankeyDiagram.height = 5000;
+    sankeyDiagram.width = 3500;
+    sankeyDiagram.height = 4000;
     // Draw the sankey diagram with the given json file
     if (QueryString.id)
 	    sankeyDiagram.drawDiagram("api/sankey-levels.php?id=" + QueryString.id);
