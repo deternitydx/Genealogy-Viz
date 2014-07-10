@@ -12,7 +12,7 @@ if (!$result) {
     exit;
 }
 
-$gender = array( "M" => "Male", "F" => "Female");
+$gender = array( "M" => "Male", "F" => "Female", "[F]" => "Female", "[M]" => "Male", "[U]" => "NULL", "NULL" => "NULL");
 
 $places = array();
 
@@ -65,8 +65,8 @@ while ($row = pg_fetch_array($result)) {
 
         // insert the person's name as an authoritative name
         $arr = array ("PersonID" => $id,
-            "First" => $row['GivenName'],
-            "Last" => $row['Surname'],
+            "First" => pg_escape_string($row['GivenName']),
+            "Last" => pg_escape_string($row['Surname']),
             "Type" => "authoritative");
         $insert = get_insert_statement("Name", $arr);
         $res = pg_query($db_to, $insert);
@@ -84,6 +84,7 @@ function get_insert_statement($tableName, $arr) {
     $vals = "";
     foreach ($arr as $k => $v) {
             $cols .= "\"$k\",";
+            if ($v == "") $v = "NULL";
             if ($k == "BYUID" || $k == "BYUChildOf" || $v == "NULL")
                 $vals .= "$v,";
             else
@@ -103,7 +104,7 @@ function get_place($place) {
     if (!isset($place) || empty($place) || $place == null || $place == "NULL" || $place == "" || $place == "null")
             return "NULL";
 
-    $arr = array("OfficialName" => $place);
+    $arr = array("OfficialName" => pg_escape_string($place));
 
     $insert = get_insert_statement("Place", $arr);
     $res = pg_query($db_to, $insert);
