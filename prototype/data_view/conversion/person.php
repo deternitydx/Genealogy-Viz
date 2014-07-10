@@ -14,8 +14,6 @@ if (!$result) {
 
 $gender = array( "M" => "Male", "F" => "Female");
 
-$i = 0;
-
 $places = array();
 
 // grab all the places
@@ -24,8 +22,6 @@ $places = load_places($db_to);
 print_r($places);
 // Loop over each person in the list
 while ($row = pg_fetch_array($result)) {
-    // do stuff with row
-        if ($i++ == 10) return;
         $birthplace = "";
         $deathplace = "";
         $burialplace = "";
