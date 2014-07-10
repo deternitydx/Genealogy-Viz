@@ -107,7 +107,6 @@ function get_place($place) {
     if (!isset($place) || empty($place) || $place == null || $place == "NULL" || $place == "" || $place == "null")
             return "NULL";
 
-    echo "inserting for place: $place\n";
     $arr = array("OfficialName" => $place);
 
     $insert = get_insert_statement("Place", $arr);
@@ -118,8 +117,6 @@ function get_place($place) {
         $temprow = pg_fetch_Array($res);
         $id = $temprow[0];
         $places[$place] = $id;
-        echo "inserted new place at: $id";
-        print_r($places);
         return $id;
     }
 
