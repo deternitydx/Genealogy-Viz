@@ -3,13 +3,21 @@
 //header('Content-type: application/json');
 
 $id = 14;
+$ln = "";
 if (isset($_GET["id"]))
 	$id = $_GET["id"];
-	
+
+if (isset($_GET["q"])) {
+    $ln = $_GET["q"];
+}
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT * FROM public.\"Marriage\" ORDER BY \"HusbandID\" asc");
+$addTo = "";
+if ($ln != "") {
+        $addTo .= " AND h.\"Surname\" = '$ln' ";
+}
+$result = pg_query($db, "SELECT m.\"ID\", m.\"HusbandID\", h.\"Surname\" as hs, h.\"GivenName\" as hg, m.\"WifeID\", w.\"Surname\" as ws, w.\"GivenName\" as wg, m.\"MarriageDate\", m.\"DivorceDate\", m.\"MarriagePlace\", m.\"Comments\" FROM public.\"Marriage\" m, public.\"Person\" h, public.\"Person\" w  WHERE h.\"ID\" = m.\"HusbandID\" AND w.\"ID\" = m.\"WifeID\" $addTo ORDER BY hs, hg, ws, wg, \"ID\" asc");
 if (!$result) {
     echo "An error occurred.\n";
     exit;
@@ -18,7 +26,7 @@ if (!$result) {
 $arr = pg_fetch_all($result);
 
 echo "<table border='1'>";
-echo "<tr><td>ID</td><td>Husband</td><td>Wife</td><td>MarriageDate</td><td>AutoMarriageDate</td><td>BYUMarriageDate</td><td>Place</td><td>Comments</td></tr>";
+echo "<tr><td>ID</td><td>Husband ID</td><td>Surname</td><td>GivenName</td><td>Wife ID</td><td>Surname</td><td>GivenName</td><td>MarriageDate</td><td>DivorceDate</td><td>Place</td><td>Comments</td></tr>";
 $json = array();
 foreach ($arr as $mar) {
 	$resa = array();
