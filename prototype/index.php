@@ -30,16 +30,24 @@
 	status to show  Links are created from women to their children in the marriage.</li>
 </ul>
 
-<h2>Data Views</h2>
+<h2>Data Views Of UVA's Data</h2>
 <p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
 <ul>
-	<li><a href="data_view/people.php">People</a>: all people in the database.</li>
-	<li><a href="data_view/marriages.php">Marriages</a>: all marriages in the database.</li>
-	<li><a href="data_view/multimarriages.php">Men with Multiple Wives</a>: list of all men and their number of wives (throughout their lifetime).</li>
-	<li><a href="data_view/polyandry.php">Women with Multiple Husbands</a>: list of all women and their number of husbands (throughout their lifetime).</li>
-	<li><a href="data_view/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
-	<li><a href="data_view/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
-	<li><a href="data_view/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
+	<li><a href="data_view/documentdb.php">Database Organization</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
+	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
+</ul>
+
+
+<h2>Data Views Of BYU's Data</h2>
+<p>We have some real data from BYU.  The links below allow access to some parts of that data.</p>
+<ul>
+	<li><a href="data_view/jill_db/people.php">People</a>: all people in the database.</li>
+	<li><a href="data_view/jill_db/marriages.php">Marriages</a>: all marriages in the database.</li>
+	<li><a href="data_view/jill_db/multimarriages.php">Men with Multiple Wives</a>: list of all men and their number of wives (throughout their lifetime).</li>
+	<li><a href="data_view/jill_db/polyandry.php">Women with Multiple Husbands</a>: list of all women and their number of husbands (throughout their lifetime).</li>
+	<li><a href="data_view/jill_db/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
+	<li><a href="data_view/jill_db/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
+	<li><a href="data_view/jill_db/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
 </ul>
 
 <h2>REST API Service</h2>
