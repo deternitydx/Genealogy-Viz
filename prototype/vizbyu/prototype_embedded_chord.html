@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>Geneology Display Prototype</title>
+<style>
+
+	h1 {
+		font-family: sans-serif;
+		font-weight: normal;
+		font-size: 16px;
+	}
+
+svg {
+  font: 10px sans-serif;
+}
+
+#chart {
+  height: 500px;
+}
+
+.node rect {
+  cursor: move;
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+  fill: none;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}
+
+.chord path {
+  fill-opacity: .67;
+  stroke: #000;
+  stroke-width: .5px;
+}
+
+</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="css/tipsy.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/jquery.tipsy.js"></script>
+<script>
+	// jQuery to handle tooltips
+/*
+  $(function() {
+    $( document ).tooltip();
+  });
+*/
+	// jQuery to handle dialog
+	$(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      width: 640,
+      height: 580,
+      modal: true,
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      }
+    });
+ 
+  });
+  
+  function show_info(node){
+	var dialog = d3.select("#dialog");
+	dialog.text(""); // empty it out
+	
+	/*dialog.append("iframe")
+		.attr("src", "chord.html?id="+node.name)
+		.attr("frameborder", "0")
+		.attr("width", 600)
+		.attr("height", 600)
+		.style("overflow", "hidden"); */
+	//    document.getElementById('moreinfo').src = "chord.html?id="+id;
+    
+    chordDiagram.drawChord(node.name);
+	// open the dialog window with jQuery
+	$("#dialog").dialog("option", "title", node.name);
+	$("#dialog").dialog("open"); 
+}
+</script>
+
+
+</head>
+<body>
+	<h1>Marrage Unit Geneology Prototype</h1>
+	<div id="chart"></div>
+
+
+<script src="http://d3js.org/d3.v2.min.js?2.9.1"></script>
+<script src="js/sankey.js"></script>
+<script src="js/display_sankey2.js"></script>
+<script src="js/display_chord.js"></script>
+<script>
+	// Instantiate the sankey display, selecting the chart object as the target
+	var sankeyDiagram = new SankeyDisplay("#chart");
+
+	// Draw the sankey diagram with the given json file
+	sankeyDiagram.drawDiagram("test/energy.json");
+	
+	var chordDiagram = new ChordDisplay("#dialog");
+
+</script>
+<div id="dialog" class="dialog" style="overflow: hidden">
+<!--<iframe frameborder="0" scrolling="no" width="600" height="600" id="moreinfo" style="overflow: hidden">
+</iframe>-->
+</div>
+
+</body>
+</html>

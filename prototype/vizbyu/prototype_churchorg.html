@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>Geneology Display Prototype</title>
+<style>
+
+	h1 {
+		font-family: sans-serif;
+		font-weight: normal;
+		font-size: 16px;
+	}
+
+svg {
+  font: 10px sans-serif;
+}
+
+#chart {
+  height: 5000px;
+}
+
+.node rect {
+  cursor: move;
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+  fill: none;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}
+
+.chord path {
+  fill-opacity: .67;
+  stroke: #000;
+  stroke-width: .5px;
+}
+
+</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="css/tipsy.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/jquery.tipsy.js"></script>
+<script>
+	// jQuery to handle tooltips
+/*
+  $(function() {
+    $( document ).tooltip();
+  });
+*/
+	// jQuery to handle dialog
+	$(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      width: 640,
+      height: 580,
+      modal: true,
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      }
+    });
+ 
+  });
+  
+  function show_info(node){
+	var dialog = d3.select("#dialog");
+	dialog.text(""); // empty it out
+	
+	/*dialog.append("iframe")
+		.attr("src", "chord.html?id="+node.name)
+		.attr("frameborder", "0")
+		.attr("width", 600)
+		.attr("height", 600)
+		.style("overflow", "hidden"); */
+	//    document.getElementById('moreinfo').src = "chord.html?id="+id;
+    
+    chordDiagram.drawChord(node.id);
+	// open the dialog window with jQuery
+	$("#dialog").dialog("option", "title", node.name);
+	$("#dialog").dialog("open"); 
+}
+</script>
+
+
+</head>
+<body>
+	<h1>Marrage Unit Geneology Prototype</h1>
+	<div id="chart"></div>
+
+
+<script src="http://d3js.org/d3.v2.min.js?2.9.1"></script>
+<script src="js/sankey.js"></script>
+<script src="js/display_sankey.js"></script>
+<script src="js/display_chord.js"></script>
+<script>
+var QueryString = function () {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    	// If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    	// If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    	// If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  } 
+    return query_string;
+} ();
+
+
+    // Instantiate the sankey display, selecting the chart object as the target
+	var sankeyDiagram = new SankeyDisplay("#chart");
+
+    sankeyDiagram.width = 3500;
+    sankeyDiagram.height = 4000;
+    // Draw the sankey diagram with the given json file
+    if (QueryString.id)
+	    sankeyDiagram.drawDiagram("api/sankey.php?id=" + QueryString.id);
+    else
+	    sankeyDiagram.drawDiagram("api/sankey.php");
+
+	var chordDiagram = new ChordDisplay("#dialog");
+    chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
+
+</script>
+<div id="organizations">
+        <button onClick="sankeyDiagram.drawDiagram('api/sankey.php?id=626,39984,33544,431,18320,31093,44681,59058');">Quorum of 12 Apostles</button>
+        <button onClick="sankeyDiagram.drawDiagram('api/sankey.php?id=19791,20037,38751,37759,1337,31150,43935,40328');">Council of Seventy</button>
+        <button onClick="sankeyDiagram.drawDiagram('api/sankey.php?id=626,39984,33544,431,18320,31093,44681,59058,504');">Quorum of 12 Apostles + JS</button>
+        <button onClick="sankeyDiagram.drawDiagram('api/sankey.php?id=19791,20037,38751,37759,1337,31150,43935,40328,504');">Council of Seventy + JS</button>
+        <button onClick="sankeyDiagram.drawDiagram('api/sankey.php?id=19791,20037,38751,37759,1337,31150,43935,40328,504,626');">Council of Seventy + JS + BY</button>
+</div>
+<div id="dialog" class="dialog" style="overflow: hidden">
+<!--<iframe frameborder="0" scrolling="no" width="600" height="600" id="moreinfo" style="overflow: hidden">
+</iframe>-->
+</div>
+
+</body>
+</html>

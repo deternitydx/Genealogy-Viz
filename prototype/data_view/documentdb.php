@@ -1,5 +1,9 @@
+<html>
+<head>
+<title>Database Organization</title>
+</head>
+<body>
 <?php
-header("Content-Type: text/plain"); 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name ASC;");
@@ -8,13 +12,13 @@ if (!$result) {
       die();
 }
 
-echo "% Nauvoo Database Structure\n% Institute for Advanced Technology in the Humanities\n% \n\n";
+echo "<h1> Nauvoo Database Structure</h1><h2> Institute for Advanced Technology in the Humanities</h2> \n\n";
 $tables = pg_fetch_all($result);
 
 foreach ($tables as $table) {
     $tablename = $table["table_name"];
 
-    echo "$tablename\n=========================\n\n";
+    echo "<h3>$tablename</h3>";
 
     $result = pg_query($db, "
             SELECT c.column_name,c.data_type,pgd.description, c.ordinal_position
@@ -24,13 +28,15 @@ foreach ($tables as $table) {
                    WHERE c.table_name = '$tablename' ORDER BY c.ordinal_position ASC;");
 
     $columns = pg_fetch_all($result);
-    echo "Columns\n---------------\n\n";
+    echo "<h4>Columns</h4>\n\n<ul>";
     foreach($columns as $column) {
         if (!isset($column['description'])) $column['description'] = "";
-        echo "* **{$column['column_name']}**\n     * *Type: {$column['data_type']}*\n     * Description: {$column['description']}\n";
+        echo "<li><b>{$column['column_name']}</b><br/><em>Type: {$column['data_type']}</em><br/>Description: {$column['description']}</li>\n";
     }
 
-    echo "\n\n";
+    echo "</ul>\n\n";
 }
 
 ?>
+</body>
+</html>
