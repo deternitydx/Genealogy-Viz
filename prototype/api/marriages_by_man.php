@@ -7,11 +7,12 @@ if (isset($_GET["id"]))
 	$id = $_GET["id"];
 	
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT * FROM public.\"Marriage\" WHERE \"HusbandID\"=$id ORDER BY \"MarriageDate\" ASC");
+$result = pg_query($db, "SELECT m.* FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
+       h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' AND h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
 if (!$result) {
-    echo "An error occurred.\n";
+    echo "1An error occurred.\n";
     exit;
 }
 
@@ -24,9 +25,9 @@ $parents = array();
 $children = array();
 $relations = array();
 
-$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ID\"=" . $marriages[0]["HusbandID"]);
+$result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriages[0]["HusbandID"]);
 if (!$result) {
-    echo "An error occurred.\n";
+    echo "2An error occurred.\n";
     exit;
 }
 
@@ -40,9 +41,9 @@ array_push($parents, $arr[0]);
 
 // Get the wives and their children and adoptions to this wife
 foreach ($marriages as $marriage) {
-	$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ID\"=" . $marriage["WifeID"]);
+    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["WifeID"]);
 	if (!$result) {
-	    echo "An error occurred.\n";
+	    echo "3An error occurred.\n";
 	    exit;
 	}
 
@@ -55,9 +56,9 @@ foreach ($marriages as $marriage) {
 	array_push($parents,$wife);
 
 
-	$result = pg_query($db, "SELECT * FROM public.\"Person\" WHERE \"ChildOfMarriageID\"=" . $marriage["ID"]);
+    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
 	if (!$result) {
-	    echo "An error occurred.\n";
+	    echo "4An error occurred.\n";
 	    exit;
 	}
 
@@ -70,10 +71,10 @@ foreach ($marriages as $marriage) {
 	foreach ($arr as $child) {
 		$child["AdoptionDate"] = "";
 		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
+		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["Last"] . ", " . $child["First"] . " (Child)\", \"to\":\"" . $wife["Last"] . ", " . $wife["First"] . " (Parent)\"}");
 	}
 
-
+/*
 	$result = pg_query($db, "SELECT \"Person\".*, \"Adoption\".\"AdoptionDate\" FROM public.\"Person\", public.\"Adoption\" WHERE \"Person\".\"ID\"=\"Adoption\".\"PersonID\" and \"Adoption\".\"MarriageID\"=" . $marriage["ID"]);
 	if (!$result) {
 	    echo "An error occurred.\n";
@@ -85,10 +86,11 @@ foreach ($marriages as $marriage) {
 	// got the adopted children
 	foreach ($arr as $child) {
 		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", \"to\":\"" . $wife["Surname"] . ", " . $wife["GivenName"] . " (Parent)\"}");
+		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Last"] . ", " . $child["First"] . " (Child)\", \"to\":\"" . $wife["Last"] . ", " . $wife["First"] . " (Parent)\"}");
 	}
 
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
+ */
 }
 
 
@@ -96,7 +98,7 @@ foreach ($marriages as $marriage) {
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"name\": \"" . $parent["Surname"] . ", " . $parent["GivenName"] . " (Parent)\", ".
+	array_push($parPrint, "{ \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . " (Parent)\", ".
 		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
@@ -105,7 +107,7 @@ echo "], \"children\": [";
 
 $chiPrint = array();
 foreach ($children as $child) {
-	array_push($chiPrint, "{ \"name\": \"" . $child["Surname"] . ", " . $child["GivenName"] . " (Child)\", ".
+	array_push($chiPrint, "{ \"name\": \"" . $child["Last"] . ", " . $child["First"] . " (Child)\", ".
 		"\"birthDate\":\"".$child["BirthDate"]."\", \"deathDate\":\"".$child["DeathDate"]."\", ".
 		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
 } 
