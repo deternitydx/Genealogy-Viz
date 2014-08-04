@@ -1,0 +1,4 @@
+SELECT "Person".*, parent."HusbandID" as "Father" FROM public."Marriage" as m, public."Person", public."Marriage" as parent  WHERE "Person"."ID" = m."WifeID" AND m."HusbandID"=60825 AND parent."ID" = "Person"."ChildOfMarriageID" ORDER BY m."MarriageDate" ASC
+
+
+
