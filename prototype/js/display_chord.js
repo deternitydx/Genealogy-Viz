@@ -6,17 +6,17 @@ this.element = element;
 this.matrix = [];
 
 var getColor = function (gender, role) {
-	if (gender === "M" && role === "parent")
+	if (gender === "Male" && role === "parent")
 		return "#1D5190";
-	if (gender === "F" && role === "parent")
+	if (gender === "Female" && role === "parent")
 		return "#C33742";
-	if (gender === "M" && role === "child")
+	if (gender === "Male" && role === "child")
 		return "#73A8E9";
-	if (gender === "F" && role === "child")
+	if (gender === "Female" && role === "child")
 		return "#D6757D";
-	if (gender === "M" && role === "divorce")
+	if (gender === "Male" && role === "divorce")
 		return "#0d233e";
-	if (gender === "F" && role === "divorce")
+	if (gender === "Female" && role === "divorce")
 		return "#391013";
 }
     
@@ -42,10 +42,10 @@ this.drawLegend = function(element) {
 
 	cont.append("h4").text("People");
 	var table = cont.append("table");
-	table.append("tr").append("td").style("background", getColor("M", "parent")).style("color", "#FFFFFF").text("Male Parent");
-	table.append("tr").append("td").style("background", getColor("M", "child")).style("color", "#FFFFFF").text("Male Child");
-	table.append("tr").append("td").style("background", getColor("F", "parent")).style("color", "#FFFFFF").text("Female Parent");
-	table.append("tr").append("td").style("background", getColor("F", "child")).style("color", "#FFFFFF").text("Female Child");
+	table.append("tr").append("td").style("background", getColor("Male", "parent")).style("color", "#FFFFFF").text("Male Parent");
+	table.append("tr").append("td").style("background", getColor("Male", "child")).style("color", "#FFFFFF").text("Male Child");
+	table.append("tr").append("td").style("background", getColor("Female", "parent")).style("color", "#FFFFFF").text("Female Parent");
+	table.append("tr").append("td").style("background", getColor("Female", "child")).style("color", "#FFFFFF").text("Female Child");
 	
 	cont.append("h4").text("Relations");
 	var table = cont.append("table");

@@ -34,7 +34,7 @@ if (isset($_GET["q"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT DISTINCT ON (n.\"Last\",p.\"ID\") p.\"BYUID\",p.\"ID\",n.\"First\", n.\"Middle\", n.\"Last\",p.\"BirthDate\",p.\"DeathDate\", p.\"Gender\" FROM \"Person\" p LEFT JOIN \"Name\" n ON (p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative') LEFT JOIN \"ChurchOrgMembership\" m ON (m.\"PersonID\" = p.\"ID\") LEFT JOIN \"ChurchOrganization\" c ON (m.\"ChurchOrgID\" = c.\"ID\") WHERE c.\"Name\" = 'Annointed Quorum' ORDER BY n.\"Last\", p.\"ID\" ASC");
+$result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.* FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND n.\"Last\"='$query' ORDER BY n.\"Last\", n.\"First\",n.\"Middle\" asc");
 if (!$result) {
     echo "An error occurred.\n";
     exit;
@@ -49,11 +49,8 @@ foreach ($arr as $mar) {
 	$resa = array();
 	if ($first) $headings = array();
 	foreach ($mar as $k=>$v) {
-            //array_push($resa,"\"$k\": \"$v\"");
-        if ($k == "ID")
-                array_push($resa, "<a href=\"../chord.html?id=$v\">$v</a>");
-        else
-                array_push($resa, "$v");
+		//array_push($resa,"\"$k\": \"$v\"");
+		array_push($resa, "$v");
 		if ($first) array_push($headings, "$k");
 	}
 	

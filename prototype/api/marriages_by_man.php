@@ -9,7 +9,7 @@ if (isset($_GET["id"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT m.* FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
+$result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", w.\"PersonID\" as \"WifeID\", h.\"PersonID\" as \"HusbandID\" FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
        h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' AND h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
 if (!$result) {
     echo "1An error occurred.\n";
@@ -88,9 +88,8 @@ foreach ($marriages as $marriage) {
 		array_push($tmpchildren, $child);
 		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Last"] . ", " . $child["First"] . " (Child)\", \"to\":\"" . $wife["Last"] . ", " . $wife["First"] . " (Parent)\"}");
 	}
-
-	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
  */
+	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
 }
 
 
@@ -98,7 +97,7 @@ foreach ($marriages as $marriage) {
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . " (Parent)\", ".
+	array_push($parPrint, "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . " (Parent)\", ".
 		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
@@ -107,7 +106,7 @@ echo "], \"children\": [";
 
 $chiPrint = array();
 foreach ($children as $child) {
-	array_push($chiPrint, "{ \"name\": \"" . $child["Last"] . ", " . $child["First"] . " (Child)\", ".
+	array_push($chiPrint, "{ \"id\": \"{$child["ID"]}\", \"name\": \"" . $child["Last"] . ", " . $child["First"] . " (Child)\", ".
 		"\"birthDate\":\"".$child["BirthDate"]."\", \"deathDate\":\"".$child["DeathDate"]."\", ".
 		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
 } 
