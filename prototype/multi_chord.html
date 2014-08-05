@@ -154,6 +154,7 @@ chordDiagram1.width = 400; chordDiagram1.height = 400;
 chordDiagram1.json_location = function(id) {return "api/marriages_by_man.php?id=" + 495;};
 chordDiagram1.originalTime = QueryString.time ? QueryString.time : null; 
 chordDiagram1.drawChord(QueryString.id ? QueryString.id : 50);
+chordDiagram1.drawTitle("#chordID1", "Joseph Smith");
 //chordDiagram1.drawTimeSlider("#bottom");
 //chordDiagram.drawLegend("#legend");
 
@@ -162,6 +163,7 @@ chordDiagram2.width = 400; chordDiagram2.height = 400;
 chordDiagram2.json_location = function(id) {return "api/marriages_by_man.php?id=" + 615;};
 chordDiagram2.originalTime = QueryString.time ? QueryString.time : null; 
 chordDiagram2.drawChord(QueryString.id ? QueryString.id : 50);
+chordDiagram2.drawTitle("#chordID2", "Brigham Young");
 
 var slider = null;
 

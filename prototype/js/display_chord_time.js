@@ -2,6 +2,8 @@ function ChordDisplay(element) {
 
 	var _this = this;
 	this.element = element;
+
+    this.innerElement = null;
 	
 	this.originalTime = null;
 
@@ -33,6 +35,9 @@ function ChordDisplay(element) {
 		return "test/" + id + ".json?nocache=" + noC;
 	};
 
+    this.drawTitle = function(element, title) {
+        d3.select(element).append("div").append("h4").text(title);
+    }
 
 	this.drawLegend = function(element) {
 
@@ -204,8 +209,10 @@ function ChordDisplay(element) {
 				_this.svg = d3.select(_this.element)
 				.append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
 			} else {
-				d3.select(_this.element).html("");
-				_this.svg = d3.select(_this.element).append("svg")
+                if (_this.innerElement == null)
+                    _this.innerElement = d3.select(_this.element).append("div");
+				_this.innerElement.html("");
+				_this.svg = _this.innerElement.append("svg")
 				.attr("width", _this.width)
 				.attr("height", _this.height)
 				.append("g")

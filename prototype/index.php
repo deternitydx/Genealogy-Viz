@@ -14,25 +14,19 @@
 
 <h2>Visualization Prototypes</h2>
 <ul>
-	<li><a href="prototype_click_chord.html">Sankey Marriages, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
-	marriage units are represented by circles in the diagram.  
-	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  
-	This version uses sample data in the test/ directory.</li>
-	<li><a href="prototype_embedded_chord.html">Sankey Marriages, Embedded Chords</a>: Displays a sankey-like diagram of marriages, where the
-	marriages are represented by their actual chord diagrams (this is very browser and memory intensive, and requires extra load time).  
-	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  
-	This version uses sample data in the test/ directory.</li>
 	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
 	real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.</li>
 	<li><a href="chord_time.html?id=626">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
 	the marriage to view or use a slider to step through the marriage.  Given a husband's id (by argument "id") from the real database, it shows 
 	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
 	status to show  Links are created from women to their children in the marriage.</li>
+	<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>
 </ul>
 
 <h2>Data Views Of UVA's Data</h2>
 <p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
 <ul>
+	<li><a href="data_view/aq.php">AQ Members</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="data_view/documentdb.php">Database Organization</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
