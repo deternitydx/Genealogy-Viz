@@ -155,6 +155,7 @@ else
     chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
+chordDiagram.drawTimeSlider("#bottom");
 chordDiagram.drawLegend("#legend");
 
 
