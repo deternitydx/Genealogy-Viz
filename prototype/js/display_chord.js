@@ -105,11 +105,11 @@ people.forEach(function(person) {
 
 relationships.forEach(function (rel) {
 	people.forEach(function(person, i) {
-		if (rel.from === person.name) {
+		if (rel.from === person.id) {
 			person.numRels++;
 			rel.fromId = i;
 		}
-		if (rel.to === person.name) {
+		if (rel.to === person.id) {
 			person.numRels++;
 			rel.toId = i;
 		}

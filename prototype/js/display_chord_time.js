@@ -117,11 +117,11 @@ function ChordDisplay(element) {
 		_this.relationships.forEach(function (rel) {
 			delete rel.fromId; delete rel.toId;
 			_this.people.forEach(function(person, i) {
-				if (rel.from === person.name) {
+				if (rel.from === person.id) {
 					person.numRels++;
 					rel.fromId = i;
 				}
-				if (rel.to === person.name) {
+				if (rel.to === person.id) {
 					person.numRels++;
 					rel.toId = i;
 				}
@@ -306,20 +306,27 @@ function ChordDisplay(element) {
 
 			_this.draw();
 
-			var stepperdiv = d3.select("#bottom").append("div").style("margin-top", "30px");
+
+		}); // end of json call
+	} // end of drawChord
+
+
+    this.drawTimeSlider = function(element) {
+
+			var stepperdiv = d3.select(element).append("div").style("margin-top", "30px");
 			stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
 			stepperdiv.append("button").text("All Time").on("click", _this.allTime);
 			stepperdiv.append("button").text("Next").on("click", _this.goNext);
+            stepperdiv.append("span").attr("id","timeText").html("All Time");
 			
 			// Add the time slider
 			var min = 1830, max = 1870;
         		var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
 			var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
 			_this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
-			d3.select("#bottom").append("div").attr("id", "sliderDiv").call(_this.slider);
+			d3.select(element).append("div").attr("id", "sliderDiv").call(_this.slider);
 
-		}); // end of json call
-	} // end of drawChord
+    }
 
 	this.goPrevious = function(event, time) {
 		_this.slider.value(_this.slider.value() - 1);
