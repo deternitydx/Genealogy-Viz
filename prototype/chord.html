@@ -130,7 +130,10 @@ var QueryString = function () {
 } ();
 
 var chordDiagram = new ChordDisplay("#chordID");
-chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
+if (QueryString.wife)
+    chordDiagram.json_location = function(id) {return "api/marriages_by_woman.php?id=" + id;};
+else
+    chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 50);
 chordDiagram.drawLegend("#legend");

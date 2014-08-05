@@ -47,11 +47,15 @@ $json = array();
 $first = true;
 foreach ($arr as $mar) {
 	$resa = array();
-	if ($first) $headings = array();
+    if ($first) $headings = array();
+    $addl = "";
+    if ($mar["Gender"] == "Female")
+        $addl = "&wife=1";
+
 	foreach ($mar as $k=>$v) {
             //array_push($resa,"\"$k\": \"$v\"");
         if ($k == "ID")
-                array_push($resa, "<a href=\"../chord.html?id=$v\">$v</a>");
+                array_push($resa, "<a href=\"../chord.html?id=$v$addl\">$v</a>");
         else
                 array_push($resa, "$v");
 		if ($first) array_push($headings, "$k");
