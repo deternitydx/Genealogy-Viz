@@ -54,11 +54,14 @@ foreach ($arr as $mar) {
 
 	foreach ($mar as $k=>$v) {
             //array_push($resa,"\"$k\": \"$v\"");
-        if ($k == "ID")
-                array_push($resa, "<a href=\"../chord.html?id=$v$addl\">$v</a>");
-        else
+        if ($k == "ID"){
+                array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> <a href=\"../chord.html?id=$v$addl\">Static</a>");
                 array_push($resa, "$v");
-		if ($first) array_push($headings, "$k");
+                if ($first) array_push($headings, "Links");
+        } else {
+                array_push($resa, "$v");
+        }
+        if ($first) array_push($headings, "$k");
 	}
 	
 	

@@ -9,7 +9,7 @@ if (isset($_GET["id"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", w.\"PersonID\" as \"WifeID\", h.\"PersonID\" as \"HusbandID\" FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
+$result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", h.\"PersonID\" as \"HusbandID\" FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
        h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' AND h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
 if (!$result) {
     echo "1An error occurred.\n";
@@ -34,9 +34,11 @@ if (!$result) {
 $arr = pg_fetch_all($result);
 
 // got the husband
-$arr[0]["Married"] = "";
-$arr[0]["Divorced"] = "";
-array_push($parents, $arr[0]);
+$husband = $arr[0];
+$husband["Married"] = "";
+$husband["Divorced"] = "";
+
+array_push($parents, $husband);
 
 
 // Get the wives and their children and adoptions to this wife
@@ -52,8 +54,20 @@ foreach ($marriages as $marriage) {
 	// got the wife
 	$wife = $arr[0];
 	$wife["Married"] = $marriage["MarriageDate"];
-	$wife["Divorced"] = $marriage["DivorceDate"];
-	array_push($parents,$wife);
+    $wife["Divorced"] = $marriage["DivorceDate"];
+
+    // Add the wife if she's not already here
+    $found = false;
+    foreach($parents as $parent)
+            if ($parent["ID"] == $wife["ID"]) {
+                    $found = true;
+                    break;
+            }
+    if (!$found)
+	    array_push($parents,$wife);
+
+    // Add the husband-wife relationship
+    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $husband["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
 
 
     $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
@@ -98,7 +112,8 @@ echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
 	array_push($parPrint, "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . "\", ".
-		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
+            "\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". 
+            $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
 

@@ -57,6 +57,10 @@ function ChordDisplay(element) {
 		table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
 		table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
 		table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
+	    table.append("tr").append("td").style("background", "#B8DBFF").style("color", "#000000").text("Married (BYU)");
+	    table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
+	    table.append("tr").append("td").style("background", "#FFCCE6").style("color", "#000000").text("Married (Time)");
+	    table.append("tr").append("td").style("background", "#C8FFFF").style("color", "#000000").text("Married (Civil)");
 		
 		var time = "All Time";
 		if (_this.originalTime != null) {
@@ -76,7 +80,7 @@ function ChordDisplay(element) {
 
 			_this.data.parents.forEach(function(parent) {
 				if (/*parent.birthDate <= timepoint && parent.deathDate >= timepoint &&*/
-				    ((parent.marriageDate <= timepoint && (parent.deathDate >= timepoint)
+				    ((parent.marriageDate <= timepoint && ((parent.deathDate >= timepoint)) // or they are married eternally or jilldb
 					    && (parent.divorceDate >= timepoint || parent.divorceDate == "")) || parent.gender == "Male")) // parent is alive and in marriage
 			    		parents.push(parent);
 			});
@@ -187,8 +191,8 @@ function ChordDisplay(element) {
 			.range(_this.colorList);
 
 			_this.fillType = d3.scale.ordinal()
-			.domain(["colloquial", "adoption", "biological"])
-			.range(["#f7fcb9", "#FFCD81", "#A1CB87"]);
+	             .domain(["colloquial", "adoption", "biological", "byu", "eternal", "time", "civil"])
+	             .range(["#f7fcb9", "#FFCD81", "#A1CB87", "#B8DBFF", "#AD85FF", "#FFCCE6", "#C8FFFF"]);
 
 
 			_this.chord = d3.layout.chord()
