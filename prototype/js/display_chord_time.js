@@ -24,7 +24,8 @@ function ChordDisplay(element) {
 	this.width = 600,
 	this.height = 500,
 	this.innerRadius = Math.min(this.width, this.height) * .31,
-	this.outerRadius = this.innerRadius * 1.3;
+	this.outerRadius = this.innerRadius * 1.3,
+    this.drawNumWives = false;
 
 	this.embed = false;
 
@@ -36,7 +37,11 @@ function ChordDisplay(element) {
 	};
 
     this.drawTitle = function(element, title) {
-        d3.select(element).append("div").append("h4").text(title);
+        d3.select(element).append("div").append("h3").text(title);
+    }
+
+    this.updateNumWives = function(element, numWives) {
+        element.append("div").append("h4").text(numWives + " wives");
     }
 
 	this.drawLegend = function(element) {
@@ -56,11 +61,11 @@ function ChordDisplay(element) {
 		var table = cont.append("table");
 		table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
 		table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
-		table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
-	    table.append("tr").append("td").style("background", "#B8DBFF").style("color", "#000000").text("Married (BYU)");
+		//table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
+	    table.append("tr").append("td").style("background", "#C9BCD6").style("color", "#000000").text("Married (BYU)");
 	    table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
-	    table.append("tr").append("td").style("background", "#FFCCE6").style("color", "#000000").text("Married (Time)");
-	    table.append("tr").append("td").style("background", "#C8FFFF").style("color", "#000000").text("Married (Civil)");
+	    table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Married (Time)");
+	    //table.append("tr").append("td").style("background", "#C8FFFF").style("color", "#000000").text("Married (Civil)");
 		
 		var time = "All Time";
 		if (_this.originalTime != null) {
@@ -192,7 +197,7 @@ function ChordDisplay(element) {
 
 			_this.fillType = d3.scale.ordinal()
 	             .domain(["colloquial", "adoption", "biological", "byu", "eternal", "time", "civil"])
-	             .range(["#f7fcb9", "#FFCD81", "#A1CB87", "#B8DBFF", "#AD85FF", "#FFCCE6", "#C8FFFF"]);
+	             .range(["#f7fcb9", "#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#C8FFFF"]);
 
 
 			_this.chord = d3.layout.chord()
@@ -222,6 +227,9 @@ function ChordDisplay(element) {
 				.append("g")
 				.attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
 			}
+            if (_this.drawNumWives) {
+                 _this.updateNumWives(_this.innerElement, _this.parents.length - 1);
+            }
 
 			console.log(_this.width + ", " + _this.height);
 
