@@ -26,7 +26,7 @@
 <h2>Data Views Of UVA's Data</h2>
 <p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
 <ul>
-	<li><a href="data_view/aq.php">AQ Members</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
+	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
 	<li><a href="data_view/documentdb.php">Database Organization</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
@@ -67,6 +67,7 @@
 <p>There is an api service available for accessing the data needed for visualizations.  It always creates a JSON response.</p>
 <ul>
 	<li><a href="api/marriages_by_man.php">Marriages by Man</a>: takes a husband's id and returns a JSON object containing all his wives, their children, and relationships between wives and children.</li>
+	<li><a href="api/marriages_by_woman.php">Marriages by Woman</a>: takes a wife's id and returns a JSON object containing all her husbands, their children, and relationships between husbands and children.</li>
 	<li><a href="api/marriages.php">Marriages</a>: takes a marriage id and returns a JSON object containing all participants in the marriage (husband, wife, children).</li>
 </ul>
 
