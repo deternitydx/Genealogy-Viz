@@ -29,11 +29,15 @@ while ($data1 !== false) {
 
        $values = array("PersonID"=>$id, "First"=>$data["First Name"], "Middle"=>$data["Middle Name"], "Last"=>$data["Surname/Married  Name"],
                "Prefix" =>$data["Prefix"], "Suffix"=>$data["Suffix"], "Type"=>$lu[$data["Type"]]);
-       $insert = get_insert_statement("Name", $values);
-       $update = get_update_statement("Name", $values, "\"PersonID\"=$id AND \"Type\"='{$lu[$data["Type"]]}'");
-       $query = "WITH upsert AS ($update RETURNING *) $insert WHERE NOT EXISTS (SELECT * FROM upsert);";
-       $res = pg_query($db_to, $insert);
-       echo $query . "\n";     
+       if ($lu[$data["Type"]] != 'alternate') {
+               $update = get_update_statement("Name", $values, "\"PersonID\"=$id AND \"Type\"='{$lu[$data["Type"]]}'");
+               $res = pg_query($db_to, $update);
+               if (!$res) { die("An error occured in query"); }
+       }
+       if ($lu[$data["Type"]] == 'alternate' || (isset($res) && pg_num_rows($res) == 0)) {
+            $insert = get_insert_statement("Name", $values);
+            $res = pg_query($db_to, $insert);
+       }
        $data1 = fgetcsv($csvfile);
 }
 
