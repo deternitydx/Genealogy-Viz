@@ -18,6 +18,10 @@ function ChordDisplay(element) {
 			return "#73A8E9";
 		if (gender === "Female" && role === "child")
 			return "#D6757D";
+	    if (gender === "Male" && role === "divorce")
+		    return "#0d233e";
+	    if (gender === "Female" && role === "divorce")
+		    return "#391013";
 	}
 
 
@@ -25,7 +29,10 @@ function ChordDisplay(element) {
 	this.height = 500,
 	this.innerRadius = Math.min(this.width, this.height) * .31,
 	this.outerRadius = this.innerRadius * 1.3,
-    this.drawNumWives = false;
+    this.drawNumSigOthers = false;
+    this.patriarchal = true;
+    this.nameAsTitle = false;
+
 
 	this.embed = false;
 
@@ -37,11 +44,14 @@ function ChordDisplay(element) {
 	};
 
     this.drawTitle = function(element, title) {
-        d3.select(element).append("div").append("h3").text(title);
+        d3.select(element).append("div").append("h1").text(title);
     }
 
-    this.updateNumWives = function(element, numWives) {
-        element.append("div").append("h4").text(numWives + " wives");
+    this.updateNumSigOthers = function(element, numWives) {
+        var type = ' wives';
+        if (!_this.patriarchal)
+             type = ' husbands';
+        element.append("div").append("h4").text(numWives + type);
     }
 
 	this.drawLegend = function(element) {
@@ -76,7 +86,7 @@ function ChordDisplay(element) {
 	};
 
 	this.setMatrix = function(timepoint) {
-		
+	    _this.timepoint = timepoint;	
 		var children = _this.data.children;
 		var parents = _this.data.parents;
 		if (timepoint != null) { // we actually need to look into and build the structures
@@ -183,8 +193,15 @@ function ChordDisplay(element) {
 		for (var i=0; i < _this.numPeople; i++) {
 			if (i < _this.children.length)
 				_this.colorList[i] = getColor(_this.children[i].gender, "child");
-			else
-				_this.colorList[i] = getColor(_this.parents[i - _this.children.length].gender, "parent");
+			else {
+		        var cur = _this.parents[i - _this.children.length];
+		        if (timepoint == null && cur.divorceDate != "")
+			    // use divorce method
+			        _this.colorList[i] = getColor(cur.gender, "divorce");
+		        else
+			        _this.colorList[i] = getColor(cur.gender, "parent");
+			
+            }//    _this.colorList[i] = getColor(_this.parents[i - _this.children.length].gender, "parent");
 		}
 
 	};
@@ -218,8 +235,11 @@ function ChordDisplay(element) {
 				_this.svg = d3.select(_this.element)
 				.append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
 			} else {
-                if (_this.innerElement == null)
+                if (_this.innerElement == null) {
+                    if (_this.nameAsTitle) 
+                        _this.drawTitle(_this.element, _this.parents[_this.parents.length - 1].name);
                     _this.innerElement = d3.select(_this.element).append("div");
+                }    
 				_this.innerElement.html("");
 				_this.svg = _this.innerElement.append("svg")
 				.attr("width", _this.width)
@@ -227,8 +247,8 @@ function ChordDisplay(element) {
 				.append("g")
 				.attr("transform", "translate(" + _this.width / 2 + "," + _this.height / 2 + ")");
 			}
-            if (_this.drawNumWives) {
-                 _this.updateNumWives(_this.innerElement, _this.parents.length - 1);
+            if (_this.drawNumSigOthers) {
+                 _this.updateNumSigOthers(_this.innerElement, _this.parents.length - 1);
             }
 
 			console.log(_this.width + ", " + _this.height);
@@ -253,8 +273,11 @@ function ChordDisplay(element) {
 				offset: 0,
 				hoverlock: true,
 				title: function() {
+	                var info = "";
 					var d = this.__data__;
-					return _this.people[d.index].name; 
+	                if (_this.timepoint == null && _this.people[d.index].divorceDate)
+          	            info = "<br>Divorced: "+ _this.people[d.index].divorceDate;
+					return _this.people[d.index].name + info; 
 				}
 			});
 
