@@ -20,6 +20,7 @@ body {
 		font-family: sans-serif;
 		font-weight: normal;
 		font-size: 16px;
+		text-align: center;
 	}
 
 	h3 {
@@ -130,11 +131,14 @@ var QueryString = function () {
 } ();
 
 var chordDiagram = new ChordDisplay("#chordID");
-if (QueryString.wife)
+if (QueryString.wife) {
     chordDiagram.json_location = function(id) {return "api/marriages_by_woman.php?id=" + id;};
-else
+    chordDiagram.patriarchal = false;
+} else
     chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 
+chordDiagram.drawNumSigOthers = true;
+chordDiagram.nameAsTitle = true;
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
 chordDiagram.drawLegend("#legend");
 

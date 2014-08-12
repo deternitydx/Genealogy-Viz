@@ -17,6 +17,7 @@ body {
 		font-family: sans-serif;
 		font-weight: normal;
 		font-size: 16px;
+		text-align: center;
 	}
 
 	h3 {
@@ -118,7 +119,7 @@ td, tr {
 <script src="js/jquery.tipsy.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/slider/d3.slider.js"></script>
-<script src="js/display_chord_time.js"></script>
+<script src="js/display_chord.js"></script>
 </head>
 <body>
 <div id="legend"></div>
@@ -149,15 +150,17 @@ var QueryString = function () {
 } ();
 
 var chordDiagram = new ChordDisplay("#chordID");
-if (QueryString.wife)
+if (QueryString.wife) {
     chordDiagram.json_location = function(id) {return "api/marriages_by_woman.php?id=" + id;};
-else
+    chordDiagram.patriarchal = false;
+} else
     chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
 chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
+chordDiagram.nameAsTitle = true;;
+chordDiagram.drawNumSigOthers = true;
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
 chordDiagram.drawTimeSlider("#bottom");
 chordDiagram.drawLegend("#legend");
-chordDiagram.drawNumWives = true;
 
 
 </script>
