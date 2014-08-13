@@ -1,6 +1,7 @@
 <html>
 <head>
 <title>Database Organization</title>
+<link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
 </head>
 <body>
 <?php
