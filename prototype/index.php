@@ -27,7 +27,8 @@
 <p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
 <ul>
 	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
-	<li><a href="data_view/documentdb.php">Database Organization</a>: Markdown version of the database organization document.  Use pandoc to create a PDF version.</li>
+	<li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
+	<li><a href="data_view/documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
 
