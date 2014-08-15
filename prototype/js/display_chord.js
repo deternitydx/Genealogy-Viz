@@ -33,6 +33,7 @@ function ChordDisplay(element) {
     this.patriarchal = true;
     this.nameAsTitle = false;
 
+    this.beginDate = new Date("01/01/1830");
 
     this.embed = false;
 
@@ -117,7 +118,7 @@ function ChordDisplay(element) {
         _this.numPeople = parents.length + children.length;
 
 
-        console.log(_this);
+        //console.log(_this);
         _this.matrix = new Array();
         for (var i=0; i < _this.numPeople; i++) {
             _this.matrix[i] = new Array();
@@ -251,7 +252,7 @@ function ChordDisplay(element) {
                  _this.updateNumSigOthers(_this.innerElement, _this.parents.length - 1);
             }
 
-            console.log(_this.width + ", " + _this.height);
+            //console.log(_this.width + ", " + _this.height);
 
             var g = _this.svg.append("g");
 
@@ -355,30 +356,40 @@ function ChordDisplay(element) {
 
     this.drawTimeSlider = function(element) {
 
-            var stepperdiv = d3.select(element).append("div").style("margin-top", "30px");
-            stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
-            stepperdiv.append("button").text("All Time").on("click", _this.allTime);
-            stepperdiv.append("button").text("Next").on("click", _this.goNext);
-            stepperdiv.append("span").attr("id","timeText").html("All Time");
-            
-            // Add the time slider
-            var min = 1830, max = 1870;
-                var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
-            var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
-            _this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
-            d3.select(element).append("div").attr("id", "sliderDiv").call(_this.slider);
+        var stepperdiv = d3.select(element).append("div").style("margin-top", "30px");
+        stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
+        stepperdiv.append("button").text("All Time").on("click", _this.allTime);
+        stepperdiv.append("button").text("Next").on("click", _this.goNext);
+        stepperdiv.append("span").attr("id","timeText").html("All Time");
+    
+        // Add the time slider
+        var min = 0, max = 14640;
+        var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
+        var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
+        _this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
+        d3.select(element).append("div").attr("id", "sliderDiv").call(_this.slider);
 
     }
 
+    this.getCurrentDate = function(days) {
+        var result = new Date(_this.beginDate);
+        result.setDate(_this.beginDate.getDate() + days);
+        return result;
+    }
+
+    this.formatDate = function(date) {
+        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+
     this.goPrevious = function(event, time) {
-        _this.slider.value(_this.slider.value() - 1);
+        _this.slider.value(_this.slider.value() - 365);
         _this.redraw(null, _this.slider.value());
     }
     this.allTime = function(event, time) {
         _this.redraw(null,null);
     }
     this.goNext = function(event, time) {
-        _this.slider.value(_this.slider.value() + 1);
+        _this.slider.value(_this.slider.value() + 365);
         _this.redraw(null, _this.slider.value());
     }
 
@@ -388,8 +399,9 @@ function ChordDisplay(element) {
             _this.setMatrix(null);
             d3.select("#timeText").html("All Time");
         } else {
-            _this.setMatrix(time + "-01-01");
-            d3.select("#timeText").html(time + "-01-01");
+            var curDate = _this.formatDate(_this.getCurrentDate(time));
+            _this.setMatrix(curDate);
+            d3.select("#timeText").html(curDate);
         }
         _this.draw();
     }
