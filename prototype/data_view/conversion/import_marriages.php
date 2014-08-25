@@ -6,26 +6,35 @@ $csvfile = fopen("marriages.csv", "r");
 if ($csvfile == NULL)
         die("Error reading file");
 $head = fgetcsv($csvfile);
+foreach ($head as $k => $v) {
+        $head[$k] = trim($v);
+}
 $data1 = fgetcsv($csvfile);
 $knownIds = array(); // indexed BYUID => UVAID
 $types = array("Eternal" => "eternity", "Time" => "time", "Civil" => "civil");
 $currentID = 100000;
 while ($data1 !== false) {
+       echo "Read one line\n";
        $data = array();
        foreach ($data1 as $k => $v) 
-               $data[$head[$k]] = $v;
+               $data[$head[$k]] = trim($v);
 
        // Full data is now available in data by text indexing
 
        // Ignore the row if it is the husband
-       if (isset($data["Root Husband"]) && $data["Root Husband"] == "Y")
+       if (isset($data["Root Husband"]) && $data["Root Husband"] == "Y") {
+               echo "       Ignoring Root Husband\n";
+               // Grab the next line of the file
+               $data1 = fgetcsv($csvfile);
                continue;
+       }
 
        // Put the information into its own structure
        $marriage = array();
 
        // Look up the husband id in the UVA database
-       if ($data["Male Household ID"] != '' && !isset($knownIds[$data["Male Household ID"]])) { // look up husband id
+       if ($data["Male Household ID"] != '' && !isset($knownIds[$data["Male Household ID"]])
+                && is_numeric($data["Male Household ID"])) { // look up husband id
             $byuid = $data["Male Household ID"];
             $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
             if (!$result) {
@@ -37,10 +46,11 @@ while ($data1 !== false) {
             //print_r($row);
             $knownIds[$byuid] = $row["ID"];
             echo "Added BYUID $byuid into our known list of ids\n";
-       } else {
-            echo "Missing husband for row.";
+       } else if ($data["Male Household ID"] == "" || !is_numeric($data["Male Household ID"])) {
+            echo "*****Missing husband for row.\n";
             print_r ($data);
-            continue;
+            echo "Person database is:\n";
+            print_r($knownIds);
        }
 
        $marriage["HusbandID"] = $knownIds[$data["Male Household ID"]];
@@ -84,7 +94,7 @@ while ($data1 !== false) {
                     "Last" => pg_escape_string($data['Last Name']),
                     "Type" => "authoritative");
                 $insert = get_insert_statement("Name", $arr);
-                $res = pg_query($db_to, $insert);
+                //$res = pg_query($db_to, $insert);
 
             }
             print_r ($data);
@@ -96,56 +106,77 @@ while ($data1 !== false) {
 
        $marriage["WifeID"] = $knownIds[$data["Person Sealed to Household Male ID"]];
 
-       // Look up the wife id in the UVA database
+       // Look up the officiator ids in the UVA database
+       $tmp = array();
        if ($data["Marriage Officiator"] != '' && !isset($knownIds[$data["Marriage Officiator"]])) { // look up wife ID
-            $byuid = $data["Marriage Officiator"];
-            $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
-            if (!$result) {
-                echo "An error occurred.\n";
-                exit;
+            $list = explode(";", $data["Marriage Officiator"]);
+            foreach ($list as $byuid) {
+                $byuid = trim($byuid);
+                if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
+                    $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                    if (!$result) {
+                        echo "An error occurred.\n";
+                        exit;
+                    }
+
+                    $row = pg_fetch_array($result);
+                    //print_r($row);
+                    $knownIds[$byuid] = $row["ID"];
+                    echo "Added BYUID $byuid into our known list of ids\n";
+                    array_push($tmp, $row["ID"]);
+                }
             }
-
-            $row = pg_fetch_array($result);
-            //print_r($row);
-            $knownIds[$byuid] = $row["ID"];
-            echo "Added BYUID $byuid into our known list of ids\n";
        }
-       if ($data["Marriage Officiator"] != '')
-           $marriage["OfficiatorID"] = $knownIds[$data["Marriage Officiator"]];
-       
-       // Look up the husband proxy id in the UVA database
-       if ($data["MP Male"] != '' && !isset($knownIds[$data["MP Male"]])) { // look up husband id
-            $byuid = $data["MP Male"];
-            $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
-            if (!$result) {
-                echo "An error occurred.\n";
-                exit;
+       if (!empty($tmp))
+           $marriage["OfficiatorIDs"] = $tmp;
+
+       // Look up the husband proxy ids in the UVA database
+       $tmp = array();
+       if ($data["MP Male"] != '' && !isset($knownIds[$data["MP Male"]])) { // look up husband proxy
+            $list = explode(";", $data["MP Male"]);
+            foreach ($list as $byuid) {
+                $byuid = trim($byuid);
+                if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
+                    $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                    if (!$result) {
+                        echo "An error occurred.\n";
+                        exit;
+                    }
+
+                    $row = pg_fetch_array($result);
+                    //print_r($row);
+                    $knownIds[$byuid] = $row["ID"];
+                    echo "Added BYUID $byuid into our known list of ids\n";
+                    array_push($tmp, $row["ID"]);
+                }
             }
-
-            $row = pg_fetch_array($result);
-            //print_r($row);
-            $knownIds[$byuid] = $row["ID"];
-            echo "Added BYUID $byuid into our known list of ids\n";
        }
-       if ($data["MP Male"] != '')
-           $marriage["HusbandProxyID"] = $knownIds[$data["MP Male"]];
+       if (!empty($tmp))
+           $marriage["HusbandProxyIDs"] = $tmp;
 
-       // Look up the wife proxy id in the UVA database
-       if ($data["MP Female"] != '' && !isset($knownIds[$data["MP Female"]])) { // look up husband id
-            $byuid = $data["MP Female"];
-            $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
-            if (!$result) {
-                echo "An error occurred.\n";
-                exit;
+       // Look up the wife proxy ids in the UVA database
+       $tmp = array();
+       if ($data["MP Female"] != '' && !isset($knownIds[$data["MP Female"]])) { // look up husband proxy
+            $list = explode(";", $data["MP Female"]);
+            foreach ($list as $byuid) {
+                $byuid = trim($byuid);
+                if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
+                    $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                    if (!$result) {
+                        echo "An error occurred.\n";
+                        exit;
+                    }
+
+                    $row = pg_fetch_array($result);
+                    //print_r($row);
+                    $knownIds[$byuid] = $row["ID"];
+                    echo "Added BYUID $byuid into our known list of ids\n";
+                    array_push($tmp, $row["ID"]);
+                }
             }
-
-            $row = pg_fetch_array($result);
-            //print_r($row);
-            $knownIds[$byuid] = $row["ID"];
-            echo "Added BYUID $byuid into our known list of ids\n";
        }
-       if ($data["MP Female"] != '')
-           $marriage["WifeProxyID"] = $knownIds[$data["MP Female"]];
+       if (!empty($tmp))
+           $marriage["WifeProxyIDs"] = $tmp;
 
        // Look up the marriage ID in the UVA Database
        if ($data["Marriage ID (BYU)"] != '') { // look up wife ID
@@ -164,7 +195,7 @@ while ($data1 !== false) {
        }
 
        // Look up the type
-       $marriage['Type'] = $types[$data["Marriage Type (civil, Time, Eternal)"]];
+       $marriage['Type'] = $types[$data["Marriage Type (Civil, Time, Eternal)"]];
 
        // Set whether or not this is a root marriage
        if ($data["Root Wife"] == "Y")
@@ -177,10 +208,11 @@ while ($data1 !== false) {
            $marriage['MarriageDate'] = $data["Marriage Date"];
 
        // Set the Divorce Date
-       if ($data["Divorce Date"] != '')
+       if ($data["Divorce"] != '')
            $marriage['DivorceDate'] = $data["Divorce Date"];
 
 
+       print_r($marriage);
        // Update the marriage, if it exists
 
        // If marriage doesn't exist, then insert the marriage itself (with root boolean)
