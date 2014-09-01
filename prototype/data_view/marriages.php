@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>People</title>
+<title>Marriages</title>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
@@ -15,14 +15,16 @@
 <body>
 <script>
 $(document).ready( function () {
-    $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/people.php", deferRender: true});
+    $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/marriages.php", deferRender: true});
 } );
 </script>
-<h1>People</h1>
+<h1>Marriages</h1>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>ID</th><th>First</th><th>Middle</th><th>Last</th><th>Birth Date</th><th>Death Date</th><th>Gender</th><th>Birth Place ID</th></tr></thead>";
+echo "<thead><tr><th>ID</th><th>Marriage Date</th><th>Divorce Date</th><th>Cancelled Date</th><th>Type</th><th>Husband ID</th><th>Husband Last</th><th>Husband First</th>
+    <th>Wife ID</th><th>Wife Last</th><th>Wife First</th><th>Place</th></tr></thead>";
 echo "</table>";
 ?>
 </body>
 </html>
+
