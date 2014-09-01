@@ -30,9 +30,11 @@ function ChordDisplay(element) {
     this.innerRadius = Math.min(this.width, this.height) * .31,
     this.outerRadius = this.innerRadius * 1.3,
     this.drawNumSigOthers = false;
+    this.sigOtherElement = null;
     this.patriarchal = true;
     this.nameAsTitle = false;
-
+    this.useHoverOver = false;
+    this.hoverElement = null;
 
     this.embed = false;
 
@@ -44,14 +46,19 @@ function ChordDisplay(element) {
     };
 
     this.drawTitle = function(element, title) {
-        d3.select(element).append("div").append("h1").text(title);
+        var titleE = d3.select(element).append("div");
+        titleE.append("h1").text(title);
+        _this.sigOtherElement = titleE.append("h4");
     }
 
     this.updateNumSigOthers = function(element, numWives) {
         var type = ' wives';
         if (!_this.patriarchal)
              type = ' husbands';
-        element.append("div").append("h4").text(numWives + type);
+        if (_this.sigOtherElement != null)
+            _this.sigOtherElement.text(numWives + type);
+        else
+            element.append("div").append("h4").text(numWives + type);
     }
 
     this.drawLegend = function(element) {
@@ -117,7 +124,7 @@ function ChordDisplay(element) {
         _this.numPeople = parents.length + children.length;
 
 
-        console.log(_this);
+        //console.log(_this);
         _this.matrix = new Array();
         for (var i=0; i < _this.numPeople; i++) {
             _this.matrix[i] = new Array();
@@ -168,7 +175,7 @@ function ChordDisplay(element) {
 
         _this.relationships = activeRels;
 
-        console.log(_this.relationships);
+        //console.log(_this.relationships);
         _this.relationships.forEach(function (rel) {
             if (rel.hasOwnProperty('fromId') && rel.hasOwnProperty('toId')) {
     
@@ -231,8 +238,8 @@ function ChordDisplay(element) {
                 _this.innerRadius = Math.min(_this.width, _this.height) * .31,
                 _this.outerRadius = Math.min(_this.width, _this.height) / 2;
 
-                console.log("Drawing the chord");
-                console.log(_this.element);
+                //console.log("Drawing the chord");
+                //console.log(_this.element);
                 _this.svg = d3.select(_this.element)
                 .append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
             } else {
@@ -251,8 +258,15 @@ function ChordDisplay(element) {
             if (_this.drawNumSigOthers) {
                  _this.updateNumSigOthers(_this.innerElement, _this.parents.length - 1);
             }
+            // placeholder for hoverover text
+            if (!_this.useHoverOver) {
+                var tmp = _this.innerElement.append("div").attr("class", "hoverinfo");
+                tmp.append("h4").text("More Information");
+                _this.hoverElement = tmp.append("div").attr("class", "hoverinfoinner").append("h5"); 
+                _this.hoverElement.html("&nbsp;");
+            }
 
-            console.log(_this.width + ", " + _this.height);
+            //console.log(_this.width + ", " + _this.height);
 
             var g = _this.svg.append("g");
 
@@ -267,20 +281,23 @@ function ChordDisplay(element) {
             .on("mouseout", fadePerson(1))
             .text("hi");
 
-
-            $('.chordperson').tipsy({ 
-                gravity: 'c', 
-                html: true, 
-                offset: 0,
-                hoverlock: true,
-                title: function() {
-                    var info = "";
-                    var d = this.__data__;
-                    if (_this.timepoint == null && _this.people[d.index].divorceDate)
-                        info = "<br>Divorced: "+ _this.people[d.index].divorceDate;
-                    return _this.people[d.index].name + info; 
-                }
-            });
+            if (_this.useHoverOver) {
+                $('.chordperson').tipsy({ 
+                    gravity: 'c', 
+                    html: true, 
+                    offset: 0,
+                    hoverlock: true,
+                    title: function() {
+                        var info = "";
+                        var d = this.__data__;
+                        if (_this.timepoint == null && _this.people[d.index].divorceDate)
+                            info = "<br>Divorced: "+ _this.people[d.index].divorceDate;
+                        return _this.people[d.index].name + info; 
+                    }
+                });
+            } else {
+                // Put in an element
+            }
 
 
             _this.svg.append("g")
@@ -296,8 +313,8 @@ function ChordDisplay(element) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
                         (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
                             ret = _this.fillType(rel.type);
-                            console.log("Filling with color " + ret + " for type " + rel.type);
-                            console.log(d.source.index + "    " + d.source.subindex);
+                            //console.log("Filling with color " + ret + " for type " + rel.type);
+                            //console.log(d.source.index + "    " + d.source.subindex);
                         }
                 });
 
@@ -314,22 +331,26 @@ function ChordDisplay(element) {
             .on("mouseover", fadeLink(.1))
             .on("mouseout", fadeLink(1));
 
-            $('.chordpath').tipsy({ 
-                gravity: 'c', 
-                html: true, 
-                offset: 0,
-                hoverlock: false,
-                title: function() {
-                    var d = this.__data__;
-                    var ret = "";
-                    _this.relationships.forEach(function(rel) {
-                        if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
-                            (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
-                            ret = rel.desc;
-                    });
-                    return ret; //_this.people[d.index].name; 
-                }
-            });
+            if (_this.useHoverOver) {
+                $('.chordpath').tipsy({ 
+                    gravity: 'c', 
+                    html: true, 
+                    offset: 0,
+                    hoverlock: false,
+                    title: function() {
+                        var d = this.__data__;
+                        var ret = "";
+                        _this.relationships.forEach(function(rel) {
+                            if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
+                                (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
+                                ret = rel.desc;
+                        });
+                        return ret; //_this.people[d.index].name; 
+                    }
+                });
+            } else {
+                // Put in an element
+            }
 
     }
 
@@ -401,21 +422,53 @@ function ChordDisplay(element) {
     // Returns an event handler for fading a given chord group.
     function fadePerson(opacity) {
         return function(g, i) {
+            // fade all other persons
             _this.svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != i && d.target.index != i; })
             .transition()
             .style("opacity", opacity);
+
+            // update hover, if applicable
+            if (!_this.useHoverOver) {
+                if (opacity == 1)
+                    _this.hoverElement.html("&nbsp;");
+                else {
+                    var info = "";
+                    if (_this.timepoint == null && _this.people[i].divorceDate)
+                        info = "<br>Divorced: "+ _this.people[i].divorceDate;
+                    _this.hoverElement.html(_this.people[i].name + info); 
+                }
+            }
+
         };
     }
 
     // Returns an event handler for fading to one chord
     function fadeLink(opacity) {
         return function(g, i) {
+            // fade all other links
             _this.svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != g.source.index || d.target.index != g.target.index; })
             .transition()
             .style("opacity", opacity);
+            
+            // update hover, if applicable
+            if (!_this.useHoverOver) {
+                if (opacity == 1)
+                    _this.hoverElement.html("&nbsp;");
+                else {
+                    var ret = "";
+                    _this.relationships.forEach(function(rel) {
+                        if ( (rel.fromId === g.source.index && rel.toId === g.target.index) ||
+                            (rel.fromId === g.source.subindex && rel.toId === g.target.subindex) )
+                            ret = _this.people[rel.fromId].name + " &nbsp;&nbsp;<i>" + rel.desc + "</i>&nbsp;&nbsp; " + _this.people[rel.toId].name;
+                    });
+                    _this.hoverElement.html(ret); 
+                }
+            }
+
         };
     }
+
 
 } // end ChordDisplay
