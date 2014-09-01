@@ -1,31 +1,26 @@
 <?php
 include_once("common_functions.php");
 
-$DEBUG = false;
-$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
-
+$DEBUG = true;
+$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_new user=nauvoo password=p7qNpqygYU");
+$i = 1;
 $csvfile = fopen("marriages.csv", "r");
-$badfile = fopen("failed_marriages.csv", "w");
-$newidfile = fopen("marriages_newid.csv", "w");
 if ($csvfile == NULL)
         die("Error reading file");
 $head = fgetcsv($csvfile);
-fputcsv($badfile, $head);
-fputcsv($newidfile, $head);
 foreach ($head as $k => $v) {
         $head[$k] = trim($v);
 }
-$headrev = array_flip($head);
 $data1 = fgetcsv($csvfile);
 $knownIds = array(); // indexed BYUID => UVAID
-$types = array("Eternal" => "eternity", "Time" => "time", "Civil" => "civil", "Unknown" => "unknown");
-$typesrev = array_flip($types);
+$types = array("Eternal" => "eternity", "Time" => "time", "Civil" => "civil");
 $currentID = 100000;
 while ($data1 !== false) {
+        $i++;
         $data = array();
         foreach ($data1 as $k => $v) 
                 $data[$head[$k]] = trim($v);
-        echo "Read one line: {$data["Male Household ID"]} = {$data["Person Sealed to Household Male ID"]}\n";
+        echo "$i: Read one line: H={$data["Male Household ID"]} W={$data["Person Sealed to Household Male ID"]}\n";
 
         // Full data is now available in data by text indexing
 
@@ -33,7 +28,6 @@ while ($data1 !== false) {
         if (isset($data["Skip"]) && $data["Skip"] == "Y") {
                 echo "       Skipped this row.\n";
                 // Grab the next line of the file
-                write_bad_marriage($badfile, $data1);
                 $data1 = fgetcsv($csvfile);
                 continue;
         }
@@ -41,9 +35,13 @@ while ($data1 !== false) {
         if (isset($data["Root Husband"]) && $data["Root Husband"] == "Y") {
                 echo "       Ignoring Root Husband\n";
                 // Grab the next line of the file
-                write_bad_marriage($badfile, $data1);
                 $data1 = fgetcsv($csvfile);
                 continue;
+        }
+
+        // Check if IDs are identical
+        if ($data["Male Household ID"] == $data["Person Sealed to Household Male ID"]) {
+                echo "    IDs are Identical in $i\n";
         }
 
         // Put the information into its own structure
@@ -53,7 +51,7 @@ while ($data1 !== false) {
         if ($data["Male Household ID"] != '' && !isset($knownIds[$data["Male Household ID"]])
                 && is_numeric($data["Male Household ID"])) { // look up husband id
                 $byuid = $data["Male Household ID"];
-                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                 if (!$result) {
                         echo "An error occurred.\n";
                         exit;
@@ -62,28 +60,25 @@ while ($data1 !== false) {
                 $row = pg_fetch_array($result);
                 //print_r($row);
                 if (!isset($row["ID"]) || $row["ID"] == null) {
-                        echo "Could NOT find husband with id $byuid in the database.";
-                        die();
-                }
-                $knownIds[$byuid] = $row["ID"];
+                        echo "    Could NOT find husband with id $byuid in the database.\n";
+                } else { $knownIds[$byuid] = $row["ID"]; }
 
-                echo "Added BYUID $byuid into our known list of ids (as {$knownIds[$byuid]})\n";
+                //echo "Added BYUID $byuid into our known list of ids (as {$knownIds[$byuid]})\n";
         } else if ($data["Male Household ID"] == "" || !is_numeric($data["Male Household ID"])) {
-                echo "*****Missing husband for row.\n";
+                echo "    Missing husband for row $i\n";
                 // Grab the next line of the file
-                write_bad_marriage($badfile, $data1);
                 $data1 = fgetcsv($csvfile);
                 continue;
         }
-
-        $marriage["HusbandID"] = $knownIds[$data["Male Household ID"]];
-
+        if (isset($knownIds[$data["Male Household ID"]]))
+            $marriage["HusbandID"] = $knownIds[$data["Male Household ID"]];
+        else $marriage["HusbandID"] = "";
 
         // Look up the wife id in the UVA database
         if ($data["Person Sealed to Household Male ID"] != '' 
                 && !isset($knownIds[$data["Person Sealed to Household Male ID"]])) { // look up wife ID
                 $byuid = $data["Person Sealed to Household Male ID"];
-                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                 if (!$result) {
                         echo "An error occurred.\n";
                         exit;
@@ -91,13 +86,17 @@ while ($data1 !== false) {
 
                 $row = pg_fetch_array($result);
                 //print_r($row);
-                $knownIds[$byuid] = $row["ID"];
-                echo "Added BYUID $byuid into our known list of ids\n";
+                
+                if (!isset($row["ID"]) || $row["ID"] == null) {
+                        echo "    Could NOT find wife with id $byuid in the database.";
+                } else { $knownIds[$byuid] = $row["ID"]; }
+
+                //echo "Added BYUID $byuid into our known list of ids\n";
         } else if (isset($knownIds[md5($data["First Name"] . $data["Middle Name"] . $data["Last Name"])])) { 
                 // person has been added already
                 $data["Person Sealed to Household Male ID"] = md5($data["First Name"] . $data["Middle Name"] . $data["Last Name"]);
         } else if (!isset($knownIds[$data["Person Sealed to Household Male ID"]])){
-                echo "Missing wife for row.  Adding her to the database\n";
+                echo "    Missing wife for row.  Adding her to the database\n";
                 $arr = array ("Gender" => "Female");
                 $id = "";
 
@@ -130,7 +129,7 @@ while ($data1 !== false) {
                 $currentID = md5($data["First Name"] . $data["Middle Name"] . $data["Last Name"]);
                 $knownIds[$currentID] = $id;
                 $data["Person Sealed to Household Male ID"] = $currentID;
-                echo "Successfully added new woman to database\n";
+                //echo "Successfully added new woman to database\n";
         }
 
         $marriage["WifeID"] = $knownIds[$data["Person Sealed to Household Male ID"]];
@@ -142,16 +141,18 @@ while ($data1 !== false) {
                 foreach ($list as $byuid) {
                         $byuid = trim($byuid);
                         if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
-                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                                 if (!$result) {
                                         echo "An error occurred.\n";
                                         exit;
                                 }
 
                                 $row = pg_fetch_array($result);
+                                if (!isset($row["ID"]) || $row["ID"] == null)
+                                        echo "    Could not find officiator with id $byuid on line $i\n";
+                                else { $knownIds[$byuid] = $row["ID"]; }
                                 //print_r($row);
-                                $knownIds[$byuid] = $row["ID"];
-                                echo "Added BYUID $byuid into our known list of ids\n";
+                                //echo "Added BYUID $byuid into our known list of ids\n";
                                 array_push($tmp, $row["ID"]);
                         }
                 }
@@ -166,16 +167,18 @@ while ($data1 !== false) {
                 foreach ($list as $byuid) {
                         $byuid = trim($byuid);
                         if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
-                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                                 if (!$result) {
                                         echo "An error occurred.\n";
                                         exit;
                                 }
 
                                 $row = pg_fetch_array($result);
+                                if (!isset($row["ID"]) || $row["ID"] == null)
+                                        echo "    Could not find male proxy with id $byuid on line $i\n";
+                                else { $knownIds[$byuid] = $row["ID"]; }
                                 //print_r($row);
-                                $knownIds[$byuid] = $row["ID"];
-                                echo "Added BYUID $byuid into our known list of ids\n";
+                                //echo "Added BYUID $byuid into our known list of ids\n";
                                 array_push($tmp, $row["ID"]);
                         }
                 }
@@ -190,7 +193,7 @@ while ($data1 !== false) {
                 foreach ($list as $byuid) {
                         $byuid = trim($byuid);
                         if ($byuid != "" && $byuid != "NR" && $byuid != "N/A" && is_numeric($byuid)) {
-                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                                $result = pg_query($db_to, "SELECT * FROM public.\"Person\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                                 if (!$result) {
                                         echo "An error occurred.\n";
                                         exit;
@@ -198,8 +201,10 @@ while ($data1 !== false) {
 
                                 $row = pg_fetch_array($result);
                                 //print_r($row);
-                                $knownIds[$byuid] = $row["ID"];
-                                echo "Added BYUID $byuid into our known list of ids\n";
+                                if (!isset($row["ID"]) || $row["ID"] == null)
+                                        echo "    Could not find female proxy with id $byuid on line $i\n";
+                                else { $knownIds[$byuid] = $row["ID"]; }
+                                //echo "Added BYUID $byuid into our known list of ids\n";
                                 array_push($tmp, $row["ID"]);
                         }
                 }
@@ -210,17 +215,23 @@ while ($data1 !== false) {
         // Look up the marriage ID in the UVA Database
         if ($data["Marriage ID (BYU)"] != '') { // look up wife ID
                 $byuid = $data["Marriage ID (BYU)"];
-                $result = pg_query($db_to, "SELECT * FROM public.\"Marriage\" WHERE \"BYUID\"={$byuid} ORDER BY \"ID\" asc");
+                $result = pg_query($db_to, "SELECT * FROM public.\"Marriage\" WHERE \"ID\"={$byuid} ORDER BY \"ID\" asc");
                 if (!$result) {
                         echo "An error occurred.\n";
                         exit;
                 }
 
                 $row = pg_fetch_array($result);
+                if (!isset($row["ID"]) || $row["ID"] == null)
+                      echo "    Could not find marriage with id $byuid on line $i\n";
                 //print_r($row);
+                if ($row["HusbandID"] != $marriage["HusbandID"])
+                      echo "    Husband IDs don't match for this marriage on line $i\n";
+                if ($row["WifeID"] != $marriage["WifeID"])
+                      echo "    Wife IDs don't match for this marriage on line $i\n";
                 $marriage["ID"] = $row["ID"];
                 $marriage["BYUID"] = $byuid;
-                echo "Used BYUMarriageID $byuid for marriage\n";
+                //echo "Used BYUMarriageID $byuid for marriage\n";
         }
 
         // Look up the type
@@ -249,7 +260,7 @@ while ($data1 !== false) {
 
         // Debugging print statement
         //print_r($marriage);
-            echo $tmp . " == " . $marriage["Type"] . "\n";
+            //echo $tmp . " == " . $marriage["Type"] . "\n";
 
         $arr = array(   "Root" => $marriage['Root'],
                         "Type" => $marriage['Type'],
@@ -265,7 +276,7 @@ while ($data1 !== false) {
                 if (!$DEBUG) {
                         $result = pg_query($db_to, $update);
                         if (!$result) die("Error updating marriage");
-                } else { echo "$update\n"; }
+                } else { }//echo "$update\n"; }
         } else { // no marriage, so we must insert!
                 $insert = get_insert_statement("Marriage", $arr);
                 if (!$DEBUG) {
@@ -278,7 +289,7 @@ while ($data1 !== false) {
 
                         // grab this marriage's ID in the new database
                         $marriage['ID'] = $temprow[0];
-                } else { echo "$insert\n"; $marriage['ID'] = "DEBUG"; }
+                } else { }//echo "$insert\n"; $marriage['ID'] = "DEBUG"; }
         }
 
         // Create the list of people in this table
@@ -296,56 +307,28 @@ while ($data1 !== false) {
                     array_push($people, array("PersonID" => $tmpid, "Role" => "ProxyHusband"));
 
         // First, Remove the one that is in the database, if it exists
-        $query = "DELETE FROM \"PersonMarriage\" WHERE \"MarriageID\"={$marriage['ID']}";
+        //$query = "DELETE FROM \"PersonMarriage\" WHERE \"MarriageID\"={$marriage['ID']}";
         if (!$DEBUG) {
                 $res = pg_query($db_to, $query);
-        } else { echo "$query\n"; }
+        } else { }//echo "$query\n"; }
 
         // Then, insert husband, wife, proxies (if exist), officiator (if exist) into the personmarriage table
         foreach ($people as $person) {
                 // Insert each person
-                $arr = array_merge($person, array("MarriageID" => $marriage['ID']));
-                $insert = get_insert_statement("PersonMarriage", $arr);
+                //$arr = array_merge($person, array("MarriageID" => $marriage['ID']));
+                //$insert = get_insert_statement("PersonMarriage", $arr);
                 if (!$DEBUG) {
                         $result = pg_query($db_to, $insert);
                         if (!$result) die("Error inserting person-marriage");
-                } else { echo "$insert\n"; }
+                } else { }//echo "$insert\n"; }
 
 
         }
 
-        write_good_marriage($newidfile, $data1, $marriage);
         // Grab the next line of the file
         $data1 = fgetcsv($csvfile);
 }
 
 fclose($csvfile);
-fclose($badfile);
-fclose($newidfile);
 
-function write_bad_marriage($file, $line) {
-    fputcsv($file, $line);
-}
-
-function write_good_marriage($file, $line, $mg) {
-        global $headrev; global $typesrev;
-
-        $line[$headrev["Male Household ID"]] = $mg["HusbandID"];
-        $line[$headrev["Person Sealed to Household Male ID"]] = $mg["WifeID"];
-        if (isset($mg["OfficiatorIDs"]))
-            $line[$headrev["Marriage Officiator"]] = implode(";", $mg["OfficiatorIDs"]);
-        else 
-            $line[$headrev["Marriage Officiator"]] = "";
-        if (isset($mg["HusbandProxyIDs"]))
-            $line[$headrev["MP Male"]]  = implode(";", $mg["HusbandProxyIDs"]);
-        else 
-            $line[$headrev["MP Male"]] = "";
-        if (isset($mg["WifeProxyIDs"]))
-        $line[$headrev["MP Female"]]  = implode(";", $mg["WifeProxyIDs"]);
-        else 
-            $line[$headrev["MP Female"]] = "";
-        $line[$headrev["Marriage Type (Civil, Time, Eternal)"]] = $typesrev[$mg["Type"]];
-
-        fputcsv($file, $line);
-}
 ?>

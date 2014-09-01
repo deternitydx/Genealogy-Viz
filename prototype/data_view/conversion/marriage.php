@@ -31,8 +31,6 @@ while ($row = pg_fetch_array($result)) {
 
 
         $arr = array ("BYUID" => $row['ID'],
-                        "HusbandID" => get_new_id($row['HusbandID']),
-                        "WifeID" => get_new_id($row['WifeID']),
                         "PlaceID" => $marriageplace,
                         "MarriageDate" => $row['MarriageDate'],
                         "DivorceDate" => $row['DivorceDate']);
@@ -46,6 +44,26 @@ while ($row = pg_fetch_array($result)) {
 
         // grab this marriage's ID in the new database
         $id = $temprow[0];
+
+        // insert husband and wife into personmarriage
+        if (isset($row["HusbandID"]) && $row["HusbandID"] != null) {
+                $arr = array( "PersonID" => get_new_id($row["HusbandID"]), "MarriageID" => $id, "Role" => "Husband");
+                $ins = get_insert_statement("PersonMarriage", $arr);
+                $res = pg_query($db_to, $ins);
+                if (!$res) {
+                        echo "Error in query: " . $ins;
+                        print_r($row); die();
+                }
+        }
+        if (isset($row["WifeID"]) && $row["WifeID"] != null) {
+                $arr = array( "PersonID" => get_new_id($row["WifeID"]), "MarriageID" => $id, "Role" => "Wife");
+                $ins = get_insert_statement("PersonMarriage", $arr);
+                $res = pg_query($db_to, $ins);
+                if (!$res) {
+                        echo "Error in query: " . $ins;
+                        print_r($row); die();
+                }
+        }
 
         // update the children's links in the person table
         $res = pg_query($db_to, "UPDATE public.\"Person\" set \"BiologicalChildOfMarriage\"=$id where \"BYUChildOf\"={$row['ID']}");
