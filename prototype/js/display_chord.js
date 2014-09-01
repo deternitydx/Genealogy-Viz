@@ -75,7 +75,7 @@ function ChordDisplay(element) {
         table.append("tr").append("td").style("background", "#C9BCD6").style("color", "#000000").text("Married (BYU)");
         table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
         table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Married (Time)");
-        //table.append("tr").append("td").style("background", "#C8FFFF").style("color", "#000000").text("Married (Civil)");
+        table.append("tr").append("td").style("background", "#FFB2E6").style("color", "#000000").text("Married (Civil)");
         
         var time = "All Time";
         if (_this.originalTime != null) {
@@ -168,6 +168,7 @@ function ChordDisplay(element) {
 
         _this.relationships = activeRels;
 
+        console.log(_this.relationships);
         _this.relationships.forEach(function (rel) {
             if (rel.hasOwnProperty('fromId') && rel.hasOwnProperty('toId')) {
     
@@ -213,8 +214,8 @@ function ChordDisplay(element) {
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["colloquial", "adoption", "biological", "byu", "eternal", "time", "civil"])
-                 .range(["#f7fcb9", "#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#C8FFFF"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6"]);
 
 
             _this.chord = d3.layout.chord()
@@ -293,8 +294,11 @@ function ChordDisplay(element) {
                 var ret = "none";
                 _this.relationships.forEach(function (rel) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
-                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
-                        ret = _this.fillType(rel.type);
+                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
+                            ret = _this.fillType(rel.type);
+                            console.log("Filling with color " + ret + " for type " + rel.type);
+                            console.log(d.source.index + "    " + d.source.subindex);
+                        }
                 });
 
                 return ret; })
