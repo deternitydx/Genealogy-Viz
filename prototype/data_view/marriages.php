@@ -22,7 +22,7 @@ $(document).ready( function () {
 <?php
 echo "<table id='datatable' class='display'>";
 echo "<thead><tr><th>ID</th><th>Marriage Date</th><th>Divorce Date</th><th>Cancelled Date</th><th>Type</th><th>Husband ID</th><th>Husband Last</th><th>Husband First</th>
-    <th>Wife ID</th><th>Wife Last</th><th>Wife First</th><th>Place</th></tr></thead>";
+    <th>Wife ID</th><th>Wife Last</th><th>Wife First</th></tr></thead>";
 echo "</table>";
 ?>
 </body>

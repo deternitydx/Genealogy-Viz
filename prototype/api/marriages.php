@@ -9,16 +9,15 @@ if (isset($_GET["id"]))
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", 
+$result = pg_query($db, "SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", 
        h.\"PersonID\" as \"HusbandID\", 
-       hn.\"Last\" as \"HusbandLast\", hn.\"First\" as \"HusbandFirst\", w.\"PersonID\" as \"WifeID\", wn.\"Last\" as \"WifeLast\", wn.\"First\" as \"WifeFirst\", pl.\"OfficialName\" as \"Place\"
-       FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w, public.\"Name\" wn, public.\"Name\" hn, public.\"Place\" pl
+       hn.\"Last\" as \"HusbandLast\", hn.\"First\" as \"HusbandFirst\", w.\"PersonID\" as \"WifeID\", wn.\"Last\" as \"WifeLast\", wn.\"First\" as \"WifeFirst\"
+       FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w, public.\"Name\" wn, public.\"Name\" hn
        WHERE
        h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' 
        AND wn.\"PersonID\" = w.\"PersonID\" AND wn.\"Type\" = 'authoritative'
        AND hn.\"PersonID\" = h.\"PersonID\" AND hn.\"Type\" = 'authoritative'
-       AND pl.\"ID\" = m.\"PlaceID\"
-       ORDER BY m.\"ID\" ASC");
+       ORDER BY m.\"ID\" DESC");
 if (!$result) {
     echo "1An error occurred.\n";
     exit;
