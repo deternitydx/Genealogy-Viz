@@ -11,6 +11,11 @@ body {
     margin-right: auto;
 }
 
+#sliderDiv {
+    width: 675px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .chord path {
     fill-opacity: .67;
@@ -83,6 +88,7 @@ svg {
 table {
     border: 1px solid #000000;
     margin: 0px;
+    margin-bottom: 5px;
     padding: 0px;
     width: 100%;
     border-spacing: 0;

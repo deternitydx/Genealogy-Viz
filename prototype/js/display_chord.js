@@ -89,7 +89,8 @@ function ChordDisplay(element) {
             time = _this.originalTime;
         }
         cont.append("h4").text("Time Slice");
-        cont.append("p").attr("id", "timeText").text(_this.originalTime);
+        var table = cont.append("table");
+        table.append("tr").append("td").style("background", "#d8d8d8").style("color", "#000000").attr("id", "timeText").text(time);
     };
 
     this.setMatrix = function(timepoint) {
@@ -384,7 +385,7 @@ function ChordDisplay(element) {
             stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
             stepperdiv.append("button").text("All Time").on("click", _this.allTime);
             stepperdiv.append("button").text("Next").on("click", _this.goNext);
-            stepperdiv.append("span").attr("id","timeText").html("All Time");
+            //stepperdiv.append("span").attr("id","timeText").html("All Time");
             
             // Add the time slider
             var min = 1830, max = 1870;
@@ -397,6 +398,7 @@ function ChordDisplay(element) {
 
     this.goPrevious = function(event, time) {
         _this.slider.value(_this.slider.value() - 1);
+        _this.slider.redraw();
         _this.redraw(null, _this.slider.value());
     }
     this.allTime = function(event, time) {
@@ -404,6 +406,7 @@ function ChordDisplay(element) {
     }
     this.goNext = function(event, time) {
         _this.slider.value(_this.slider.value() + 1);
+        _this.slider.redraw();
         _this.redraw(null, _this.slider.value());
     }
 
