@@ -80,7 +80,6 @@ function ChordDisplay(element) {
         var table = cont.append("table");
         table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
         table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
-        //table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
         table.append("tr").append("td").style("background", "#C9BCD6").style("color", "#000000").text("Married (BYU)");
         table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
         table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Married (Time)");
@@ -179,8 +178,11 @@ function ChordDisplay(element) {
                 if (rel.hasOwnProperty('fromId') && !rel.hasOwnProperty('toId'))
                     _this.people[rel.fromId].numRels--;
                 return;
-            } else
+            } else {
+                // hack for now, to keep from seeing two different marriages
+
                 activeRels.push(rel);
+            }
         });
 
         _this.relationships = activeRels;
@@ -198,8 +200,8 @@ function ChordDisplay(element) {
     
                 _this.matrix[i][i] -= iPerc;
                 _this.matrix[j][j] -= jPerc;
-                _this.matrix[i][j] = iPerc;
-                _this.matrix[j][i] = jPerc;
+                _this.matrix[i][j] += iPerc;
+                _this.matrix[j][i] += jPerc;
             }   
         });
 
@@ -230,8 +232,8 @@ function ChordDisplay(element) {
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder"])
-                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder"]) //, "civil.eternity"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff"]);//, "url(#civil-eternity)"]);
 
 
             _this.chord = d3.layout.chord()
@@ -270,9 +272,23 @@ function ChordDisplay(element) {
                 var tmp = _this.innerElement.append("div").attr("class", "hoverinfo");
                 tmp.append("h4").text("More Information");
                 _this.hoverElement = tmp.append("div").attr("class", "hoverinfoinner").append("h5"); 
-                _this.hoverElement.html("&nbsp;");
+                _this.hoverElement.html("&nbsp;<br>&nbsp;");
             }
 
+            /*
+            _this.defs = _this.svg.append("defs").append("linearGradient").attr("id","civil-eternity");
+            _this.defs.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "10%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "20%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "30%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "50%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "60%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "70%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "90%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "100%").attr("stop-color", "#FFB2E6");
+            */
 
             var g = _this.svg.append("g");
 
@@ -314,13 +330,17 @@ function ChordDisplay(element) {
             .attr("class", "chordpath")
             .attr("d", d3.svg.chord().radius(_this.innerRadius))
             .style("fill", function(d) { 
+                var types = new Array();
                 var ret = "none";
                 _this.relationships.forEach(function (rel) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
                         (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
-                            ret = _this.fillType(rel.type);
+                            types.push(rel.type); //ret = _this.fillType(rel.type);
                         }
                 });
+                if (types.length > 0)
+                    //ret = _this.fillType(types.join("."));
+                    ret = _this.fillType(types[types.length -1]);
 
                 return ret; })
             .style("stroke", function(d) { 
@@ -437,9 +457,9 @@ function ChordDisplay(element) {
             // update hover, if applicable
             if (!_this.useHoverOver) {
                 if (opacity == 1)
-                    _this.hoverElement.html("&nbsp;");
+                    _this.hoverElement.html("&nbsp;<br>&nbsp;");
                 else {
-                    var info = "";
+                    var info = "<br>&nbsp;";
                     if (_this.timepoint == null && _this.people[i].divorceDate)
                         info = "<br>Divorced: "+ _this.people[i].divorceDate;
                     _this.hoverElement.html(_this.people[i].name + info); 
@@ -461,15 +481,19 @@ function ChordDisplay(element) {
             // update hover, if applicable
             if (!_this.useHoverOver) {
                 if (opacity == 1)
-                    _this.hoverElement.html("&nbsp;");
+                    _this.hoverElement.html("&nbsp;<br>&nbsp;");
                 else {
+                    var types = new Array();
                     var ret = "";
                     _this.relationships.forEach(function(rel) {
                         if ( (rel.fromId === g.source.index && rel.toId === g.target.index) ||
-                            (rel.fromId === g.source.subindex && rel.toId === g.target.subindex) )
+                            (rel.fromId === g.source.subindex && rel.toId === g.target.subindex) ) {
                             ret = _this.people[rel.fromId].name + " &nbsp;&nbsp;<i>" + rel.desc + "</i>&nbsp;&nbsp; " + _this.people[rel.toId].name;
+                            types.push(rel.type);
+                        }
                     });
                     _this.hoverElement.html(ret); 
+                    _this.hoverElement.html(ret + "<br>Type: " + types.join(", ")); 
                 }
             }
 

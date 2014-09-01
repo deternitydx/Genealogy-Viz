@@ -6,9 +6,25 @@
     z-index: 2;
 }
 
+.d3-slider-range {
+      background:#2980b9;
+        left:0px;
+          right:0px;
+            height: 0.8em;
+              position: absolute;
+          }
+
+          .d3-slider-range-vertical {
+                background:#2980b9;
+                  left:0px;
+                    right:0px;
+                      position: absolute;
+                        top:0;
+                    }
+
+
 .d3-slider-horizontal {
     height: .8em;
-    width: 900px;
 }  
 
 .d3-slider-vertical {
