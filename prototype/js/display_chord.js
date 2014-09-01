@@ -22,6 +22,7 @@ function ChordDisplay(element) {
             return "#0d233e";
         if (gender === "Female" && role === "divorce")
             return "#391013";
+        return "#ffffff";
     }
 
 
@@ -35,6 +36,7 @@ function ChordDisplay(element) {
     this.nameAsTitle = false;
     this.useHoverOver = false;
     this.hoverElement = null;
+    this.placeHolder = {gender:"placeholder", id:"-1", name:"&nbsp;"};
 
     this.embed = false;
 
@@ -114,6 +116,14 @@ function ChordDisplay(element) {
             });
         }
 
+        if (parents.length == 0) {
+            parents.push(_this.placeHolder);
+        }
+
+        if (children.length == 0) {
+            children.push(_this.placeHolder);
+        }
+
         _this.parents = parents;
         _this.children = children;
         _this.relationships = _this.data.relationships;
@@ -125,7 +135,6 @@ function ChordDisplay(element) {
         _this.numPeople = parents.length + children.length;
 
 
-        //console.log(_this);
         _this.matrix = new Array();
         for (var i=0; i < _this.numPeople; i++) {
             _this.matrix[i] = new Array();
@@ -176,7 +185,6 @@ function ChordDisplay(element) {
 
         _this.relationships = activeRels;
 
-        //console.log(_this.relationships);
         _this.relationships.forEach(function (rel) {
             if (rel.hasOwnProperty('fromId') && rel.hasOwnProperty('toId')) {
     
@@ -218,12 +226,12 @@ function ChordDisplay(element) {
     this.draw = function() {
 
             _this.fill = d3.scale.ordinal()
-            .domain(d3.range(4))
+            .domain(d3.range(7))
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil"])
-                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff"]);
 
 
             _this.chord = d3.layout.chord()
@@ -239,8 +247,6 @@ function ChordDisplay(element) {
                 _this.innerRadius = Math.min(_this.width, _this.height) * .31,
                 _this.outerRadius = Math.min(_this.width, _this.height) / 2;
 
-                //console.log("Drawing the chord");
-                //console.log(_this.element);
                 _this.svg = d3.select(_this.element)
                 .append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
             } else {
@@ -267,7 +273,6 @@ function ChordDisplay(element) {
                 _this.hoverElement.html("&nbsp;");
             }
 
-            //console.log(_this.width + ", " + _this.height);
 
             var g = _this.svg.append("g");
 
@@ -276,7 +281,7 @@ function ChordDisplay(element) {
             .enter().append("path")
             .attr("class", "chordperson")
             .style("fill", function(d) { return _this.fill(d.index); })
-            .style("stroke", function(d) { if (d.index >= _this.people.length - 2) return '#000000'; else return _this.fill(d.index); })
+            .style("stroke", function(d) { if (d.index >= _this.people.length - 2 && _this.people.length > 2) return '#000000'; else return _this.fill(d.index); })
             .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
             .on("mouseover", fadePerson(.1))
             .on("mouseout", fadePerson(1))
@@ -314,8 +319,6 @@ function ChordDisplay(element) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
                         (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
                             ret = _this.fillType(rel.type);
-                            //console.log("Filling with color " + ret + " for type " + rel.type);
-                            //console.log(d.source.index + "    " + d.source.subindex);
                         }
                 });
 
