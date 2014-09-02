@@ -4,9 +4,9 @@ include_once("common_functions.php");
 $DEBUG = false;
 $db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-$csvfile = fopen("marriages.csv", "r");
-$badfile = fopen("failed_marriages.csv", "w");
-$newidfile = fopen("marriages_newid.csv", "w");
+$csvfile = fopen("marriages_dups.csv", "r");
+$badfile = fopen("failed_marriages_dups.csv", "w");
+$newidfile = fopen("marriages_newid_dups.csv", "w");
 if ($csvfile == NULL)
         die("Error reading file");
 $head = fgetcsv($csvfile);
@@ -330,6 +330,7 @@ function write_bad_marriage($file, $line) {
 function write_good_marriage($file, $line, $mg) {
         global $headrev; global $typesrev;
 
+        $line[$headrev["Marriage ID (BYU)"]] = $mg["ID"];
         $line[$headrev["Male Household ID"]] = $mg["HusbandID"];
         $line[$headrev["Person Sealed to Household Male ID"]] = $mg["WifeID"];
         if (isset($mg["OfficiatorIDs"]))
