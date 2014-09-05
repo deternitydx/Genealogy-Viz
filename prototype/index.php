@@ -16,11 +16,14 @@
 <ul>
 	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
 	real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.</li>
-	<li><a href="chord_time.html?id=626">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
+	<li><a href="chord_time.html?id=615">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
 	the marriage to view or use a slider to step through the marriage.  Given a husband's id (by argument "id") from the real database, it shows 
 	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
 	status to show  Links are created from women to their children in the marriage.</li>
 	<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>
+	<li><a href="sankey.html">Sankey Marriages, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
+	marriage units are represented by circles in the diagram.  
+	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.</li>
 </ul>
 
 <h2>Data Views Of UVA's Data</h2>
@@ -28,22 +31,31 @@
 <ul>
 	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
 	<li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
+	<li><a href="data_view/marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
 	<li><a href="data_view/documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
 
+<h2>REST API Service</h2>
+<p>There is an api service available for accessing the data needed for visualizations.  It always creates a JSON response.</p>
+<ul>
+	<li><a href="api/marriages_by_man.php">Marriages by Man</a>: Takes a husband's id and returns a JSON object containing all his wives, their children, and relationships between wives and children.</li>
+	<li><a href="api/marriages_by_woman.php">Marriages by Woman</a>: Takes a wife's id and returns a JSON object containing all her husbands, their children, and relationships between husbands and children.</li>
+	<li><a href="api/marriages.php">Marriages</a>: Returns all marriages in the database as a JSON data object.</li>
+	<li><a href="api/people.php">People</a>: Returns all people in the database as a JSON data object.</li>
+</ul>
 
+
+<hr style="width:100%;text-align:center;border:1px solid black;"/>
 
 <h2>Visualization Prototypes from BYU Data</h2>
 <ul>
 	<li><a href="vizbyu/prototype_click_chord.html">Sankey Marriages, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
 	marriage units are represented by circles in the diagram.  
-	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  
-	This version uses sample data in the test/ directory.</li>
+	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage. </li>
 	<li><a href="vizbyu/prototype_embedded_chord.html">Sankey Marriages, Embedded Chords</a>: Displays a sankey-like diagram of marriages, where the
 	marriages are represented by their actual chord diagrams (this is very browser and memory intensive, and requires extra load time).  
-	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  
-	This version uses sample data in the test/ directory.</li>
+	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.  </li>
 	<li><a href="vizbyu/chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
 	real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.</li>
 	<li><a href="vizbyu/chord_time.html?id=626">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
@@ -62,14 +74,6 @@
 	<li><a href="data_view/jill_db/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
 	<li><a href="data_view/jill_db/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
 	<li><a href="data_view/jill_db/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
-</ul>
-
-<h2>REST API Service</h2>
-<p>There is an api service available for accessing the data needed for visualizations.  It always creates a JSON response.</p>
-<ul>
-	<li><a href="api/marriages_by_man.php">Marriages by Man</a>: takes a husband's id and returns a JSON object containing all his wives, their children, and relationships between wives and children.</li>
-	<li><a href="api/marriages_by_woman.php">Marriages by Woman</a>: takes a wife's id and returns a JSON object containing all her husbands, their children, and relationships between husbands and children.</li>
-	<li><a href="api/marriages.php">Marriages</a>: takes a marriage id and returns a JSON object containing all participants in the marriage (husband, wife, children).</li>
 </ul>
 
 </body>

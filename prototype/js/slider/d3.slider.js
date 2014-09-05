@@ -24,7 +24,8 @@ d3.slider = function module() {
       dispatch = d3.dispatch("slide"),
       formatPercent = d3.format(".2%"),
       tickFormat = d3.format(".0"),
-      sliderLength;
+      sliderLength,
+      handle;
 
   function slider(selection) {
     selection.each(function() {
@@ -43,7 +44,7 @@ d3.slider = function module() {
       var drag = d3.behavior.drag();
 
       // Slider handle
-      var handle = div.append("a")
+      handle = div.append("a")
           .classed("d3-slider-handle", true)
           .attr("xlink:href", "#")
           .on("click", stopPropagation)
@@ -96,8 +97,6 @@ d3.slider = function module() {
 
         // Horizontal axis
         if (orientation === "horizontal") {
-
-          svg.style("left", -margin);
 
           svg.attr({ 
             width: sliderLength + margin * 2, 
@@ -196,6 +195,29 @@ d3.slider = function module() {
     });
 
   } 
+
+  // Redraw function
+  slider.redraw = function() {
+          var newPos = formatPercent(scale(slider.stepValue(value))),
+              position = (orientation === "horizontal") ? "left" : "bottom";
+          d3.dispatch("slide").slide(d3.event.sourceEvent || d3.event, value);
+          handle.style(position, newPos);          
+  };
+      
+  // Calculate nearest step value
+  slider.stepValue = function(val) {
+
+        var valModStep = (val - scale.domain()[0]) % step,
+            alignValue = val - valModStep;
+
+        if (Math.abs(valModStep) * 2 >= step) {
+          alignValue += (valModStep > 0) ? step : -step;
+        }
+
+        return alignValue;
+
+ };
+
 
   // Getter/setter functions
   slider.min = function(_) {

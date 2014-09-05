@@ -22,6 +22,7 @@ function ChordDisplay(element) {
             return "#0d233e";
         if (gender === "Female" && role === "divorce")
             return "#391013";
+        return "#ffffff";
     }
 
 
@@ -30,10 +31,13 @@ function ChordDisplay(element) {
     this.innerRadius = Math.min(this.width, this.height) * .31,
     this.outerRadius = this.innerRadius * 1.3,
     this.drawNumSigOthers = false;
+    this.sigOtherElement = null;
     this.patriarchal = true;
     this.nameAsTitle = false;
-
     this.beginDate = new Date("01/01/1830");
+    this.useHoverOver = false;
+    this.hoverElement = null;
+    this.placeHolder = {gender:"placeholder", id:"-1", name:"&nbsp;"};
 
     this.embed = false;
 
@@ -45,14 +49,19 @@ function ChordDisplay(element) {
     };
 
     this.drawTitle = function(element, title) {
-        d3.select(element).append("div").append("h1").text(title);
+        var titleE = d3.select(element).append("div");
+        titleE.append("h1").text(title);
+        _this.sigOtherElement = titleE.append("h4");
     }
 
     this.updateNumSigOthers = function(element, numWives) {
         var type = ' wives';
         if (!_this.patriarchal)
              type = ' husbands';
-        element.append("div").append("h4").text(numWives + type);
+        if (_this.sigOtherElement != null)
+            _this.sigOtherElement.text(numWives + type);
+        else
+            element.append("div").append("h4").text(numWives + type);
     }
 
     this.drawLegend = function(element) {
@@ -72,18 +81,18 @@ function ChordDisplay(element) {
         var table = cont.append("table");
         table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
         table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
-        //table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Colloquial");
         table.append("tr").append("td").style("background", "#C9BCD6").style("color", "#000000").text("Married (BYU)");
         table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
         table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Married (Time)");
-        //table.append("tr").append("td").style("background", "#C8FFFF").style("color", "#000000").text("Married (Civil)");
+        table.append("tr").append("td").style("background", "#FFB2E6").style("color", "#000000").text("Married (Civil)");
         
         var time = "All Time";
         if (_this.originalTime != null) {
             time = _this.originalTime;
         }
         cont.append("h4").text("Time Slice");
-        cont.append("p").attr("id", "timeText").text(_this.originalTime);
+        var table = cont.append("table");
+        table.append("tr").append("td").style("background", "#d8d8d8").style("color", "#000000").attr("id", "timeText").text(time);
     };
 
     this.setMatrix = function(timepoint) {
@@ -107,6 +116,14 @@ function ChordDisplay(element) {
             });
         }
 
+        if (parents.length == 0) {
+            parents.push(_this.placeHolder);
+        }
+
+        if (children.length == 0) {
+            children.push(_this.placeHolder);
+        }
+
         _this.parents = parents;
         _this.children = children;
         _this.relationships = _this.data.relationships;
@@ -118,7 +135,6 @@ function ChordDisplay(element) {
         _this.numPeople = parents.length + children.length;
 
 
-        //console.log(_this);
         _this.matrix = new Array();
         for (var i=0; i < _this.numPeople; i++) {
             _this.matrix[i] = new Array();
@@ -163,8 +179,11 @@ function ChordDisplay(element) {
                 if (rel.hasOwnProperty('fromId') && !rel.hasOwnProperty('toId'))
                     _this.people[rel.fromId].numRels--;
                 return;
-            } else
+            } else {
+                // hack for now, to keep from seeing two different marriages
+
                 activeRels.push(rel);
+            }
         });
 
         _this.relationships = activeRels;
@@ -182,8 +201,8 @@ function ChordDisplay(element) {
     
                 _this.matrix[i][i] -= iPerc;
                 _this.matrix[j][j] -= jPerc;
-                _this.matrix[i][j] = iPerc;
-                _this.matrix[j][i] = jPerc;
+                _this.matrix[i][j] += iPerc;
+                _this.matrix[j][i] += jPerc;
             }   
         });
 
@@ -210,12 +229,12 @@ function ChordDisplay(element) {
     this.draw = function() {
 
             _this.fill = d3.scale.ordinal()
-            .domain(d3.range(4))
+            .domain(d3.range(7))
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["colloquial", "adoption", "biological", "byu", "eternal", "time", "civil"])
-                 .range(["#f7fcb9", "#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#C8FFFF"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder"]) //, "civil.eternity"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff"]);//, "url(#civil-eternity)"]);
 
 
             _this.chord = d3.layout.chord()
@@ -231,11 +250,10 @@ function ChordDisplay(element) {
                 _this.innerRadius = Math.min(_this.width, _this.height) * .31,
                 _this.outerRadius = Math.min(_this.width, _this.height) / 2;
 
-                console.log("Drawing the chord");
-                console.log(_this.element);
                 _this.svg = d3.select(_this.element)
                 .append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
             } else {
+                // only draw the title once, if needed
                 if (_this.innerElement == null) {
                     if (_this.nameAsTitle) 
                         _this.drawTitle(_this.element, _this.parents[_this.parents.length - 1].name);
@@ -251,8 +269,28 @@ function ChordDisplay(element) {
             if (_this.drawNumSigOthers) {
                  _this.updateNumSigOthers(_this.innerElement, _this.parents.length - 1);
             }
+            // placeholder for hoverover text
+            if (!_this.useHoverOver) {
+                var tmp = _this.innerElement.append("div").attr("class", "hoverinfo");
+                tmp.append("h4").text("More Information");
+                _this.hoverElement = tmp.append("div").attr("class", "hoverinfoinner").append("h5"); 
+                _this.hoverElement.html("&nbsp;<br>&nbsp;");
+            }
 
-            //console.log(_this.width + ", " + _this.height);
+            /*
+            _this.defs = _this.svg.append("defs").append("linearGradient").attr("id","civil-eternity");
+            _this.defs.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "10%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "20%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "30%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "50%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "60%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "70%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
+            _this.defs.append("stop").attr("offset", "90%").attr("stop-color", "#AD85FF");
+            _this.defs.append("stop").attr("offset", "100%").attr("stop-color", "#FFB2E6");
+            */
 
             var g = _this.svg.append("g");
 
@@ -261,26 +299,29 @@ function ChordDisplay(element) {
             .enter().append("path")
             .attr("class", "chordperson")
             .style("fill", function(d) { return _this.fill(d.index); })
-            .style("stroke", function(d) { if (d.index >= _this.people.length - 2) return '#000000'; else return _this.fill(d.index); })
+            .style("stroke", function(d) { if (d.index >= _this.people.length - 2 && _this.people.length > 2) return '#000000'; else return _this.fill(d.index); })
             .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
             .on("mouseover", fadePerson(.1))
             .on("mouseout", fadePerson(1))
             .text("hi");
 
-
-            $('.chordperson').tipsy({ 
-                gravity: 'c', 
-                html: true, 
-                offset: 0,
-                hoverlock: true,
-                title: function() {
-                    var info = "";
-                    var d = this.__data__;
-                    if (_this.timepoint == null && _this.people[d.index].divorceDate)
-                        info = "<br>Divorced: "+ _this.people[d.index].divorceDate;
-                    return _this.people[d.index].name + info; 
-                }
-            });
+            if (_this.useHoverOver) {
+                $('.chordperson').tipsy({ 
+                    gravity: 'c', 
+                    html: true, 
+                    offset: 0,
+                    hoverlock: true,
+                    title: function() {
+                        var info = "";
+                        var d = this.__data__;
+                        if (_this.timepoint == null && _this.people[d.index].divorceDate)
+                            info = "<br>Divorced: "+ _this.people[d.index].divorceDate;
+                        return _this.people[d.index].name + info; 
+                    }
+                });
+            } else {
+                // Put in an element
+            }
 
 
             _this.svg.append("g")
@@ -291,12 +332,17 @@ function ChordDisplay(element) {
             .attr("class", "chordpath")
             .attr("d", d3.svg.chord().radius(_this.innerRadius))
             .style("fill", function(d) { 
+                var types = new Array();
                 var ret = "none";
                 _this.relationships.forEach(function (rel) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
-                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
-                        ret = _this.fillType(rel.type);
+                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
+                            types.push(rel.type); //ret = _this.fillType(rel.type);
+                        }
                 });
+                if (types.length > 0)
+                    //ret = _this.fillType(types.join("."));
+                    ret = _this.fillType(types[types.length -1]);
 
                 return ret; })
             .style("stroke", function(d) { 
@@ -311,22 +357,26 @@ function ChordDisplay(element) {
             .on("mouseover", fadeLink(.1))
             .on("mouseout", fadeLink(1));
 
-            $('.chordpath').tipsy({ 
-                gravity: 'c', 
-                html: true, 
-                offset: 0,
-                hoverlock: false,
-                title: function() {
-                    var d = this.__data__;
-                    var ret = "";
-                    _this.relationships.forEach(function(rel) {
-                        if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
-                            (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
-                            ret = rel.desc;
-                    });
-                    return ret; //_this.people[d.index].name; 
-                }
-            });
+            if (_this.useHoverOver) {
+                $('.chordpath').tipsy({ 
+                    gravity: 'c', 
+                    html: true, 
+                    offset: 0,
+                    hoverlock: false,
+                    title: function() {
+                        var d = this.__data__;
+                        var ret = "";
+                        _this.relationships.forEach(function(rel) {
+                            if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
+                                (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) )
+                                ret = rel.desc;
+                        });
+                        return ret; //_this.people[d.index].name; 
+                    }
+                });
+            } else {
+                // Put in an element
+            }
 
     }
 
@@ -337,6 +387,14 @@ function ChordDisplay(element) {
 
             if (!data || !data.parents || !data.children || !data.relationships)
                 return;
+
+            if (data.error) {
+                if (_this.innerElement == null)
+                    _this.innerElement = d3.select(_this.element).append("div");
+                _this.innerElement.html("");
+                _this.innerElement.append("h4").text("Error: " + data.error);
+                return;
+            }
 
             // recalculate the radii
             _this.innerRadius = Math.min(_this.width, _this.height) * .31,
@@ -360,7 +418,6 @@ function ChordDisplay(element) {
         stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
         stepperdiv.append("button").text("All Time").on("click", _this.allTime);
         stepperdiv.append("button").text("Next").on("click", _this.goNext);
-        stepperdiv.append("span").attr("id","timeText").html("All Time");
     
         // Add the time slider
         var min = 0, max = 14640;
@@ -383,6 +440,7 @@ function ChordDisplay(element) {
 
     this.goPrevious = function(event, time) {
         _this.slider.value(_this.slider.value() - 365);
+        _this.slider.redraw();
         _this.redraw(null, _this.slider.value());
     }
     this.allTime = function(event, time) {
@@ -390,6 +448,7 @@ function ChordDisplay(element) {
     }
     this.goNext = function(event, time) {
         _this.slider.value(_this.slider.value() + 365);
+        _this.slider.redraw();
         _this.redraw(null, _this.slider.value());
     }
 
@@ -409,21 +468,57 @@ function ChordDisplay(element) {
     // Returns an event handler for fading a given chord group.
     function fadePerson(opacity) {
         return function(g, i) {
+            // fade all other persons
             _this.svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != i && d.target.index != i; })
             .transition()
             .style("opacity", opacity);
+
+            // update hover, if applicable
+            if (!_this.useHoverOver) {
+                if (opacity == 1)
+                    _this.hoverElement.html("&nbsp;<br>&nbsp;");
+                else {
+                    var info = "<br>&nbsp;";
+                    if (_this.timepoint == null && _this.people[i].divorceDate)
+                        info = "<br>Divorced: "+ _this.people[i].divorceDate;
+                    _this.hoverElement.html(_this.people[i].name + info); 
+                }
+            }
+
         };
     }
 
     // Returns an event handler for fading to one chord
     function fadeLink(opacity) {
         return function(g, i) {
+            // fade all other links
             _this.svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != g.source.index || d.target.index != g.target.index; })
             .transition()
             .style("opacity", opacity);
+            
+            // update hover, if applicable
+            if (!_this.useHoverOver) {
+                if (opacity == 1)
+                    _this.hoverElement.html("&nbsp;<br>&nbsp;");
+                else {
+                    var types = new Array();
+                    var ret = "";
+                    _this.relationships.forEach(function(rel) {
+                        if ( (rel.fromId === g.source.index && rel.toId === g.target.index) ||
+                            (rel.fromId === g.source.subindex && rel.toId === g.target.subindex) ) {
+                            ret = _this.people[rel.fromId].name + " &nbsp;&nbsp;<i>" + rel.desc + "</i>&nbsp;&nbsp; " + _this.people[rel.toId].name;
+                            types.push(rel.type);
+                        }
+                    });
+                    _this.hoverElement.html(ret); 
+                    _this.hoverElement.html(ret + "<br>Type: " + types.join(", ")); 
+                }
+            }
+
         };
     }
+
 
 } // end ChordDisplay

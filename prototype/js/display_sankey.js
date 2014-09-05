@@ -84,7 +84,7 @@ d3.json(json_location, function(jsonData) {
       .attr("class", "link")
       .attr("d", _this.path)
       .style("stroke-width", function(d) { return Math.min(d.sdy, d.tdy); })
-      .style("stroke", function(d) { if (d.gender === "M") return '#1D5190'; return '#C33742';})
+      .style("stroke", function(d) { if (d.gender === "Male") return '#1D5190'; return '#C33742';})
       .sort(function(a, b) { return b.dy - a.dy; });
       
   $('.link').tipsy({ 

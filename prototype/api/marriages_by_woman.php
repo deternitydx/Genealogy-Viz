@@ -12,7 +12,7 @@ $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo p
 $result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", w.\"PersonID\" as \"WifeID\", h.\"PersonID\" as \"HusbandID\" FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
        h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' AND w.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
 if (!$result) {
-    echo "1An error occurred.\n";
+    print_empty("Error finding marriages.");
     exit;
 }
 
@@ -27,7 +27,7 @@ $relations = array();
 
 $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriages[0]["WifeID"]);
 if (!$result) {
-    echo "2An error occurred.\n";
+    print_empty("No marriages with this woman.");
     exit;
 }
 
@@ -39,11 +39,11 @@ $arr[0]["Divorced"] = "";
 array_push($parents, $arr[0]);
 
 
-// Get the wives and their children and adoptions to this wife
+// Get the husbands and their children and adoptions to this wife
 foreach ($marriages as $marriage) {
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
+    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
 	if (!$result) {
-	    echo "3An error occurred.\n";
+        print_empty("Error finding husband information.");
 	    exit;
 	}
 
@@ -56,9 +56,9 @@ foreach ($marriages as $marriage) {
 	array_push($parents,$wife);
 
 
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
+    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
 	if (!$result) {
-	    echo "4An error occurred.\n";
+        print_empty("Error finding biological children.");
 	    exit;
 	}
 
@@ -117,6 +117,12 @@ echo "], \"relationships\": [ " . implode(",", $relations) ."] }";
 
 
 //print_r($arr);
+function print_empty($error) {
+    echo "{ \"error\" : \"$error\", ";
+    echo " \"parents\": [";
+    echo "], \"children\": [";
+    echo "], \"relationships\": [ ] }";
+}
 
 ?>
 

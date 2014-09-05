@@ -1,117 +1,8 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
-<style>
-
-body {
-  font: 10px sans-serif;
-}
-
-.chord path {
-  fill-opacity: .67;
-  stroke: #000;
-  stroke-width: .5px;
-}
-
-	h1 {
-		font-family: sans-serif;
-		font-weight: normal;
-		font-size: 16px;
-		text-align: center;
-	}
-
-	h3 {
-		text-align: center;
-	}
-
-	h4 {
-		margin: 0px;
-		padding: 0px;
-		margin-top: 15px;
-		text-align: center;
-	}
-
-	#legend {
-		width: 90px;
-		float: left;
-		clear: none;
-		margin-top: 45px;
-		text-align: center;
-	}
-
-	#legend p {
-		text-align: center;
-		margin: 1px;
-		padding:1px;
-	}
-/*svg {
-	font: 10px sans-serif;
-	padding: 0px;
-	margin: 0px;
-	max-height: 100%;
-}*/
-
-#chordID {
-	float:left;
-	clear: none;
-	padding: 0px;
-}
-
-#bottom {
-	float:left;
-	clear:both;
-	color: #000000;
-	margin: 50px;
-}
-
-#bottom svg {
-	overflow: visible;
-}
-
-.node rect {
-  cursor: move;
-  fill-opacity: .9;
-  shape-rendering: crispEdges;
-}
-
-.node text {
-  pointer-events: none;
-  text-shadow: 0 1px 0 #fff;
-}
-
-.link {
-  fill: none;
-  stroke-opacity: .2;
-}
-
-.link:hover {
-  stroke-opacity: .5;
-}
-
-.chord path {
-  fill-opacity: .67;
-  stroke: #000;
-  stroke-width: .5px;
-}
-
-table {
-	border: 1px solid #000000;
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-	border-spacing: 0;
-	border-collapse: collapse;
-}
-
-td, tr {
-	border: 1px solid #000000;
-	margin: 0px;
-	padding: 5px;
-	text-align: center;
-}
-
-</style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="css/chords.css" />
 <link rel="stylesheet" href="css/tipsy.css" />
 <link rel="stylesheet" href="js/slider/d3.slider.css" />  
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
@@ -122,6 +13,7 @@ td, tr {
 <script src="js/display_chord.js"></script>
 </head>
 <body>
+<div id="bodyDiv">
 <div id="legend"></div>
 <div id="chordID"></div>
 <div id="bottom"></div>
@@ -164,5 +56,6 @@ chordDiagram.drawLegend("#legend");
 
 
 </script>
+</div>
 </body>
 </html>
