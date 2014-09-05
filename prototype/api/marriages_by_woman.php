@@ -64,7 +64,6 @@ foreach ($marriages as $marriage) {
 
 	$arr = pg_fetch_all($result);
 
-	// IDEA: Reverse the order of the children for each wife before adding them to the children array.  This should fix the chord diagram issues.
 
 	$tmpchildren = array();
 	// got the biological children
@@ -74,24 +73,14 @@ foreach ($marriages as $marriage) {
 		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
 	}
 
-/*
-	$result = pg_query($db, "SELECT \"Person\".*, \"Adoption\".\"AdoptionDate\" FROM public.\"Person\", public.\"Adoption\" WHERE \"Person\".\"ID\"=\"Adoption\".\"PersonID\" and \"Adoption\".\"MarriageID\"=" . $marriage["ID"]);
-	if (!$result) {
-	    echo "An error occurred.\n";
-	    exit;
-	}
-
-	$arr = pg_fetch_all($result);
-
-	// got the adopted children
-	foreach ($arr as $child) {
-		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Adopted To\", \"type\":\"adoption\", \"from\":\"" . $child["Last"] . ", " . $child["First"] . " (Child)\", \"to\":\"" . $wife["Last"] . ", " . $wife["First"] . " (Parent)\"}");
-	}
- */
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
 }
 
+//reorder the children by birthday
+$births = array();
+foreach ($children as $k => $child)
+    $births[$k] = $child["BirthDate"];
+array_multisort($births, $children);
 
 
 echo "{ \"parents\": [";
