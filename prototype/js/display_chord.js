@@ -252,6 +252,7 @@ function ChordDisplay(element) {
                 _this.svg = d3.select(_this.element)
                 .append("g").attr("transform", "translate(7," + _this.height / 2 + ")");
             } else {
+                // only draw the title once, if needed
                 if (_this.innerElement == null) {
                     if (_this.nameAsTitle) 
                         _this.drawTitle(_this.element, _this.parents[_this.parents.length - 1].name);
@@ -385,6 +386,14 @@ function ChordDisplay(element) {
 
             if (!data || !data.parents || !data.children || !data.relationships)
                 return;
+
+            if (data.error) {
+                if (_this.innerElement == null)
+                    _this.innerElement = d3.select(_this.element).append("div");
+                _this.innerElement.html("");
+                _this.innerElement.append("h4").text("Error: " + data.error);
+                return;
+            }
 
             // recalculate the radii
             _this.innerRadius = Math.min(_this.width, _this.height) * .31,
