@@ -12,7 +12,7 @@ $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo p
 $result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", h.\"PersonID\" as \"HusbandID\" FROM public.\"Marriage\" m, public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
        h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' AND h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
 if (!$result) {
-    echo "1An error occurred.\n";
+    print_empty("Error finding marriages.");
     exit;
 }
 
@@ -27,7 +27,7 @@ $relations = array();
 
 $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriages[0]["HusbandID"]);
 if (!$result) {
-    echo "2An error occurred.\n";
+    print_empty("No marriages for this man.");
     exit;
 }
 
@@ -45,7 +45,7 @@ array_push($parents, $husband);
 foreach ($marriages as $marriage) {
     $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["WifeID"]);
 	if (!$result) {
-	    echo "3An error occurred.\n";
+        print_empty("Error finding wife information.");
 	    exit;
 	}
 
@@ -72,7 +72,7 @@ foreach ($marriages as $marriage) {
 
     $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
 	if (!$result) {
-	    echo "4An error occurred.\n";
+        print_empty("Error finding biological children.");
 	    exit;
 	}
 
@@ -131,6 +131,12 @@ echo implode(",", $chiPrint);
 echo "], \"relationships\": [ " . implode(",", $relations) ."] }";
 
 
+function print_empty($error) {
+    echo "{ \"error\" : \"$error\", ";
+    echo " \"parents\": [";
+    echo "], \"children\": [";
+    echo "], \"relationships\": [ ] }";
+}
 //print_r($arr);
 
 ?>
