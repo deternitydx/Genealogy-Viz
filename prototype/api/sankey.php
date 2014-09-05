@@ -49,7 +49,7 @@
 
 header('Content-type: application/json');
 
-$ids = array( 615, 616);
+$ids = array( 615, 616, 51049);
 if (isset($_GET["id"]))
 	$ids = explode(",",$_GET["id"]);
 

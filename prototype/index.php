@@ -23,7 +23,14 @@
 	<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>
 	<li><a href="sankey.html">Sankey Marriages, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
 	marriage units are represented by circles in the diagram.  
-	People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.</li>
+    People are links between marriages.  On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.
+        <ul>
+            <li><a href="sankey.html?id=615,616,51049">Brigham Young and relatives</a></li>
+            <li><a href="sankey.html?id=495,496,12625,12626,12627,12629">Joseph Smith and relatives</a></li>
+            <li><a href="sankey.html?id=615,616,51049,495,496,12625,12626,12627,12629">Brigham Young, Joseph Smith, and relatives</a></li>
+        </ul>
+
+    </li>
 </ul>
 
 <h2>Data Views Of UVA's Data</h2>
