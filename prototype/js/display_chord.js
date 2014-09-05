@@ -298,7 +298,7 @@ function ChordDisplay(element) {
             .enter().append("path")
             .attr("class", "chordperson")
             .style("fill", function(d) { return _this.fill(d.index); })
-            .style("stroke", function(d) { if (d.index >= _this.people.length - 2 && _this.people.length > 2) return '#000000'; else return _this.fill(d.index); })
+            .style("stroke", function(d) { if (_this.isRoot(d.index)) return '#000000'; else return _this.fill(d.index); })
             .attr("d", d3.svg.arc().innerRadius(_this.innerRadius).outerRadius(_this.outerRadius))
             .on("mouseover", fadePerson(.1))
             .on("mouseout", fadePerson(1))
@@ -377,6 +377,18 @@ function ChordDisplay(element) {
                 // Put in an element
             }
 
+    }
+
+    // check if is root
+    this.isRoot = function (index) {
+        var rootB = false;
+        console.log(_this.relationships);
+        console.log(index);
+        _this.relationships.forEach(function(rel) {
+            if (( rel.fromId === index || rel.toId === index ) && rel.root === "t")
+                rootB = true;
+        });
+        return rootB; //index >= _this.people.length - 2 && _this.people.length > 2;
     }
 
     // drawing code below:
