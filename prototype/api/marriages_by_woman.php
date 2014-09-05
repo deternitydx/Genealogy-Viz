@@ -39,9 +39,9 @@ $arr[0]["Divorced"] = "";
 array_push($parents, $arr[0]);
 
 
-// Get the wives and their children and adoptions to this wife
+// Get the husbands and their children and adoptions to this wife
 foreach ($marriages as $marriage) {
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
+    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
 	if (!$result) {
 	    echo "3An error occurred.\n";
 	    exit;
@@ -56,7 +56,7 @@ foreach ($marriages as $marriage) {
 	array_push($parents,$wife);
 
 
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
+    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
 	if (!$result) {
 	    echo "4An error occurred.\n";
 	    exit;
