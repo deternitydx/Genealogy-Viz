@@ -101,3 +101,11 @@ hr {
 	height: 0px;
 	border: 1px solid #AAAAAA;
 }
+
+li {
+    margin-bottom: 9px;
+}
+
+li ul li {
+    margin-bottom: 1px;
+}
