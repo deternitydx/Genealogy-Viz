@@ -6,8 +6,8 @@ var _this = this;
 this.container = element;
 
 this.margin = {top: 1, right: 1, bottom: 6, left: 1},
-    this.width = 960 - this.margin.left - this.margin.right,
-    this.height = 500 - this.margin.top - this.margin.bottom;
+    this.width = 1260 - this.margin.left - this.margin.right,
+    this.height = 800 - this.margin.top - this.margin.bottom;
 
 this.formatNumber = d3.format(",.0f"),
     this.format = function(d) { return formatNumber(d) + " TWh"; },
@@ -66,7 +66,9 @@ d3.json(json_location, function(jsonData) {
       .links(_this.links)
       .size([_this.width, _this.height])
       .layout(32);
-  
+ 
+     console.log(_this.sankey.nodes);
+
   // Clean out the element
   d3.select(_this.container).text("");
 
@@ -83,7 +85,7 @@ d3.json(json_location, function(jsonData) {
     .enter().append("path")
       .attr("class", "link")
       .attr("d", _this.path)
-      .style("stroke-width", function(d) { return Math.min(d.sdy, d.tdy); })
+      .style("stroke-width", function(d) { return Math.max(d.sdy, d.tdy) / 2; })
       .style("stroke", function(d) { if (d.gender === "Male") return '#1D5190'; return '#C33742';})
       .sort(function(a, b) { return b.dy - a.dy; });
       
@@ -113,7 +115,11 @@ d3.json(json_location, function(jsonData) {
       .on("drag", dragmove));
 
   node.append("circle")
-      .attr("r", function(d) { return d.dy / 2; })
+      .attr("r", function(d) { console.log(d); 
+            if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
+                return Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
+            else 
+                return Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; })
       .attr("cy", function(d) { return d.dy / 2; })
       .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
       .style("fill", function(d) { return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
