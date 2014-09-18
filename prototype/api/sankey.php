@@ -152,7 +152,7 @@ foreach($people as $i => $person) {
             $needDummy = true;
             // check to see if woman, and if so, then let's query to see if she's married one of the men we have
             if ($person["gender"] == "Female") {
-                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"HusbandID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = 'Wife') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\";");
+                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"HusbandID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = 'Wife') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\" and pm.\"Role\" = 'Husband';");
                 if (!$result) {
                     echo "An error occurred.\n";
                     exit;
