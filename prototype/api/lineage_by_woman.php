@@ -71,8 +71,8 @@ function insertPerson($person, $direction, $id) {
             $people[$person["ID"]]["childOf"] = -1;
     }
     
-    // If we have a boy, he gets his own MU with himself as target. 
-    if ($person["Gender"] == "Male") {
+    // If we have a female, she gets her own MU with herself as target. 
+    if ($person["Gender"] == "Female") {
         if (!array_key_exists($person["ID"], $marriageUnits))
             $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
         $people[$person["ID"]]["target"] = $person["ID"];
