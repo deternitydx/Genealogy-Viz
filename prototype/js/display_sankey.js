@@ -172,30 +172,43 @@ d3.json(json_location, function(jsonData) {
                .style("stroke-opacity", "");
           } });
 
-  node.append("circle")
+  // Draw the marriage nodes
+  node.filter(function(d) { return (d.type === "marriage") ? this : null;}).append("circle")
       .attr("r", function(d) { //console.log(d);
             var r = 0; 
             if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
                 r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
             else 
                 r = Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; 
-            if (d.type === "person")
-                r = r / 2;
             return r;
       })
       .attr("cy", function(d) { return d.dy / 2; })
       .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
       .style("fill", function(d) { //console.log(d); 
-             var fill = "#bbbbbb";
-             if ( d.type === "person") {
-                 if (d.gender === "Male")
-                     fill = '#1D5190';
-                 else
-                     fill = '#C33742';
-             }
+             return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
+      .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+
+   // Draw the person nodes
+   node.filter(function(d) { return (d.type === "person") ? this : null;}).append("circle")
+      .attr("r", function(d) { //console.log(d);
+            var r = 0; 
+            if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
+                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
+            else 
+                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; 
+            return r/2;
+      })
+      .attr("cy", function(d) { return d.dy / 2; })
+      .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
+      .style("fill", function(d) { //console.log(d); 
+             var fill;
+             if (d.gender === "Male")
+                 fill = '#1D5190';
+             else
+                 fill = '#C33742';
              return d.color = fill; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
       .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
-      .style("fill-opacity", function(d) { return (d.type === "person") ? "0.2" : "1.0";});
+      .style("fill-opacity","0.2");
 //    .append("title")
 //      .text(function(d) { return d.name + "\n" + format(d.value); });
 /*
