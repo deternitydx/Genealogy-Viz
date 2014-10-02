@@ -34,7 +34,7 @@ svg {
 }
 
 .link:hover {
-    stroke-opacity: .5;
+    stroke-opacity: .8;
 }
 
 .chord path {
@@ -135,9 +135,9 @@ var QueryString = function () {
     if (QueryString.wife) {
         sankeyDiagram.drawDiagram("api/lineage_by_woman.php?id=" + QueryString.id);
     } else if (QueryString.id)
-	    sankeyDiagram.drawDiagram("api/sankey.php?id=" + QueryString.id);
+	    sankeyDiagram.drawDiagram("api/sankey-bi.php?id=" + QueryString.id);
     else
-	    sankeyDiagram.drawDiagram("api/sankey.php");
+	    sankeyDiagram.drawDiagram("api/sankey-bi.php");
 
 	var chordDiagram = new ChordDisplay("#dialog");
     if (QueryString.wife) {
