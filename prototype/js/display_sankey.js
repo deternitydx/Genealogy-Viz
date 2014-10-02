@@ -1,11 +1,11 @@
 Array.prototype.contains = function(obj) {
-        var i = this.length;
-            while (i--) {
-                        if (this[i] === obj) {
-                                        return true;
-                                                }
-                                                    }
-                                                        return false;
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -163,7 +163,7 @@ d3.json(json_location, function(jsonData) {
           if (d.type === "person") {
             d3.selectAll(".link").filter( function(l) { return (l.source === d || l.target === d) ? this : null; })
                .style("stroke-opacity", "0.8");
-            this.style("fill-opacity", "0.8");
+            //this.style("fill-opacity", "0.8");
           } })
       .on("mouseout", function(d, i) {//console.log(d); console.log(i);
           if (d.type === "person") {
@@ -209,7 +209,8 @@ d3.json(json_location, function(jsonData) {
              return d.color = fill; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
       .style("stroke", function(d) { return d.color; })
       .style("stroke-opacity", "0.5")
-      .style("fill-opacity","0.2");
+      .style("fill-opacity","0.2")
+      .on("click", function() {console.log(_this);});
 //    .append("title")
 //      .text(function(d) { return d.name + "\n" + format(d.value); });
 /*
