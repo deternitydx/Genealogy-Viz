@@ -155,7 +155,6 @@ d3.json(json_location, function(jsonData) {
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .on("click", show_info)
     .call(d3.behavior.drag()
       .origin(function(d) { return d; })
       .on("dragstart", function() { this.parentNode.appendChild(this); })
@@ -187,19 +186,20 @@ d3.json(json_location, function(jsonData) {
       .style("fill", function(d) { //console.log(d); 
              return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
       .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+      .on("click", show_info)
 
    // Draw the person nodes
-   node.filter(function(d) { return (d.type === "person") ? this : null;}).append("circle")
-      .attr("r", function(d) { //console.log(d);
-            var r = 0; 
-            if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
-            else 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; 
-            return r/2;
+   node.filter(function(d) { return (d.type === "person") ? this : null;}).append("rect")
+      .attr("height", function(d) { //console.log(d);
+            var r = Math.max(d.dy, _this.sankey.nodeWidth()); 
+            d.height = r/2;
+            return d.height;
       })
-      .attr("cy", function(d) { return d.dy / 2; })
-      .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
+      .attr("width", function(d) { //console.log(d);
+            return d.height;
+      })
+      .attr("y", function(d) { return d.dy / 2 - (d.height / 2); })
+      .attr("x", function(d) { return _this.sankey.nodeWidth() / 2 - (d.height / 2); })
       .style("fill", function(d) { //console.log(d); 
              var fill;
              if (d.gender === "Male")
@@ -207,7 +207,8 @@ d3.json(json_location, function(jsonData) {
              else
                  fill = '#C33742';
              return d.color = fill; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
-      .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+      .style("stroke", function(d) { return d.color; })
+      .style("stroke-opacity", "0.5")
       .style("fill-opacity","0.2");
 //    .append("title")
 //      .text(function(d) { return d.name + "\n" + format(d.value); });
@@ -229,7 +230,7 @@ d3.json(json_location, function(jsonData) {
         hoverlock: true,
         title: function() {
           var d = this.__data__;
-          return (d.type === "marriage") ? d.name + "'s Marriage" : d.name; 
+          return (d.type === "marriage" && d.name) ? d.name + "'s Marriage" : d.name; 
         }
       });
 
