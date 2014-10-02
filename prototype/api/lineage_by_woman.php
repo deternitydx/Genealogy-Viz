@@ -18,15 +18,15 @@
 
         ],
         "people":[
-                {"source":1234,"target":1232, "gender":"M", "name": "Smith, John"},
-                {"source":1231,"target":1232, "gender":"F", "name": "Jones, Mary"},
-                {"source":1232,"target":1236, "gender":"M", "name": "Smith, Tom"},
-                {"source":1233,"target":1236, "gender":"F", "name": "Bowls, Debra"},
-                {"source":1235,"target":1236, "gender":"F", "name": "Carter, Rebekah"},
-                {"source":1236,"target":1237, "gender":"F", "name": "Smith, Rachel"},
-                {"source":1236,"target":1238, "gender":"M", "name": "Smith, Matthew"},
-                {"source":1236,"target":1239, "gender":"F", "name": "Smith, Martha"},
-                {"source":1236,"target":1260, "gender":"F", "name": "Smith, Christina"}
+                {"source":[1234,...] ,"target":[1232, ...], "gender":"M", "name": "Smith, John"},
+                {"source":[1231],"target":[1232], "gender":"F", "name": "Jones, Mary"},
+                {"source":[1232],"target":[1236], "gender":"M", "name": "Smith, Tom"},
+                {"source":[1233],"target":[1236], "gender":"F", "name": "Bowls, Debra"},
+                {"source":[1235],"target":[1236], "gender":"F", "name": "Carter, Rebekah"},
+                {"source":[1236],"target":[1237], "gender":"F", "name": "Smith, Rachel"},
+                {"source":[1236],"target":[1238], "gender":"M", "name": "Smith, Matthew"},
+                {"source":[1236],"target":[1239], "gender":"F", "name": "Smith, Martha"},
+                {"source":[1236],"target":[1260], "gender":"F", "name": "Smith, Christina"}
         ]
     }
  */
@@ -64,7 +64,7 @@ function insertPerson($person, $direction, $id) {
     
     // If they are not already there, add them
     if (!isset($people[$person["ID"]]))
-        $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>null, "target"=>null, "gender"=>$person["Gender"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "childOf"=>$person["BiologicalChildOfMarriage"]);
+        $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>array(), "target"=>array(), "gender"=>$person["Gender"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "childOf"=>$person["BiologicalChildOfMarriage"]);
         
     // If they don't have a parent marriage, then set this field to -1
     if (!isset($person["BiologicalChildOfMarriage"]) || $person["BiologicalChildOfMarriage"] == "") {
@@ -75,11 +75,13 @@ function insertPerson($person, $direction, $id) {
     if ($person["Gender"] == "Female") {
         if (!array_key_exists($person["ID"], $marriageUnits))
             $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
-        $people[$person["ID"]]["target"] = $person["ID"];
+        if (!in_array($person["ID"], $people[$person["ID"]]["target"]))
+            array_push($people[$person["ID"]]["target"], $person["ID"]);
     }
     
     // Set the direction we had asked for to the proper id
-    $people[$person["ID"]][$direction] = $id;
+    if (!in_array($id, $people[$person["ID"]][$direction]))
+        array_push($people[$person["ID"]][$direction], $id);
 }
 
 
@@ -137,18 +139,20 @@ foreach($ids as $id) {
 $dummyID = 1000000;
 $known = array();
 foreach($people as $i => $person) {
-        if ($person["source"] === null) {
-            if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known))
-                $people[$i]["source"] = $known[$person["childOf"]];
-            else {
+        if (empty($person["source"])) {
+            if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known)) {
+                if (!in_array($known[$person["childOf"]], $people[$i]["source"]))
+                    array_push($people[$i]["source"], $known[$person["childOf"]]);
+            } else {
                 $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
-                $people[$i]["source"] = $dummyID;
+                if (!in_array($dummyID, $people[$i]["source"]))
+                    array_push($people[$i]["source"], $dummyID);
                 $known[$person["childOf"]] = $dummyID;
                 $dummyID++;
             }
         }
 
-        if ($person["target"] === null) {
+        if (empty($person["target"])) {
             $needDummy = true;
             // check to see if man, and if so, then let's query to see if he's married one of the women we have
             if ($person["gender"] == "Male") {
@@ -162,14 +166,16 @@ foreach($people as $i => $person) {
                 foreach ($arr as $target) {
 						$wifeID = $target["WifeID"];
                         if (array_key_exists($wifeID, $marriageUnits)) {
-                                $people[$i]["target"] = $wifeID;
+                                if (!in_array($wifeID, $people[$i]["target"]))
+                                    array_push($people[$i]["target"],$wifeID);
                                 $needDummy = false;
                         }
                 }
                 // If there is a wife ID, let's use her id as the target to catch some other men
                 if ($needDummy && $wifeID != null) {
                 	$marriageUnits[$wifeID] = array("id"=>$wifeID, "name"=>"");
-                	$people[$i]["target"] = $wifeID;
+                    if (!in_array($wifeID, $people[$i]["target"]))
+                	    array_push($people[$i]["target"], $wifeID);
                 	$needDummy = false;
             	}
             }
@@ -177,7 +183,8 @@ foreach($people as $i => $person) {
             
             if ($needDummy) {
                 $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
-                $people[$i]["target"] = $dummyID;
+                if (!in_array($dummyID, $people[$i]["target"]))
+                    array_push($people[$i]["target"], $dummyID);
                 $dummyID++;
             }
         }
@@ -195,7 +202,7 @@ echo "], \"people\": [";
 
 $i = 0;
 foreach ($people as $person) {
-        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\":" . $person["source"]. ", \"target\":" .$person["target"] .", \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
+        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\": [" . implode(",",$person["source"]). "], \"target\": [" .implode(",",$person["target"]) ."], \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
         if ($i++ < count($people) -1) echo ",";
 }
 
