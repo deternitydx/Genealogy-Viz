@@ -70,7 +70,7 @@ foreach ($arr as $mar) {
         if ($k == "ID"){
                 array_push($resa, "$v");
                 array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> <a href=\"../chord.html?id=$v$addl\">Static</a>");
-                array_push($resa, "<a href=\"../sankey.html?id=$v$addl\">Sankey</a>");
+                array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">Marriage Flow</a>");
                 if ($first) array_push($headings, "Chord");
                 if ($first) array_push($headings, "Sankey");
         } else if ($v == "") {
