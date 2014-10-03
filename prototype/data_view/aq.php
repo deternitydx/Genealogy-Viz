@@ -11,6 +11,25 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
 
+<script type="text/javascript">
+function goSankey() {
+    var vals = new Array();
+    var add = "";
+    $(':checkbox:checked[name^=ids]').val(function() { 
+        if (this.value.indexOf("&wife=1") != -1) {
+            add = "&wife=-1";
+            vals.push(this.value.substr(0, this.value.indexOf('&'))); 
+        } else
+            vals.push(this.value); 
+    });
+    var goTo = vals.join(",");
+    var link = "../marriageflow.html?id=" + goTo + add;
+    console.log(link);
+    window.location.href = link;
+    return false;
+}
+</script>
+
 <style>
 /*
 td {
@@ -54,6 +73,7 @@ if (!$result) {
 }
 
 $arr = pg_fetch_all($result);
+echo "<form>";
 echo "<table id='datatable' class='display'>";
 $json = array();
 $first = true;
@@ -69,10 +89,12 @@ foreach ($arr as $mar) {
         if ($first) array_push($headings, "$k");
         if ($k == "ID"){
                 array_push($resa, "$v");
-                array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> <a href=\"../chord.html?id=$v$addl\">Static</a>");
-                array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">Marriage Flow</a>");
+                array_push($resa, "<input type=\"checkbox\" name=\"ids[]\" value=\"$v$addl\"/>");
+                array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> - <a href=\"../chord.html?id=$v$addl\">Static</a>");
+                array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">View</a>");
+                if ($first) array_push($headings, " ");
                 if ($first) array_push($headings, "Chord");
-                if ($first) array_push($headings, "Sankey");
+                if ($first) array_push($headings, "Lineage");
         } else if ($v == "") {
                 array_push($resa, "&nbsp;");
         } else {
@@ -90,8 +112,9 @@ foreach ($arr as $mar) {
 }
 	echo implode("", $json);
 
-echo "</tbody></table>";
-
+echo "</tbody></table></form>";
+echo "<h3>Actions available for selected members</h3>";
+echo "<p><button onClick='goSankey();'>Combined Marriage Flow View</button> Note: this view is only available currently if all those members selected are male or female.  No mixed gender isplays are available at this time.</p>";
 ?>
 </body>
 </html>
