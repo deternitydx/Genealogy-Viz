@@ -96,10 +96,15 @@ d3.sankey = function() {
   // Compute the value (size) of each node by summing the associated links.
   function computeNodeValues() {
     nodes.forEach(function(node) {
-      node.value = Math.max(
-        d3.sum(node.sourceLinks, svalue),
-        d3.sum(node.targetLinks, tvalue)
-      );
+      var s = d3.sum(node.sourceLinks, svalue);
+      var t = d3.sum(node.targetLinks, tvalue);
+      // If all sources or targets have source/target value 1, then collapse them down
+      if (s / node.sourceLinks.length == 1)
+          s = 1;
+      if (t / node.targetLinks.length == 1)
+          t = 1;
+      node.value = Math.max(s,t);
+
     });
   }
 
@@ -266,11 +271,13 @@ d3.sankey = function() {
       var sy = 0, ty = 0;
       node.sourceLinks.forEach(function(link) {
         link.sy = sy;
-        sy += link.sdy;
+        if (link.svalue != 1) // if they are all 1, then start all from the top
+            sy += link.sdy;
       });
       node.targetLinks.forEach(function(link) {
         link.ty = ty;
-        ty += link.tdy;
+        if (link.tvalue != 1) // if they are all 1, then start all from the top
+            ty += link.tdy;
       });
     });
 

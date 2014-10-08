@@ -23,7 +23,7 @@ function goSankey() {
             vals.push(this.value); 
     });
     var goTo = vals.join(",");
-    var link = "../sankey.html?id=" + goTo + add;
+    var link = "../marriageflow.html?id=" + goTo + add;
     console.log(link);
     window.location.href = link;
     return false;
@@ -91,10 +91,10 @@ foreach ($arr as $mar) {
                 array_push($resa, "$v");
                 array_push($resa, "<input type=\"checkbox\" name=\"ids[]\" value=\"$v$addl\"/>");
                 array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> - <a href=\"../chord.html?id=$v$addl\">Static</a>");
-                array_push($resa, "<a href=\"../sankey.html?id=$v$addl\">View</a>");
+                array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">View</a>");
                 if ($first) array_push($headings, " ");
                 if ($first) array_push($headings, "Chord");
-                if ($first) array_push($headings, "Sankey");
+                if ($first) array_push($headings, "Lineage");
         } else if ($v == "") {
                 array_push($resa, "&nbsp;");
         } else {
@@ -114,7 +114,7 @@ foreach ($arr as $mar) {
 
 echo "</tbody></table></form>";
 echo "<h3>Actions available for selected members</h3>";
-echo "<p><button onClick='goSankey();'>Combined Sankey View</button> Note: this view is only available currently if all those members selected are male or female.  No mixed gender isplays are available at this time.</p>";
+echo "<p><button onClick='goSankey();'>Combined Marriage Flow View</button> Note: this view is only available currently if all those members selected are male or female.  No mixed gender isplays are available at this time.</p>";
 ?>
 </body>
 </html>
