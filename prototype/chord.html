@@ -4,16 +4,19 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/chords.css" />
 <link rel="stylesheet" href="css/tipsy.css" />
+<link rel="stylesheet" href="js/slider/d3.slider.css" />  
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="js/jquery.tipsy.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/slider/d3.slider.js"></script>
 <script src="js/display_chord.js"></script>
 </head>
 <body>
 <div id="bodyDiv">
-<div id="chordID"></div>
 <div id="legend"></div>
+<div id="chordID"></div>
+<div id="bottom"></div>
 <script>
 var QueryString = function () {
   // This function is anonymous, is executed immediately and 
@@ -44,11 +47,15 @@ if (QueryString.wife) {
     chordDiagram.patriarchal = false;
 } else
     chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
-
-chordDiagram.drawNumSigOthers = true;
+chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
 chordDiagram.nameAsTitle = true;
+chordDiagram.drawNumSigOthers = true;
 chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
 chordDiagram.drawLegend("#legend");
+
+if (QueryString.temporal) {
+    chordDiagram.drawTimeSlider("#bottom");
+}
 
 </script>
 </div>

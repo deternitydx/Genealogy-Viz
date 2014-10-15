@@ -81,23 +81,25 @@ function insertPerson($person, $direction, $id) {
     
     // If they are not already there, add them
     if (!isset($people[$person["ID"]]))
-        $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>null, "target"=>null, "gender"=>$person["Gender"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "childOf"=>$person["BiologicalChildOfMarriage"]);
+        $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>array(), "target"=>array(), "gender"=>$person["Gender"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "childOf"=>$person["BiologicalChildOfMarriage"]);
         
     // If they don't have a parent marriage, then set this field to -1
     if (!isset($person["BiologicalChildOfMarriage"]) || $person["BiologicalChildOfMarriage"] == "") {
             $people[$person["ID"]]["childOf"] = -1;
     }
-    
-    // If we have a boy, he gets his own MU with himself as target. 
-    if ($person["Gender"] == "Male") {
+
+    // If this person is the gender of the marriage units, create a marriage unit for them
+    if ((is_masculine() && $person["Gender"] == "Male") || (is_feminine() && $person["Gender"] == "Female")) {
         if (!array_key_exists($person["ID"], $marriageUnits))
             $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
-        $people[$person["ID"]]["target"] = $person["ID"];
+        if (!in_array($person["ID"], $people[$person["ID"]]["target"]))
+            array_push($people[$person["ID"]]["target"], $person["ID"]);
     }
     
     // Set the direction we had asked for to the proper id
     if ($direction !== null && $id !== null)
-        $people[$person["ID"]][$direction] = $id;
+        if (!in_array($id, $people[$person["ID"]][$direction]))
+            array_push($people[$person["ID"]][$direction], $id);
 }
 
 function is_masculine() {
@@ -112,6 +114,11 @@ function is_feminine() {
 function get_role() {
     if (is_masculine()) return "Husband";
     else return "Wife";
+}
+
+function get_other_role() {
+    if (is_masculine()) return "Wife";
+    else return "Husband";
 }
 
 function processID($id) {
@@ -181,9 +188,9 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
     $rightedge = array();
     // If there is any person on the edge, we will keep their ids for more use:
     foreach($people as $i => $person) {
-        if ($person["source"] === null)
+        if (empty($person["source"]))
             array_push($leftedge, $i);
-        if ($person["target"] === null)
+        if (empty($person["target"]))
             array_push($rightedge, $i);
     }
 
@@ -234,39 +241,43 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
 $dummyID = 1000000;
 $known = array();
 foreach($people as $i => $person) {
-        if ($person["source"] === null) {
-            if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known))
-                $people[$i]["source"] = $known[$person["childOf"]];
+        if (empty($person["source"])) {
+            if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known) && !in_array($known[$person["childOf"]], $people[$i]["source"]))
+                    array_push($people[$i]["source"], $known[$person["childOf"]]);
             else {
                 $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
-                $people[$i]["source"] = $dummyID;
+                if (!in_array($dummyID, $people[$i]["source"]))
+                    array_push($people[$i]["source"], $dummyID);
                 $known[$person["childOf"]] = $dummyID;
                 $dummyID++;
             }
         }
 
-        if ($person["target"] === null) {
+        if (empty($person["target"])) {
             $needDummy = true;
-            // check to see if woman, and if so, then let's query to see if she's married one of the men we have
-            if ($person["gender"] == "Female") {
-                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"HusbandID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = 'Wife') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\" and pm.\"Role\" = 'Husband';");
+            // TODO Fix IF statement
+            // check to see if this person is the opposite gender, and if so, then let's query to see if they're married one of the main people we have
+            if ((is_masculine() && $person["gender"] == "Female") || (is_feminine() && $person["gender"] == "Male")) {
+                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"SigOtherID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = '".get_other_role()."') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\" and pm.\"Role\" = '".get_role()."';");
                 if (!$result) {
                     echo "An error occurred.\n";
                     exit;
                 }
                 $arr = pg_fetch_all($result);
-                $husbandID = null;
+                $sigOtherID = null;
                 foreach ($arr as $target) {
-						$husbandID = $target["HusbandID"];
-                        if (array_key_exists($husbandID, $marriageUnits)) {
-                                $people[$i]["target"] = $husbandID;
+						$sigOther = $target["SigOtherID"];
+                        if (array_key_exists($sigOtherID, $marriageUnits)) {
+                                if (!in_array($sigOtherID, $people[$i]["target"]))
+                                    array_push($people[$i]["target"],$sigOtherID);
                                 $needDummy = false;
                         }
                 }
                 // If there is a husband ID, let's use his id as the target to catch some other women
-                if ($needDummy && $husbandID != null) {
-                	$marriageUnits[$husbandID] = array("id"=>$husbandID, "name"=>"");
-                	$people[$i]["target"] = $husbandID;
+                if ($needDummy && $sigOtherID != null) {
+                	$marriageUnits[$sigOtherID] = array("id"=>$sigOtherID, "name"=>"");
+                    if (!in_array($sigOtherID, $people[$i]["target"]))
+                	    array_push($people[$i]["target"], $sigOtherID);
                 	$needDummy = false;
             	}
             }
@@ -274,12 +285,13 @@ foreach($people as $i => $person) {
             
             if ($needDummy) {
                 $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
-                $people[$i]["target"] = $dummyID;
+                if (!in_array($dummyID, $people[$i]["target"]))
+                    array_push($people[$i]["target"], $dummyID);
                 $dummyID++;
             }
         }
 
-        if ($people[$i]["target"] === null || $people[$i]["source"] === null) {
+        if (empty($people[$i]["target"]) || empty($people[$i]["source"])) {
             // Still have an issue, so print this for now
             //print_r($marriageUnits);
             echo "Problem with this person's target or source:";
@@ -300,13 +312,11 @@ echo "], \"people\": [";
 
 $i = 0;
 foreach ($people as $person) {
-        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\":" . $person["source"]. ", \"target\":" .$person["target"] .", \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
+        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\": [" . implode(",",$person["source"]). "], \"target\": [" .implode(",",$person["target"]) ."], \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
         if ($i++ < count($people) -1) echo ",";
 }
 
 echo "]}";
-//print_r($marriageUnits);
-//print_r($people);
 
 
 ?>

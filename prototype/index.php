@@ -16,7 +16,7 @@
 <ul>
 	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
 	real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.</li>
-	<li><a href="chord_time.html?id=615">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
+	<li><a href="chord.html?id=615&temporal">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
 	the marriage to view or use a slider to step through the marriage.  Given a husband's id (by argument "id") from the real database, it shows 
 	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
 	status to show  Links are created from women to their children in the marriage.</li>
@@ -29,6 +29,7 @@
             <li><a href="marriageflow.html?id=615,616,51049">Brigham Young and relatives</a></li>
             <li><a href="marriageflow.html?id=495,496,12625,12626,12627,12629">Joseph Smith and relatives</a></li>
             <li><a href="marriageflow.html?id=615,616,51049,495,496,12625,12626,12627,12629">Brigham Young, Joseph Smith, and relatives</a></li>
+            <li><a href="marriageflow.html?id=1907&wife=1&levels=2">Zina Huntington and 2 levels of separation</a></li>
         </ul>
 
     </li>

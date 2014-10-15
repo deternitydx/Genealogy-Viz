@@ -90,7 +90,7 @@ foreach ($arr as $mar) {
         if ($k == "ID"){
                 array_push($resa, "$v");
                 array_push($resa, "<input type=\"checkbox\" name=\"ids[]\" value=\"$v$addl\"/>");
-                array_push($resa, "<a href=\"../chord_time.html?id=$v$addl\">Temporal</a> - <a href=\"../chord.html?id=$v$addl\">Static</a>");
+                array_push($resa, "<a href=\"../chord.html?id=$v&temporal&$addl\">Temporal</a> - <a href=\"../chord.html?id=$v$addl\">Static</a>");
                 array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">View</a>");
                 if ($first) array_push($headings, " ");
                 if ($first) array_push($headings, "Chord");

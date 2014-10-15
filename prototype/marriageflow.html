@@ -140,7 +140,7 @@ var QueryString = function () {
     if (QueryString.levels)
         append += "levels=" + QueryString.levels + "&";
 
-    sankeyDiagram.drawDiagram("api/sankey-levels.php" + append);
+    sankeyDiagram.drawDiagram("api/lineage.php" + append);
 
 	var chordDiagram = new ChordDisplay("#dialog");
     if (QueryString.wife) {
