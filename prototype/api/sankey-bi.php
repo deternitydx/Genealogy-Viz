@@ -71,8 +71,8 @@ function insertPerson($person, $direction, $id) {
             $people[$person["ID"]]["childOf"] = -1;
     }
     
-    // If we have a female, she gets her own MU with herself as target. 
-    if ($person["Gender"] == "Female") {
+    // If we have a boy, he gets his own MU with himself as target. 
+    if ($person["Gender"] == "Male") {
         if (!array_key_exists($person["ID"], $marriageUnits))
             $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
         if (!in_array($person["ID"], $people[$person["ID"]]["target"]))
@@ -85,9 +85,9 @@ function insertPerson($person, $direction, $id) {
 }
 
 
-// For each wife id, get the husbands
+// For each husband id, get the wives
 foreach($ids as $id) {
-    // Get the wife's information    
+    // Get the husband's information    
     $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n  WHERE p.\"ID\"=$id
          AND p.\"ID\" = n.\"PersonID\" AND n.\"Type\"='authoritative'");
     if (!$result) {
@@ -95,29 +95,30 @@ foreach($ids as $id) {
         exit;
     }
     $arr = pg_fetch_all($result);
-    $wife = $arr[0];
+    $husband = $arr[0];
 
     // set up this marriage unit ID as the husband's ID
-    $marriageUnits[$id] = array("id"=>$id, "name"=>$wife["Last"] . ", " . $wife["First"] . " " . $wife["Middle"]);
-    insertPerson($wife, "target", $id);
+    $marriageUnits[$id] = array("id"=>$id, "name"=>$husband["Last"] . ", " . $husband["First"] . " " . $husband["Middle"]);
+    insertPerson($husband, "target", $id);
 
-    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", m.\"MarriageDate\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" from (select pm.* from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Wife') mid, \"PersonMarriage\" pmw, \"Person\" p, \"Marriage\" m, \"Name\" n where mid.\"MarriageID\"=pmw.\"MarriageID\" and pmw.\"Role\" = 'Husband' and n.\"PersonID\" = pmw.\"PersonID\" and pmw.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' and m.\"ID\" = pmw.\"MarriageID\" order by m.\"MarriageDate\" ASC;");
+    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", m.\"MarriageDate\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" from (select pm.* from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Husband') mid, \"PersonMarriage\" pmw, \"Person\" p, \"Marriage\" m, \"Name\" n where mid.\"MarriageID\"=pmw.\"MarriageID\" and pmw.\"Role\" = 'Wife' and n.\"PersonID\" = pmw.\"PersonID\" and pmw.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' and m.\"ID\" = pmw.\"MarriageID\" order by m.\"MarriageDate\" ASC;");
     if (!$result) {
         echo "An error occurred.\n";
         exit;
     }
     $arr = pg_fetch_all($result);
-    foreach($arr as $husband) {
+    //print_r($arr);
+    foreach($arr as $wife) {
         // Try to get the parent if BiologicalChildOfMarriage is set to something.  May also try to do it inside of insertPerson.
 
-        insertPerson($husband, "target", $id);    
+        insertPerson($wife, "target", $id);    
     }
 }
 
-// For each wife id, get all the children
+// For each husband id, get all the children
 foreach($ids as $id) {
     
-    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", p.\"Gender\", p.\"BiologicalChildOfMarriage\", p.\"BirthDate\", p.\"DeathDate\" from (select pm.\"MarriageID\" from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Wife') mid, \"Person\" p, \"Name\" n where mid.\"MarriageID\"=p.\"BiologicalChildOfMarriage\" and n.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' order by p.\"BirthDate\" ASC;");
+    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", p.\"Gender\", p.\"BiologicalChildOfMarriage\", p.\"BirthDate\", p.\"DeathDate\" from (select pm.\"MarriageID\" from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Husband') mid, \"Person\" p, \"Name\" n where mid.\"MarriageID\"=p.\"BiologicalChildOfMarriage\" and n.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' order by p.\"BirthDate\" ASC;");
     if (!$result) {
         echo "An error occurred.\n";
         exit;
@@ -131,7 +132,6 @@ foreach($ids as $id) {
     }
 
 }
-
 
 /****
  * Clean up and add dummy nodes to those we don't know about
@@ -154,28 +154,28 @@ foreach($people as $i => $person) {
 
         if (empty($person["target"])) {
             $needDummy = true;
-            // check to see if man, and if so, then let's query to see if he's married one of the women we have
-            if ($person["gender"] == "Male") {
-                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"WifeID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = 'Husband') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\" and pm.\"Role\" = 'Wife';");
+            // check to see if woman, and if so, then let's query to see if she's married one of the men we have
+            if ($person["gender"] == "Female") {
+                $result = pg_query($db, "SELECT pm.\"PersonID\" as \"HusbandID\" FROM (SELECT m.\"MarriageID\" FROM public.\"PersonMarriage\" as m  WHERE \"PersonID\"={$person['id']} AND \"Role\" = 'Wife') m, \"PersonMarriage\" pm WHERE pm.\"MarriageID\" = m.\"MarriageID\" and pm.\"Role\" = 'Husband';");
                 if (!$result) {
                     echo "An error occurred.\n";
                     exit;
                 }
                 $arr = pg_fetch_all($result);
-                $wifeID = null;
+                $husbandID = null;
                 foreach ($arr as $target) {
-						$wifeID = $target["WifeID"];
-                        if (array_key_exists($wifeID, $marriageUnits)) {
-                                if (!in_array($wifeID, $people[$i]["target"]))
-                                    array_push($people[$i]["target"],$wifeID);
+						$husbandID = $target["HusbandID"];
+                        if (array_key_exists($husbandID, $marriageUnits)) {
+                                if (!in_array($husbandID, $people[$i]["target"]))
+                                    array_push($people[$i]["target"],$husbandID);
                                 $needDummy = false;
                         }
                 }
-                // If there is a wife ID, let's use her id as the target to catch some other men
-                if ($needDummy && $wifeID != null) {
-                	$marriageUnits[$wifeID] = array("id"=>$wifeID, "name"=>"");
-                    if (!in_array($wifeID, $people[$i]["target"]))
-                	    array_push($people[$i]["target"], $wifeID);
+                // If there is a husband ID, let's use his id as the target to catch some other women
+                if ($needDummy && $husbandID != null) {
+                	$marriageUnits[$husbandID] = array("id"=>$husbandID, "name"=>"");
+                    if (!in_array($husbandID, $people[$i]["target"]))
+                	    array_push($people[$i]["target"], $husbandID);
                 	$needDummy = false;
             	}
             }

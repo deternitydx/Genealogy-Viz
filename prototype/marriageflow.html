@@ -34,7 +34,7 @@ svg {
 }
 
 .link:hover {
-    stroke-opacity: .5;
+    stroke-opacity: .8;
 }
 
 .chord path {
@@ -132,13 +132,15 @@ var QueryString = function () {
     // Instantiate the sankey display, selecting the chart object as the target
     var sankeyDiagram = new SankeyDisplay("#chart");
     //sankeyDiagram.height=1000;
-    if (!QueryString.levels) QueryString.levels = "0";
-    if (QueryString.wife) {
-        sankeyDiagram.drawDiagram("api/lineage_by_woman.php?id=" + QueryString.id);
-    } else if (QueryString.id)
-	    sankeyDiagram.drawDiagram("api/sankey-levels.php?id=" + QueryString.id + "&levels=" + QueryString.levels);
-    else
-	    sankeyDiagram.drawDiagram("api/sankey-levels.php?levels=" + QueryString.levels);
+    var append = "?";
+    if (QueryString.wife)
+        append += "view=female&";
+    if (QueryString.id)
+        append += "id=" + QueryString.id + "&";
+    if (QueryString.levels)
+        append += "levels=" + QueryString.levels + "&";
+
+    sankeyDiagram.drawDiagram("api/sankey-levels.php" + append);
 
 	var chordDiagram = new ChordDisplay("#dialog");
     if (QueryString.wife) {
