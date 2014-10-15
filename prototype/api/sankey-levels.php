@@ -57,7 +57,7 @@
 
 header('Content-type: application/json');
 
-$ids = array( 615, 616, 51049);
+$ids = array( 615);
 if (isset($_GET["id"]))
     $ids = explode(",",$_GET["id"]);
 $levels = 0;
@@ -66,6 +66,9 @@ if (isset($_GET["levels"]))
 $showall = false;
 if (isset($_GET["showall"]))
     $showall = true;
+$orientation = "male";
+if (isset($_GET["view"]) && $_GET["view"] == "female")
+    $orientation = "female";
 
 $marriageUnits = array();
 $people = array();
@@ -93,12 +96,27 @@ function insertPerson($person, $direction, $id) {
     }
     
     // Set the direction we had asked for to the proper id
-    $people[$person["ID"]][$direction] = $id;
+    if ($direction !== null && $id !== null)
+        $people[$person["ID"]][$direction] = $id;
 }
 
+function is_masculine() {
+    global $orientation;
+    return ($orientation == 'male');
+}
+
+function is_feminine() {
+    return !is_masculine();
+}
+
+function get_role() {
+    if (is_masculine()) return "Husband";
+    else return "Wife";
+}
 
 function processID($id) {
-    // Get the husband's information    
+    global $db, $marriageUnits, $people;
+    // Get the person's information    
     $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n  WHERE p.\"ID\"=$id
          AND p.\"ID\" = n.\"PersonID\" AND n.\"Type\"='authoritative'");
     if (!$result) {
@@ -106,14 +124,24 @@ function processID($id) {
         exit;
     }
     $arr = pg_fetch_all($result);
-    $husband = $arr[0];
+    $person = $arr[0];
 
-    // set up this marriage unit ID as the husband's ID
-    $marriageUnits[$id] = array("id"=>$id, "name"=>$husband["Last"] . ", " . $husband["First"] . " " . $husband["Middle"]);
-    insertPerson($husband, "target", $id);
+    // If this person is the gender of the marriage units, create a marriage unit for them
+    if ((is_masculine() && $person["Gender"] == "Male") || (is_feminine() && $person["Gender"] == "Female")) {
+        if (!isset($marriageUnits[$id]))
+            $marriageUnits[$id] = array("id"=>$id, "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
+        insertPerson($person, "target", $id);
+    } else {
+        // Not sure if we want this, but we'll see for now
+        insertPerson($person, null, null);
+    }
 
-    // Get the wives for this husband
-    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", m.\"MarriageDate\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" from (select pm.* from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Husband') mid, \"PersonMarriage\" pmw, \"Person\" p, \"Marriage\" m, \"Name\" n where mid.\"MarriageID\"=pmw.\"MarriageID\" and pmw.\"Role\" = 'Wife' and n.\"PersonID\" = pmw.\"PersonID\" and pmw.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' and m.\"ID\" = pmw.\"MarriageID\" order by m.\"MarriageDate\" ASC;");
+    // Get the other marriage members for this person
+    $other_type = "Wife";
+    if (is_feminine()) $other_type = "Husband";
+    $this_type = "Wife";
+    if (is_masculine()) $this_type = "Husband";
+    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", m.\"MarriageDate\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" from (select pm.* from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = '$this_type') mid, \"PersonMarriage\" pmw, \"Person\" p, \"Marriage\" m, \"Name\" n where mid.\"MarriageID\"=pmw.\"MarriageID\" and pmw.\"Role\" = '$other_type' and n.\"PersonID\" = pmw.\"PersonID\" and pmw.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' and m.\"ID\" = pmw.\"MarriageID\" order by m.\"MarriageDate\" ASC;");
     if (!$result) {
         echo "An error occurred.\n";
         exit;
@@ -123,8 +151,8 @@ function processID($id) {
         insertPerson($wife, "target", $id);    
     }
 
-    // Get the children for this man's marriage 
-    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", p.\"Gender\", p.\"BiologicalChildOfMarriage\", p.\"BirthDate\", p.\"DeathDate\" from (select pm.\"MarriageID\" from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = 'Husband') mid, \"Person\" p, \"Name\" n where mid.\"MarriageID\"=p.\"BiologicalChildOfMarriage\" and n.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' order by p.\"BirthDate\" ASC;");
+    // Get the children for this person's marriage 
+    $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", p.\"Gender\", p.\"BiologicalChildOfMarriage\", p.\"BirthDate\", p.\"DeathDate\" from (select pm.\"MarriageID\" from \"PersonMarriage\" pm where pm.\"PersonID\"=$id and pm.\"Role\" = '$this_type') mid, \"Person\" p, \"Name\" n where mid.\"MarriageID\"=p.\"BiologicalChildOfMarriage\" and n.\"PersonID\" = p.\"ID\" and n.\"Type\" = 'authoritative' order by p.\"BirthDate\" ASC;");
     if (!$result) {
         echo "An error occurred.\n";
         exit;
@@ -141,7 +169,7 @@ function processID($id) {
 // **********************************************************************************************************
 
 
-// For each husband id, get the wives
+// For each person id, get their spouses and children
 foreach($ids as $id) {
     processID($id);
 }
@@ -151,6 +179,7 @@ foreach($ids as $id) {
 for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
     $leftedge = array();
     $rightedge = array();
+    // If there is any person on the edge, we will keep their ids for more use:
     foreach($people as $i => $person) {
         if ($person["source"] === null)
             array_push($leftedge, $i);
@@ -162,8 +191,9 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
         // Look up parental marriage's husband id and get parents
         if ($people[$i]["childOf"] != -1)  { // we know they have a parent
             // Start by getting all parents in that marriage
-            $mid = $people[$id]["childOf"];
-            $result = pg_query($db, "select distinct p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", m.\"MarriageDate\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" from (select pm.* from \"PersonMarriage\" pm where pm.\"MarriageID\"=$mid) mid,\"Person\" p, \"Name\" n, \"Marriage\" m where mid.\"PersonID\"=p.\"ID\" and n.\"PersonID\" = mid.\"PersonID\" and n.\"Type\" = 'authoritative' and mid.\"MarriageID\"=m.\"ID\" order by m.\"MarriageDate\" ASC;");
+            $mid = $people[$i]["childOf"];
+            // Get the parents of the same gender as the view we're currently filling
+            $result = pg_query($db, "select pm.\"PersonID\" as \"ID\" from \"PersonMarriage\" pm where pm.\"MarriageID\"=$mid and pm.\"Role\" = '". get_role() ."';");
             if (!$result) {
                  echo "An error occurred.\n";
                  exit;
@@ -172,13 +202,28 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
             foreach($arr as $parent) {
                 // this doesn't work for this particular application
                 // insertPerson($parent, "target", $id);    
+
+                // I think this is what we really want
+                processID($parent["ID"]);
             }
             
         }
+        // Look up this person, too, just in case they have other spouses or children
+        processID($people[$i]["id"]);
     }
 
     foreach ($rightedge as $i) {
-        // Look up child marriage's children
+        // Look up child marriage's parent role (husband or wife)
+        $result = pg_query($db, "select distinct pm.\"PersonID\" as \"ID\" from \"PersonMarriage\" pm, \"PersonMarriage\" jn where pm.\"MarriageID\"=jn.\"MarriageID\" and jn.\"PersonID\"=".$people[$i]["id"]." and pm.\"Role\" = '". get_role() ."';");
+        if (!$result) {
+             echo "An error occurred looking up children marriage.\n";
+             exit;
+        }
+        $arr = pg_fetch_all($result);
+        foreach($arr as $parent) {
+            processID($parent["ID"]);
+        }
+        processID($people[$i]["id"]);
     }
 }
 
@@ -232,6 +277,14 @@ foreach($people as $i => $person) {
                 $people[$i]["target"] = $dummyID;
                 $dummyID++;
             }
+        }
+
+        if ($people[$i]["target"] === null || $people[$i]["source"] === null) {
+            // Still have an issue, so print this for now
+            //print_r($marriageUnits);
+            echo "Problem with this person's target or source:";
+            print_r($person);
+            //die ("Problem with person not having a source or target");
         }
 }
 
