@@ -58,9 +58,15 @@ foreach ($tables as $table) {
                    WHERE c.table_name = '$tablename' ORDER BY c.ordinal_position ASC;");
 
     $columns = pg_fetch_all($result);
-    echo "<h4>Columns</h4>\n\n<ul>";
+    echo "<h4>Fields</h4>";
+    echo "\n\n<ul>";
+    $relations = array();
     foreach($columns as $column) {
         if (!isset($column['description'])) $column['description'] = "";
+        if (strstr($column['column_name'], "ID") && $column['column_name'] != "ID") {
+            array_push($relations, $column);
+            continue;
+        }
         echo "<li><b>{$column['column_name']}</b>";
         if (!isset($column["data_type"]) || $column["data_type"] != "USER-DEFINED")
             echo "<br/><em>Type: {$column['data_type']}</em>";
@@ -71,6 +77,18 @@ foreach ($tables as $table) {
     }
 
     echo "</ul>\n\n";
+
+    if (!empty($relations)) {
+        echo "<h4>Relations</h4>\n\n<ul>";
+        foreach ($relations as $rel) {
+            echo "<li>";
+            echo "<b>" . substr($rel['column_name'], 0, -2) . "</b>";
+            if ($rel['description'] != "")
+                echo "<br/>Description: {$rel['description']}";
+            echo "</li>";
+        }
+        echo "</ul>";
+    }
 }
 
 ?>

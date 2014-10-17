@@ -81,8 +81,8 @@ function ChordDisplay(element) {
         table.append("tr").append("td").style("background", "#A1CB87").style("color", "#000000").text("Biological");
         table.append("tr").append("td").style("background", "#FFCD81").style("color", "#000000").text("Adoption");
         table.append("tr").append("td").style("background", "#C9BCD6").style("color", "#000000").text("Married (BYU)");
-        table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Married (Eternity)");
-        table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Married (Time)");
+        table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Sealed (Eternity)");
+        table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Sealed (Time)");
         table.append("tr").append("td").style("background", "#FFB2E6").style("color", "#000000").text("Married (Civil)");
         
         var time = "All Time";
