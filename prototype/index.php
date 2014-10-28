@@ -39,7 +39,9 @@
 <p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
 <ul>
 	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
-	<li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
+    <li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
+    <li><form action="data_view/search.php" method="get">Search People: Search for all people in the database by name.  Uses a fuzzy search mechanism.  Results may be clicked to find a list of children. <br/>Name <input type="text" name="q" width="25"/> <input type="Submit" value="Search"></form>
+    </li>
 	<li><a href="data_view/marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
 	<li><a href="data_view/places.php">All Places</a>: Searchable list of all places currently in our database (using Official Name).</li>
 	<li><a href="data_view/documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>

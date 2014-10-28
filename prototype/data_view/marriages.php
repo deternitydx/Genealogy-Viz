@@ -36,10 +36,12 @@ var QueryString = function () {
     return query_string;
 } ();
 $(document).ready( function () {
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/marriages.php", deferRender: true});
+    var q = "?";
     if (QueryString.idSearch) {
-        dt.column(0).search("^" + QueryString.idSearch + "$", true).draw();
+//        dt.column(0).search("^" + QueryString.idSearch + "$", true).draw();
+        q += "id=" + QueryString.idSearch;
     }    
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/marriages.php" + q, deferRender: true});
 } );
 </script>
 <body>

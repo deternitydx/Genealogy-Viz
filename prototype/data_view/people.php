@@ -37,9 +37,13 @@ var QueryString = function () {
 } ();
 
 $(document).ready( function () {
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/people.php", deferRender: true, saveState: true});
+    var q = "?";
     if (QueryString.parentSearch) {
-        dt.column(8).search("^" + QueryString.parentSearch + "$", true).draw();
+        q += "parentsID=" + QueryString.parentSearch;
+    }    
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/people.php" + q, deferRender: true, saveState: true});
+    if (QueryString.parentSearch) {
+//        dt.column(8).search("^" + QueryString.parentSearch + "$", true).draw();
     }    
     if (QueryString.idSearch) {
         dt.column(0).search("^" + QueryString.idSearch + "$", true).draw();
