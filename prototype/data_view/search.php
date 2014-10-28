@@ -59,7 +59,7 @@ var cdt = null;
 
 function show_children(id, name){
     if (cdt != null) cdt.destroy();
-    cdt = $('#children').DataTable( {paging: false, ajax: "/nauvoo/api/search.php?type=children&q=" + id, deferRender: true, saveState: true});
+    cdt = $('#children').DataTable( {paging: false, ajax: "../api/search.php?type=children&q=" + id, deferRender: true, saveState: true});
 	// open the dialog window with jQuery
 	$("#dialog").dialog("option", "title", "Children of " + name.replace(/&nbsp;/gi,''));
     $("#dialog").dialog("open");
@@ -71,7 +71,7 @@ $(document).ready( function () {
     if (QueryString.q) {
         searchQuery += "q=" + QueryString.q + "&type=name";
     }
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/search.php" + searchQuery, deferRender: true, saveState: true});
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/search.php" + searchQuery, deferRender: true, saveState: true});
     if (QueryString.parentSearch) {
         dt.column(8).search("^" + QueryString.parentSearch + "$", true).draw();
     }    

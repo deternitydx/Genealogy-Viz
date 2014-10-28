@@ -15,7 +15,7 @@
 <body>
 <script>
 $(document).ready( function () {
-    $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/places.php", deferRender: true});
+    $('#datatable').DataTable( {paging: true, ajax: "../api/places.php", deferRender: true});
 } );
 </script>
 <h1>Places</h1>

@@ -41,7 +41,7 @@ $(document).ready( function () {
 //        dt.column(0).search("^" + QueryString.idSearch + "$", true).draw();
         q += "id=" + QueryString.idSearch;
     }    
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/marriages.php" + q, deferRender: true});
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/marriages.php" + q, deferRender: true});
 } );
 </script>
 <body>
