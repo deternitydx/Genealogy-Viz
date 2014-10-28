@@ -8,7 +8,7 @@ if (isset($_GET["id"])) {
 }
 
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", 
     h.\"PersonID\" as \"HusbandID\", 

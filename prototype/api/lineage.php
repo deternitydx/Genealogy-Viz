@@ -73,7 +73,7 @@ if (isset($_GET["view"]) && $_GET["view"] == "female")
 $marriageUnits = array();
 $people = array();
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 // Insert this person with either source or target (direction) pointing to this id
 function insertPerson($person, $direction, $id) {

@@ -2,7 +2,7 @@
 
 header('Content-type: application/json');
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $type = $_GET["type"];
 $search = implode(" & ", explode(" ", pg_escape_string($_GET["q"])));

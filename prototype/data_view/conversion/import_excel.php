@@ -1,6 +1,6 @@
 <?php
 
-//$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+//$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $csvfile = fopen("aqdata.csv", "r");
 if ($csvfile == NULL)

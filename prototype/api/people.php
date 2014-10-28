@@ -6,7 +6,7 @@ if (isset($_GET["parentsID"])) {
     $where = "AND p.\"BiologicalChildOfMarriage\"=" . $_GET["parentsID"];
 }
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", p.\"BiologicalChildOfMarriage\" as \"ChildOf\" FROM public.\"Person\" p, public.\"Name\" n

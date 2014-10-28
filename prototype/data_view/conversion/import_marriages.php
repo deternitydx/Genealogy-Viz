@@ -2,7 +2,7 @@
 include_once("common_functions.php");
 
 $DEBUG = false;
-$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $csvfile = fopen("marriages.csv", "r");
 $badfile = fopen("failed_marriages.csv", "w");

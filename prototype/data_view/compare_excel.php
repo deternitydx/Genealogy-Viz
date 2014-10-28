@@ -25,7 +25,7 @@ th {
 <body>
 <?php
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $csvfile = fopen("conversion/aqdata.csv", "r");
 if ($csvfile == NULL)
