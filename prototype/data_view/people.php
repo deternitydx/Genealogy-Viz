@@ -41,7 +41,7 @@ $(document).ready( function () {
     if (QueryString.parentSearch) {
         q += "parentsID=" + QueryString.parentSearch;
     }    
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "/nauvoo/api/people.php" + q, deferRender: true, saveState: true});
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/people.php" + q, deferRender: true, saveState: true});
     if (QueryString.parentSearch) {
 //        dt.column(8).search("^" + QueryString.parentSearch + "$", true).draw();
     }    
