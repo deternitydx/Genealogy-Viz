@@ -175,10 +175,7 @@ d3.json(json_location, function(jsonData) {
   node.filter(function(d) { return (d.type === "marriage") ? this : null;}).append("circle")
       .attr("r", function(d) { //console.log(d);
             var r = 0; 
-            if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
-            else 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; 
+            r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
             return r;
       })
       .attr("cy", function(d) { return d.dy / 2; })
