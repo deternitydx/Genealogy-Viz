@@ -112,6 +112,9 @@ d3.sankey = function() {
   // Nodes are assigned the maximum breadth of incoming neighbors plus one;
   // nodes with no incoming links are assigned breadth zero, while
   // nodes with no outgoing links are assigned the maximum breadth.
+  //
+  // Note: node.sourceLinks are the nodes that are descendents (this node is their source)
+  //       node.targetLinks are the nodes that are ancestors (this node is their target)
   function computeNodeBreadths() {
     var remainingNodes = nodes,
         nextNodes,
@@ -130,8 +133,22 @@ d3.sankey = function() {
       ++x;
     }
 
+    remainingNodes = nodes;
+    while (remainingNodes.length) {
+        nextNodes = [];
+        remainingNodes.forEach(function(node) {
+            if (node.sourceLinks.length)
+                node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
+            node.targetLinks.forEach(function(link) {
+                nextNodes.push(link.source);
+            });
+        });
+        remainingNodes = nextNodes;
+    }
+
     //
     //moveSinksRight(x);
+    //moveSourcesRight();
     scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
   }
 
