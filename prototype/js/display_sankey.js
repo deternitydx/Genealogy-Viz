@@ -32,6 +32,13 @@ this.sankey = d3.sankey()
 
 this.path = this.sankey.link();
 
+this.marriageUnitColor = function(level) {
+    if (level == 0) return "#375C37";
+    if (level == 1) return "#5C995C";
+    if (level == 2) return "#9DC29D";
+    return "#DEEBDE";
+}
+
 this.drawDiagram = function(json_location) {
 
 d3.json(json_location, function(jsonData) {
@@ -181,7 +188,9 @@ d3.json(json_location, function(jsonData) {
       .attr("cy", function(d) { return d.dy / 2; })
       .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
       .style("fill", function(d) { //console.log(d); 
-             return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
+          return d.color = _this.marriageUnitColor(d.level);   
+          //return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ 
+          })
       .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
       .on("click", show_info)
 
