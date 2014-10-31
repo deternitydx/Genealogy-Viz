@@ -121,7 +121,7 @@ d3.json(json_location, function(jsonData) {
       .nodes(_this.nodes)
       .links(_this.links)
       .size([_this.width, _this.height])
-      .layout(32);
+      .layout(100);
  
      //console.log(_this.sankey.nodes);
 
