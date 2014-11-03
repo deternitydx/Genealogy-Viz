@@ -182,14 +182,52 @@ d3.json(json_location, function(jsonData) {
       .on("dragstart", function() { this.parentNode.appendChild(this); })
       .on("drag", dragmove))
       .on("mouseover", function(d, i) {//console.log(d); console.log(i);
-          if (d.type === "person") {
-            d3.selectAll(".link").filter( function(l) { return (l.source === d || l.target === d) ? this : null; })
+          if (true) { //d.type === "person") {
+            d3.selectAll(".link").filter( function(l) { 
+                var nextEl = (l.source === d || l.target === d);
+                var elAfter = false;
+                if (d.type !== "person") {
+                    if (l.source && l.source.targetLinks)
+                       l.source.targetLinks.forEach(function (each) {
+                            if (each.source === d) elAfter = true;   
+                       });
+                    if (l.target && l.target.sourceLinks)
+                       l.target.sourceLinks.forEach(function (each) {
+                            if (each.target === d) elAfter = true;   
+                       });
+                }
+                // looking backwards:
+                //   l.target = the target of the edge
+                //   l.target.sourceLinks = list of edges that this target is the source of
+                //   l.target.sourceLinks[...].target = target of the target
+                
+                return (nextEl || elAfter) ? this : null; 
+            })
                .style("stroke-opacity", "0.8");
             //this.style("fill-opacity", "0.8");
           } })
       .on("mouseout", function(d, i) {//console.log(d); console.log(i);
-          if (d.type === "person") {
-            d3.selectAll(".link").filter( function(l) { return (l.source === d || l.target === d) ? this : null; })
+          if (true) { //d.type === "person") {
+            d3.selectAll(".link").filter( function(l) { 
+                var nextEl = (l.source === d || l.target === d);
+                var elAfter = false;
+                if (d.type !== "person") {
+                    if (l.source && l.source.targetLinks)
+                       l.source.targetLinks.forEach(function (each) {
+                            if (each.source === d) elAfter = true;   
+                       });
+                    if (l.target && l.target.sourceLinks)
+                       l.target.sourceLinks.forEach(function (each) {
+                            if (each.target === d) elAfter = true;   
+                       });
+                }
+                // looking backwards:
+                //   l.target = the target of the edge
+                //   l.target.sourceLinks = list of edges that this target is the source of
+                //   l.target.sourceLinks[...].target = target of the target
+                
+                return (nextEl || elAfter) ? this : null; 
+            })
                .style("stroke-opacity", "");
           } });
 
