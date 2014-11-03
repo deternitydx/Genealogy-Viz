@@ -37,9 +37,11 @@ d3.sankey = function() {
   };
 
   sankey.layout = function(iterations) {
+    nodePadding = Math.max(nodePadding, sankey.nodeWidth());
     computeNodeLinks();
     computeNodeValues();
     computeNodeBreadths();
+    updateHeight();
     computeNodeDepths(iterations);
     computeLinkDepths();
     return sankey;
@@ -173,6 +175,15 @@ d3.sankey = function() {
       node.x *= kx;
     });
   }
+  function updateHeight() {
+    var nodesByBreadth = d3.nest()
+        .key(function(d) { return d.x; })
+        .sortKeys(d3.ascending)
+        .entries(nodes)
+        .map(function(d) { return d.values; });
+    var height = d3.max(nodesByBreadth, function(nodes) { return (nodes.length) * nodePadding; });
+    if (height > size[1]) size[1] = height;
+  }
 
   function computeNodeDepths(iterations) {
     var nodesByBreadth = d3.nest()
@@ -190,6 +201,7 @@ d3.sankey = function() {
       relaxLeftToRight(alpha);
       resolveCollisions();
     }
+
 
     function initializeNodeDepth() {
       var ky = d3.min(nodesByBreadth, function(nodes) {
