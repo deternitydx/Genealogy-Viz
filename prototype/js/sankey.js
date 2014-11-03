@@ -155,11 +155,16 @@ d3.sankey = function() {
   }
 
   function moveSourcesRight() {
-    nodes.forEach(function(node) {
-      if (!node.targetLinks.length) {
-        node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
-      }
-    });
+    var changed = true;
+    while (!changed) {
+        changed = false;
+        nodes.forEach(function(node) {
+            if (!node.targetLinks.length) {
+                node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
+                changed = true;
+            }
+        });
+    }
   }
 
   function moveSinksRight(x) {
