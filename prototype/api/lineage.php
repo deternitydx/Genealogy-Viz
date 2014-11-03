@@ -72,7 +72,7 @@ if (isset($_GET["view"]) && $_GET["view"] == "female")
 
 $marriageUnits = array();
 $people = array();
-$currentLevel = 1;
+$currentLevel = 0;
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
@@ -90,8 +90,8 @@ function insertPerson($person, $direction, $id) {
     }
 
     // Set the level on the marriage if we need one
-    $level = $currentLevel;
-    if (in_array($id, $ids))
+    $level = $currentLevel + 1;
+    if (in_array($person["ID"], $ids))
         $level = 0;
 
     // If this person is the gender of the marriage units, create a marriage unit for them
@@ -250,6 +250,7 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
 /****
  * Clean up and add dummy nodes to those we don't know about
  */
+$currentLevel++;
 $dummyID = 1000000;
 $known = array();
 foreach($people as $i => $person) {
