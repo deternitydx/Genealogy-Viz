@@ -135,17 +135,52 @@ d3.sankey = function() {
       ++x;
     }
 
-    remainingNodes = nodes;
-    while (remainingNodes.length) {
-        nextNodes = [];
-        remainingNodes.forEach(function(node) {
-            if (node.sourceLinks.length)
-                node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
-            node.targetLinks.forEach(function(link) {
-                nextNodes.push(link.source);
+    // full depth is x - 1
+    var fullDepth = x - 1;
+
+    var changed = true;
+    while (changed) {
+        changed = false;
+        remainingNodes = nodes;
+        while (remainingNodes.length) {
+            nextNodes = [];
+            remainingNodes.forEach(function(node) {
+                // maybe we can move it
+                if (node.x < fullDepth) {
+                    // if it has nodes that count it as a source, then move it forward to just next to it's closest child
+                    if (node.sourceLinks.length) {
+                        node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
+                        //changed = true;
+                    }
+                    // if it has no nodes that count it as a source, then we need to look back
+                    // Note: edge nodes on the right will not be included here
+                    else {
+                        var currLevel = node.x;
+                        var minNext = currLevel;
+                        // If this node is counted as a target
+                        if (node.targetLinks.length) {
+                            // check each of the sources for the minimum next edge
+                            node.targetLinks.forEach( function (link) {
+                                if (link.target !== node) {
+                                    var minNextTmp = d3.min(link.source.sourceLinks, function(d) { return d.target.x; }) - 1;
+                                    if (minNextTmp < minNext)
+                                        minNext = minNextTmp;
+                                }
+                            });
+                        }
+
+                        if (minNext > currLevel) {
+                            node.x = minNext;
+                            //changed = true;
+                        }
+                    }
+                    node.targetLinks.forEach(function(link) {
+                        nextNodes.push(link.source);
+                    });
+                }
             });
-        });
-        remainingNodes = nextNodes;
+            remainingNodes = nextNodes;
+        }
     }
 
     //
@@ -156,7 +191,7 @@ d3.sankey = function() {
 
   function moveSourcesRight() {
     var changed = true;
-    while (!changed) {
+    while (changed) {
         changed = false;
         nodes.forEach(function(node) {
             if (!node.targetLinks.length) {
