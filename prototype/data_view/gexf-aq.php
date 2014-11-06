@@ -55,80 +55,89 @@ echo "<graph mode=\"static\" defaultedgetype=\"directed\">\n";
 
 $nodes = array();
 $edges = array();
-
+$dummyCounter = 100000000;
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
-// Query for all the main gender
-$result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
+
+// Query for all the main gender in the AQ
+$result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
-    FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"ChurchOrgMembership\" c
-    WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Male' 
-        AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-        AND c.\"PersonID\" = p.\"ID\" AND c.\"ChurchOrgID\" = 1
+    FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
+    WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
 }
 
-// For each (main level) person
-while ($person = pg_fetch_array($result)) {
-    // if they don't have a to-marriage, then add one for their ID.
-    $nodes[$person["ID"]] = array(
-        "id" => $person["ID"],
-        "label" => htmlspecialchars($person["First"] . " " . $person["Last"] . " Marriage"));
+process_results($result);
 
-    // Add the person link from their marriage of birth to their marriage of adulthood
-    $edge = array(
-        "source" => $person["ChildOf"],
-        "target" => $person["ID"],
-        "label" => htmlspecialchars($person["First"] . " " . $person["Last"]));
-
-    // check that this edge is not already accounted for (inefficient)
-    $inarray = false;
-    foreach ($edges as $e) {
-        if ($edge["source"] == $e["source"] && $edge["target"] == $e["target"]) {
-            $inarray = true;
-            break;
-        }
-    }
-    if (!$inarray)
-        array_push($edges, $edge);
-}
-
-// Query for all the secondary gender
+// Query for all the secondary gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
-    FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"ChurchOrgMembership\" c,
+    FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
+    LEFT OUTER JOIN
         (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
             FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
             WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
-    WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
-        AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-        AND m.\"PersonID\" = p.\"ID\" AND c.\"PersonID\" = p.\"ID\" AND c.\"ChurchOrgID\" = 1
+        ON (m.\"PersonID\" = p.\"ID\")
+    WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
 }
 
 // For each (secondary level) person
-while ($person = pg_fetch_array($result)) {
-    // Add the person link from their marriage of birth to their marriage of adulthood
-    $edge = array(
-        "source" => $person["ChildOf"],
-        "target" => $person["SpouseID"],
-        "label" => htmlspecialchars($person["First"] . " " . $person["Last"]));
-    
-    // check that this edge is not already accounted for (inefficient)
-    $inarray = false;
-    foreach ($edges as $e) {
-        if ($edge["source"] == $e["source"] && $edge["target"] == $e["target"]) {
-            $inarray = true;
-            break;
+process_results($result);
+
+
+function process_results($result) {
+    global $nodes, $edges, $dummyCounter;
+    while ($person = pg_fetch_array($result)) {
+        // if they don't have a to-marriage, then add one for their ID.
+        if ($person["Gender"] == "Male") {
+            $nodes[$person["ID"]] = array(
+                "id" => $person["ID"],
+                "label" => htmlspecialchars($person["First"] . " " . $person["Last"] . " Marriage"));
         }
+
+        // set up the target
+        $target = $person["ID"];
+        if ($person["Gender"] == "Female") {
+            if (isset($person["SpouseID"]) && $person["SpouseID"] != null && $person["SpouseID"] != "")
+                $target = $person["SpouseID"];
+            else
+                $target = $dummyCounter++;
+        }
+
+        // set up the source
+        $childOf = null; 
+        if (isset($person["ChildOf"]) && $person["ChildOf"] != null && $person["ChildOf"] != "")
+            $childOf = $person["ChildOf"];
+        else
+            $childOf = $dummyCounter++;
+        // Add the person link from their marriage of birth to their marriage of adulthood
+        $edge = array(
+            "source" => $childOf,
+            "target" => $target, 
+            "label" => htmlspecialchars($person["First"] . " " . $person["Last"]));
+
+        // check that this edge is not already accounted for (inefficient)
+        $inarray = false;
+        foreach ($edges as $e) {
+            if ($edge["source"] == $e["source"] && $edge["target"] == $e["target"]) {
+                $inarray = true;
+                break;
+            }
+        }
+        if (!$inarray)
+            array_push($edges, $edge);
     }
-    if (!$inarray)
-        array_push($edges, $edge);
 }
+
 
 
 // Nodes

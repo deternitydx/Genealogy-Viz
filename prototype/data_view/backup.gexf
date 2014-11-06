@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2">
+<meta lastmodifieddate="2014-11-05">
+	<creator>Robbie Hott</creator>
+	<description>Nauvoo Graph</description>
+</meta>
+<graph mode="static" defaultedgetype="directed">
+<nodes>
+	<node id = "425" label = "Orson Pratt Marriage" />
+	<node id = "428" label = "Parley Pratt Marriage" />
+	<node id = "484" label = "George Smith Marriage" />
+	<node id = "495" label = "Joseph Smith Marriage" />
+	<node id = "615" label = "Brigham Young Marriage" />
+	<node id = "5720" label = "Heber Kimball Marriage" />
+	<node id = "7727" label = "Orson Spencer Marriage" />
+	<node id = "10787" label = "Samuel Smith Marriage" />
+	<node id = "11997" label = "Cornelius Lott Marriage" />
+	<node id = "12241" label = "Almon Babbitt Marriage" />
+	<node id = "12596" label = "Hyrum Smith Marriage" />
+	<node id = "12648" label = "John Smith Marriage" />
+	<node id = "15277" label = "George Miller Marriage" />
+	<node id = "15542" label = "Joseph Bates Noble Marriage" />
+	<node id = "15728" label = "Isaac Morley Marriage" />
+	<node id = "16668" label = "Reynolds Cahoon Marriage" />
+	<node id = "18044" label = "William Clayton Marriage" />
+	<node id = "19532" label = "Joseph Fielding Marriage" />
+	<node id = "22809" label = "Willard Richards Marriage" />
+	<node id = "22846" label = "Levi Richards Marriage" />
+	<node id = "25079" label = "Amasa Lyman Marriage" />
+	<node id = "25714" label = "Joseph Kingsbury Marriage" />
+	<node id = "27506" label = "James Adams Marriage" />
+	<node id = "29461" label = "John Greene Marriage" />
+	<node id = "31683" label = "Charles Hyde Marriage" />
+	<node id = "31692" label = "Orson Hyde Marriage" />
+	<node id = "32035" label = "Joseph Young Marriage" />
+	<node id = "32267" label = "John Taylor Marriage" />
+	<node id = "32979" label = "John Page Marriage" />
+	<node id = "33870" label = "Sidney Rigdon Marriage" />
+	<node id = "36149" label = "N. Whitney Marriage" />
+	<node id = "36385" label = "Wilford Woodruff Marriage" />
+	<node id = "36411" label = "Lucien Woodworth Marriage" />
+</nodes>
+<edges>
+	<edge id = "0" source = "426" target = "425" label = "Orson Pratt" />
+	<edge id = "1" source = "426" target = "428" label = "Parley Pratt" />
+	<edge id = "2" source = "12648" target = "484" label = "George Smith" />
+	<edge id = "3" source = "496" target = "495" label = "Joseph Smith" />
+	<edge id = "4" source = "616" target = "615" label = "Brigham Young" />
+	<edge id = "5" source = "48471" target = "5720" label = "Heber Kimball" />
+	<edge id = "6" source = "37596" target = "7727" label = "Orson Spencer" />
+	<edge id = "7" source = "496" target = "10787" label = "Samuel Smith" />
+	<edge id = "8" source = "31156" target = "11997" label = "Cornelius Lott" />
+	<edge id = "9" source = "12243" target = "12241" label = "Almon Babbitt" />
+	<edge id = "10" source = "496" target = "12596" label = "Hyrum Smith" />
+	<edge id = "11" source = "16599" target = "12648" label = "John Smith" />
+	<edge id = "12" source = "42498" target = "15277" label = "George Miller" />
+	<edge id = "13" source = "30857" target = "15542" label = "Joseph Bates Noble" />
+	<edge id = "14" source = "49053" target = "15728" label = "Isaac Morley" />
+	<edge id = "15" source = "16902" target = "16668" label = "Reynolds Cahoon" />
+	<edge id = "16" source = "18040" target = "18044" label = "William Clayton" />
+	<edge id = "17" source = "10989" target = "19532" label = "Joseph Fielding" />
+	<edge id = "18" source = "22848" target = "22809" label = "Willard Richards" />
+	<edge id = "19" source = "22848" target = "22846" label = "Levi Richards" />
+	<edge id = "20" source = "47635" target = "25079" label = "Amasa Lyman" />
+	<edge id = "21" source = "13814" target = "25714" label = "Joseph Kingsbury" />
+	<edge id = "22" source = "42543" target = "27506" label = "James Adams" />
+	<edge id = "23" source = "29464" target = "29461" label = "John Greene" />
+	<edge id = "24" source = "31685" target = "31683" label = "Charles Hyde" />
+	<edge id = "25" source = "45411" target = "31692" label = "Orson Hyde" />
+	<edge id = "26" source = "32032" target = "32035" label = "Joseph Young" />
+	<edge id = "27" source = "32251" target = "32267" label = "John Taylor" />
+	<edge id = "28" source = "44808" target = "32979" label = "John Page" />
+	<edge id = "29" source = "21517" target = "33870" label = "Sidney Rigdon" />
+	<edge id = "30" source = "38370" target = "36149" label = "N. Whitney" />
+	<edge id = "31" source = "40291" target = "36385" label = "Wilford Woodruff" />
+	<edge id = "32" source = "46358" target = "36411" label = "Lucien Woodworth" />
+	<edge id = "33" source = "49055" target = "40" label = "Lucy Gunn" />
+	<edge id = "34" source = "49055" target = "15728" label = "Lucy Gunn" />
+	<edge id = "35" source = "282" target = "495" label = "Zina Huntington" />
+	<edge id = "36" source = "282" target = "615" label = "Zina Huntington" />
+	<edge id = "37" source = "282" target = "617" label = "Zina Huntington" />
+	<edge id = "38" source = "486" target = "484" label = "Bathsheba Bigler" />
+	<edge id = "39" source = "497" target = "495" label = "Eliza Snow" />
+	<edge id = "40" source = "497" target = "615" label = "Eliza Snow" />
+	<edge id = "41" source = "16601" target = "496" label = "Lucy Mack" />
+	<edge id = "42" source = "16904" target = "1325" label = "Thirzda Stiles" />
+	<edge id = "43" source = "16904" target = "16668" label = "Thirzda Stiles" />
+	<edge id = "44" source = "3975" target = "615" label = "Mary Angell" />
+	<edge id = "45" source = "47795" target = "7727" label = "Catherine Curtis" />
+	<edge id = "46" source = "19494" target = "495" label = "Emma Hale" />
+	<edge id = "47" source = "19494" target = "9751" label = "Emma Hale" />
+	<edge id = "48" source = "44085" target = "11997" label = "Permelia Darrow" />
+	<edge id = "49" source = "51541" target = "484" label = "Agnes Moulton" />
+	<edge id = "50" source = "51541" target = "12600" label = "Agnes Moulton" />
+	<edge id = "51" source = "51541" target = "34721" label = "Agnes Moulton" />
+	<edge id = "52" source = "45613" target = "428" label = "Mary Frost" />
+	<edge id = "53" source = "45613" target = "495" label = "Mary Frost" />
+	<edge id = "54" source = "45613" target = "39709" label = "Mary Frost" />
+	<edge id = "55" source = "16325" target = "495" label = "Louisa Beaman" />
+	<edge id = "56" source = "16325" target = "615" label = "Louisa Beaman" />
+	<edge id = "57" source = "22754" target = "18044" label = "Ruth Moon" />
+	<edge id = "58" source = "34278" target = "495" label = "Mary Rollins" />
+	<edge id = "59" source = "34278" target = "615" label = "Mary Rollins" />
+	<edge id = "60" source = "34278" target = "18111" label = "Mary Rollins" />
+	<edge id = "61" source = "27053" target = "21948" label = "Rosannah Robinson" />
+	<edge id = "62" source = "25221" target = "495" label = "Nancy Marinda Johnson" />
+	<edge id = "63" source = "25221" target = "31692" label = "Nancy Marinda Johnson" />
+	<edge id = "64" source = "44640" target = "36149" label = "Elizabeth Smith" />
+	<edge id = "65" source = "48849" target = "23476" label = "Harriet Wheeler" />
+	<edge id = "66" source = "48849" target = "32037" label = "Harriet Wheeler" />
+	<edge id = "67" source = "42973" target = "495" label = "Elizabeth Davis" />
+	<edge id = "68" source = "42973" target = "10132" label = "Elizabeth Davis" />
+	<edge id = "69" source = "42973" target = "10493" label = "Elizabeth Davis" />
+	<edge id = "70" source = "42973" target = "11997" label = "Elizabeth Davis" />
+	<edge id = "71" source = "42973" target = "18466" label = "Elizabeth Davis" />
+	<edge id = "72" source = "45613" target = "615" label = "Olive Frost" />
+	<edge id = "73" source = "45613" target = "50740" label = "Olive Frost" />
+	<edge id = "74" source = "7990" target = "32979" label = "Mary Judd" />
+	<edge id = "75" source = "36149" target = "495" label = "Sarah Whitney" />
+	<edge id = "76" source = "36149" target = "5720" label = "Sarah Whitney" />
+	<edge id = "77" source = "36149" target = "25714" label = "Sarah Whitney" />
+	<edge id = "78" source = "5720" target = "495" label = "Helen Whitney" />
+	<edge id = "79" source = "5720" target = "38336" label = "Helen Whitney" />
+	<edge id = "80" source = "32032" target = "495" label = "Fanny Murray" />
+	<edge id = "81" source = "32032" target = "25536" label = "Fanny Murray" />
+	<edge id = "82" source = "32032" target = "32300" label = "Fanny Murray" />
+	<edge id = "83" source = "10989" target = "12596" label = "Mercy Fielding" />
+	<edge id = "84" source = "10989" target = "32267" label = "Mercy Fielding" />
+	<edge id = "85" source = "10989" target = "32572" label = "Mercy Fielding" />
+	<edge id = "86" source = "40423" target = "495" label = "Sylvia Porter" />
+	<edge id = "87" source = "40423" target = "5720" label = "Sylvia Porter" />
+	<edge id = "88" source = "40423" target = "25114" label = "Sylvia Porter" />
+	<edge id = "89" source = "40423" target = "48407" label = "Sylvia Porter" />
+	<edge id = "90" source = "32300" target = "5720" label = "Vilate Murray" />
+	<edge id = "91" source = "23476" target = "615" label = "Lucy Ann Decker" />
+	<edge id = "92" source = "23476" target = "24166" label = "Lucy Ann Decker" />
+	<edge id = "93" source = "32186" target = "25079" label = "Mary Lyman" />
+	<edge id = "94" source = "45861" target = "22809" label = "Jennetta Richards" />
+	<edge id = "95" source = "33658" target = "32267" label = "Leonora Cannon" />
+</edges>
+</graph>
+</gexf>
