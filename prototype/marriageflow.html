@@ -141,6 +141,10 @@ var QueryString = function () {
         append += "id=" + QueryString.id + "&";
     if (QueryString.levels)
         append += "levels=" + QueryString.levels + "&";
+    if (QueryString.forwards)
+        append += "forwards=1&";
+    if (QueryString.backwards)
+        append += "backwards=1&";
 
     sankeyDiagram.drawDiagram("api/lineage.php" + append);
 

@@ -69,6 +69,10 @@ if (isset($_GET["showall"]))
 $orientation = "male";
 if (isset($_GET["view"]) && $_GET["view"] == "female")
     $orientation = "female";
+$goforwards = true;
+$gobackwards = true;
+if (isset($_GET["forwards"])) $gobackwards = false;
+if (isset($_GET["backwards"])) $goforwards = false;
 
 $marriageUnits = array();
 $people = array();
@@ -200,9 +204,9 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
     $rightedge = array();
     // If there is any person on the edge, we will keep their ids for more use:
     foreach($people as $i => $person) {
-        if (empty($person["source"]))
+        if ($gobackwards && empty($person["source"]))
             array_push($leftedge, $i);
-        if (empty($person["target"]))
+        if ($goforwards && empty($person["target"]))
             array_push($rightedge, $i);
     }
 
