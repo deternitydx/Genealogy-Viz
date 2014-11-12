@@ -1,7 +1,7 @@
 <?php
 include_once("common_functions.php");
 
-$DEBUG = true;
+$DEBUG = false;
 $db_to = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
 $csvfile = fopen("adoptions.csv", "r");
@@ -53,15 +53,16 @@ while ($data1 !== false) {
         // Put the information into its own structure
         $adoption = array();
 
+        $adoption["Type"] = "adoption";
         if (isset($data["Relation Family/Non-Family"]) && $data["Relation Family/Non-Family"] != "") {
             // this is a special type of relation
             $type = $data["Relation Family/Non-Family"];
             if ($type == "Son" || $type == "Daughter") {
                 // should probably do something here, like is this natural type?
                 //echo "       natural child?";
+                $adoption["Type"] = "natural";
             }
         }
-        $adoption["Type"] = "adoption";
         $adoption["AdopteeID"] = $data["ID"];
         $adoption["MarriageID"] = $data["Marriage ID"];
         if (isset($data["Place ID"]) &&$data["Place ID"] != "")
@@ -71,8 +72,8 @@ while ($data1 !== false) {
 
         // Look up the husband and wife proxy ids to get the proxy marriage id
         $tmp = "";
-        if ($data["Marriage Proxies ID (Male)"] != '' && $data["Marriage Proxies ID (Female)"] != '') { // look up marriage proxy
-                $result = pg_query($db_to, "SELECT m.\"ID\",m.\"Type\" FROM public.\"PersonMarriage\" pm1, public.\"PersonMarriage\" pm2, public.\"Marriage\" m WHERE pm1.\"PersonID\"={$data["Marriage Proxies ID (Male)"]} AND pm1.\"Role\"='Husband' AND pm2.\"PersonID\"={$data["Marriage Proxies ID (Female)"]} AND pm2.\"Role\"='Wife' AND pm1.\"MarriageID\" = pm2.\"MarriageID\" AND pm1.\"MarriageID\" = m.\"ID\" ORDER BY m.\"ID\" asc");
+        if ($data["Marriage Proxies (Male)"] != '' && $data["Marriage Proxies (Female)"] != '') { // look up marriage proxy
+                $result = pg_query($db_to, "SELECT m.\"ID\",m.\"Type\" FROM public.\"PersonMarriage\" pm1, public.\"PersonMarriage\" pm2, public.\"Marriage\" m WHERE pm1.\"PersonID\"={$data["Marriage Proxies (Male)"]} AND pm1.\"Role\"='Husband' AND pm2.\"PersonID\"={$data["Marriage Proxies (Female)"]} AND pm2.\"Role\"='Wife' AND pm1.\"MarriageID\" = pm2.\"MarriageID\" AND pm1.\"MarriageID\" = m.\"ID\" ORDER BY m.\"ID\" asc");
                 if (!$result) {
                         echo "An error occurred.\n";
                         exit;
