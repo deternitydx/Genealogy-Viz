@@ -49,6 +49,11 @@ $nodes = array();
 $edges = array();
 $dummyCounter = 100000000;
 $iterations = 0;
+$maxIter = 0;
+if (isset($_GET["level"]))
+    $maxIter = $_GET["level"];
+else if (isset($argv[1]))
+    $maxIter = $argv[1];
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
 
@@ -92,7 +97,7 @@ process_results($result);
 // CREATE SQL ARRAY of all primary gender
 $males = $newmales;
 $allmales = "(" . implode(",", array_keys($males)) . ")";
-do {
+while (!empty($newmales) && $iterations++ < $maxIter) {
     $newmales = array();
     // Get all males who are their children
     $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
@@ -187,7 +192,7 @@ do {
         $males[$k] = $v;
     }
 
-} while (!empty($newmales) && $iterations++ < 100);
+}
 
 if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 
