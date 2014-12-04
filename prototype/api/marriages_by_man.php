@@ -70,6 +70,7 @@ foreach ($marriages as $marriage) {
     array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $husband["ID"] . "\", \"to\":\"" . $wife["ID"] . "\", \"root\":\"{$marriage["Root"]}\"}");
 
 
+	// Get the biological children of this marriage
     $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"] . " ORDER BY p.\"BirthDate\" ASC");
 	if (!$result) {
         print_empty("Error finding biological children.");
@@ -84,6 +85,22 @@ foreach ($marriages as $marriage) {
 		$child["AdoptionDate"] = "";
 		array_push($tmpchildren, $child);
 		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"biological\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
+	}
+	
+	// Get the adopted children of this marriage
+	$result = pg_query($db, "SELECT DISTINCT *, nms.\"Date\", p.\"BirthDate\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
+	if (!$result) {
+        print_empty("Error finding adopted children.");
+	    exit;
+	}
+
+	$arr = pg_fetch_all($result);
+	
+	// got the adopted children
+	foreach ($arr as $child) {
+		//$child["AdoptionDate"] = $child[""];
+		array_push($tmpchildren, $child);
+		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adopted\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
 	}
 
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
