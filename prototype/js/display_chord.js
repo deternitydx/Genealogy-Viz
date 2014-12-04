@@ -22,7 +22,9 @@ function ChordDisplay(element) {
             return "#0d233e";
         if (gender === "Female" && role === "divorce")
             return "#391013";
-        return "#ffffff";
+		if (role === "child") // unknown child gender is light purple
+			return "#CC66FF";
+        return "#9900CC"; //  unknown show up as purple
     }
 
 
