@@ -87,7 +87,7 @@ foreach ($marriages as $marriage) {
 	}
 
 	// Get the adopted children of this marriage
-	$result = pg_query($db, "SELECT DISTINCT *, nms.\"Date\", p.\"BirthDate\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
+	$result = pg_query($db, "SELECT DISTINCT p.\"ID\", p.\"DeathDate\", n.\"First\", n.\"Middle\", n.\"Last\", n.\"Prefix\", n.\"Suffix\", p.\"Gender\", p.\"BiologicalChildOfMarriage\",  p.\"BirthDate\", nms.\"Date\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
 	if (!$result) {
         print_empty("Error finding adopted children.");
 	    exit;
@@ -95,10 +95,21 @@ foreach ($marriages as $marriage) {
 
 	$arr = pg_fetch_all($result);
 	
-	// got the adopted children
-	foreach ($arr as $child) {
-		//$child["AdoptionDate"] = $child[""];
-		array_push($tmpchildren, $child);
+    // Got the adopted children.  Unfortunately, we must check all the biological and adopted children to make sure this person hasn't been adopted twice or have been a biological child that has been adopted.
+    foreach ($arr as $child) {
+        $add = true;
+        foreach ($tmpchildren as $i =>$tmp)
+            if ($tmp["ID"] === $child["ID"]) { 
+                $add = false;
+                $tmpchildren[$i]["AdoptionDate"] = $child["AdoptionDate"];
+            }
+        foreach ($children as $i => $tmp)
+            if ($tmp["ID"] === $child["ID"]) { 
+                $add = false;
+                $children[$i]["AdoptionDate"] = $child["AdoptionDate"];
+            }
+        if ($add)
+            array_push($tmpchildren, $child);
 		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adopted\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $husband["ID"] . "\"}");
 	}
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
