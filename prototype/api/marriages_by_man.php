@@ -69,7 +69,6 @@ foreach ($marriages as $marriage) {
     // Add the husband-wife relationship
     array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $husband["ID"] . "\", \"to\":\"" . $wife["ID"] . "\", \"root\":\"{$marriage["Root"]}\"}");
 
-
 	// Get the biological children of this marriage
     $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"] . " ORDER BY p.\"BirthDate\" ASC");
 	if (!$result) {
@@ -88,7 +87,7 @@ foreach ($marriages as $marriage) {
 	}
 	
 	// Get the adopted children of this marriage
-	$result = pg_query($db, "SELECT DISTINCT *, nms.\"Date\", p.\"BirthDate\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
+	$result = pg_query($db, "SELECT DISTINCT *, p.\"BirthDate\", nms.\"Date\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
 	if (!$result) {
         print_empty("Error finding adopted children.");
 	    exit;
@@ -96,14 +95,39 @@ foreach ($marriages as $marriage) {
 
 	$arr = pg_fetch_all($result);
 	
-	// got the adopted children
-	foreach ($arr as $child) {
-		//$child["AdoptionDate"] = $child[""];
-		array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adopted\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
-	}
+    // Got the adopted children.  Unfortunately, we must check all the biological and adopted children to make sure this person hasn't been adopted twice or have been a biological child that has been adopted.
+    foreach ($arr as $child) {
+        $add = true;
+        foreach ($tmpchildren as $i =>$tmp)
+            if ($tmp["ID"] === $child["ID"]) { 
+                $add = false;
+                $tmpchildren[$i]["AdoptionDate"] = $child["AdoptionDate"];
+            }
+        foreach ($children as $i => $tmp)
+            if ($tmp["ID"] === $child["ID"]) { 
+                $add = false;
+                $children[$i]["AdoptionDate"] = $child["AdoptionDate"];
+            }
+        if ($add)
+            array_push($tmpchildren, $child);
+		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adoption\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $wife["ID"] . "\"}");
+    }
 
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
+}
+
+$toremove = array();
+// Check to see if there are any marriages and children
+foreach ($children as $i => $child) {
+        foreach ($parents as $j => $tmp)
+            if ($tmp["ID"] === $child["ID"]) { 
+                $parents[$j]["AdoptionDate"] = $child["AdoptionDate"];
+                array_push($toremove, $i);
+            }
+}
+
+foreach ($toremove as $i) {
+    unset($children[$i]);
 }
 
 //reorder the children by birthday
@@ -113,13 +137,16 @@ foreach ($children as $k => $child)
 array_multisort($births, $children);
 
 
-
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . "\", ".
+    $str = "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . "\", ".
             "\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". 
-            $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
+            $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"";
+    if (isset($parent["AdoptionDate"]))
+        $str .= ", \"adoptionDate\":\"".$parent["AdoptionDate"]."\"";
+    $str .= "}";
+	array_push($parPrint, $str);
 } 
 echo implode(",", $parPrint);
 
