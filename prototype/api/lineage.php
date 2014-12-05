@@ -69,15 +69,20 @@ if (isset($_GET["showall"]))
 $orientation = "male";
 if (isset($_GET["view"]) && $_GET["view"] == "female")
     $orientation = "female";
+$goforwards = true;
+$gobackwards = true;
+if (isset($_GET["forwards"])) $gobackwards = false;
+if (isset($_GET["backwards"])) $goforwards = false;
 
 $marriageUnits = array();
 $people = array();
+$currentLevel = 0;
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 // Insert this person with either source or target (direction) pointing to this id
 function insertPerson($person, $direction, $id) {
-    global $people, $marriageUnits;
+    global $people, $marriageUnits, $ids, $currentLevel;
     
     // If they are not already there, add them
     if (!isset($people[$person["ID"]]))
@@ -88,10 +93,15 @@ function insertPerson($person, $direction, $id) {
             $people[$person["ID"]]["childOf"] = -1;
     }
 
+    // Set the level on the marriage if we need one
+    $level = $currentLevel + 1;
+    if (in_array($person["ID"], $ids))
+        $level = 0;
+
     // If this person is the gender of the marriage units, create a marriage unit for them
     if ((is_masculine() && $person["Gender"] == "Male") || (is_feminine() && $person["Gender"] == "Female")) {
         if (!array_key_exists($person["ID"], $marriageUnits))
-            $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
+            $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "level"=>$level);
         if (!in_array($person["ID"], $people[$person["ID"]]["target"]))
             array_push($people[$person["ID"]]["target"], $person["ID"]);
     }
@@ -122,7 +132,7 @@ function get_other_role() {
 }
 
 function processID($id) {
-    global $db, $marriageUnits, $people;
+    global $db, $marriageUnits, $people, $currentLevel, $ids;
     // Get the person's information    
     $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n  WHERE p.\"ID\"=$id
          AND p.\"ID\" = n.\"PersonID\" AND n.\"Type\"='authoritative'");
@@ -133,10 +143,15 @@ function processID($id) {
     $arr = pg_fetch_all($result);
     $person = $arr[0];
 
+    // Set the level on the marriage if we need one
+    $level = $currentLevel;
+    if (in_array($id, $ids))
+        $level = 0;
+    
     // If this person is the gender of the marriage units, create a marriage unit for them
     if ((is_masculine() && $person["Gender"] == "Male") || (is_feminine() && $person["Gender"] == "Female")) {
         if (!isset($marriageUnits[$id]))
-            $marriageUnits[$id] = array("id"=>$id, "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"]);
+            $marriageUnits[$id] = array("id"=>$id, "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "level"=>$level);
         insertPerson($person, "target", $id);
     } else {
         // Not sure if we want this, but we'll see for now
@@ -184,13 +199,14 @@ foreach($ids as $id) {
 
 // For each level, we'll check edges and look for more people
 for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
+    $currentLevel++;
     $leftedge = array();
     $rightedge = array();
     // If there is any person on the edge, we will keep their ids for more use:
     foreach($people as $i => $person) {
-        if (empty($person["source"]))
+        if ($gobackwards && empty($person["source"]))
             array_push($leftedge, $i);
-        if (empty($person["target"]))
+        if ($goforwards && empty($person["target"]))
             array_push($rightedge, $i);
     }
 
@@ -238,6 +254,7 @@ for ($curlevel = 0; $curlevel < $levels; $curlevel++) {
 /****
  * Clean up and add dummy nodes to those we don't know about
  */
+$currentLevel++;
 $dummyID = 1000000;
 $known = array();
 foreach($people as $i => $person) {
@@ -245,7 +262,7 @@ foreach($people as $i => $person) {
             if ($person["childOf"] != -1 && array_key_exists($person["childOf"], $known) && !in_array($known[$person["childOf"]], $people[$i]["source"]))
                     array_push($people[$i]["source"], $known[$person["childOf"]]);
             else {
-                $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
+                $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"", "level"=>$currentLevel);
                 if (!in_array($dummyID, $people[$i]["source"]))
                     array_push($people[$i]["source"], $dummyID);
                 $known[$person["childOf"]] = $dummyID;
@@ -275,7 +292,7 @@ foreach($people as $i => $person) {
                 }
                 // If there is a husband ID, let's use his id as the target to catch some other women
                 if ($needDummy && $sigOtherID != null) {
-                	$marriageUnits[$sigOtherID] = array("id"=>$sigOtherID, "name"=>"");
+                	$marriageUnits[$sigOtherID] = array("id"=>$sigOtherID, "name"=>"", "level"=>$currentLevel);
                     if (!in_array($sigOtherID, $people[$i]["target"]))
                 	    array_push($people[$i]["target"], $sigOtherID);
                 	$needDummy = false;
@@ -284,7 +301,7 @@ foreach($people as $i => $person) {
             
             
             if ($needDummy) {
-                $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"");
+                $marriageUnits[$dummyID] = array("id"=>$dummyID, "name"=>"", "level"=>$currentLevel);
                 if (!in_array($dummyID, $people[$i]["target"]))
                     array_push($people[$i]["target"], $dummyID);
                 $dummyID++;
@@ -304,7 +321,7 @@ echo "{ \"marriageUnits\":[";
 
 $i = 0;
 foreach ($marriageUnits as $unit) {
-        echo "{ \"id\":" . $unit["id"] . ", \"name\":\"" . $unit["name"] . "\"}";
+        echo "{ \"id\":" . $unit["id"] . ", \"name\":\"" . $unit["name"] . "\", \"level\": " . $unit["level"] . "}";
         if ($i++ < count($marriageUnits) -1) echo ",";
 }
 

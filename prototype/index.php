@@ -11,7 +11,7 @@
 <body>
 <h1>Geneology Visualizations</h1>
 <h4>Robbie Hott, <a href="http://www.cs.virginia.edu/~jh2jf/">www.cs.virginia.edu/~jh2jf</a></h4>
-
+<h4>Notes <a href="http://www.cs.virginia.edu/~jh2jf/notes/">www.cs.virginia.edu/~jh2jf/notes/</a></h4>
 <h2>Visualization Prototypes</h2>
 <ul>
 	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the

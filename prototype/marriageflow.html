@@ -131,6 +131,8 @@ var QueryString = function () {
 
     // Instantiate the sankey display, selecting the chart object as the target
     var sankeyDiagram = new SankeyDisplay("#chart");
+    sankeyDiagram.width = $(document).width() - 25;
+    sankeyDiagram.height = $(document).height() - 25;
     //sankeyDiagram.height=1000;
     var append = "?";
     if (QueryString.wife)
@@ -139,6 +141,10 @@ var QueryString = function () {
         append += "id=" + QueryString.id + "&";
     if (QueryString.levels)
         append += "levels=" + QueryString.levels + "&";
+    if (QueryString.forwards)
+        append += "forwards=1&";
+    if (QueryString.backwards)
+        append += "backwards=1&";
 
     sankeyDiagram.drawDiagram("api/lineage.php" + append);
 

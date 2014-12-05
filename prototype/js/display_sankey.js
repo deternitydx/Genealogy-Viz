@@ -25,12 +25,27 @@ this.formatNumber = d3.format(",.0f"),
 
 this.svg = null;
 
-this.sankey = d3.sankey()
-    .nodeWidth(15)
-    .nodePadding(10)
-    .size([this.width, this.height]);
+this.sankey = null; //d3.sankey()
+    //.nodeWidth(15)
+    //.nodePadding(10)
+    //.size([this.width, this.height]);
 
-this.path = this.sankey.link();
+this.path = null; //this.sankey.link();
+
+this.marriageUnitColor = function(level) {
+    if (level == 0) return "#375C37";
+    if (level == 1) return "#5C995C";
+    if (level == 2) return "#9DC29D";
+    return "#DEEBDE";
+}
+
+this.personHeight = function() {
+      return function(d) { //console.log(d);
+            var r = Math.max(d.dy, _this.sankey.nodeWidth()); 
+            d.height = r/2;
+            return d.height;
+      };
+};
 
 this.drawDiagram = function(json_location) {
 
@@ -117,20 +132,27 @@ d3.json(json_location, function(jsonData) {
         edge.tvalue = edge.targetPerc;
     });
 
-  _this.sankey
+  _this.sankey = d3.sankey()
       .nodes(_this.nodes)
       .links(_this.links)
       .size([_this.width, _this.height])
-      .layout(32);
- 
+      .layout(150);
+
+  _this.path = _this.sankey.link();
      //console.log(_this.sankey.nodes);
+  _this.sankey.relayout();
+
 
   // Clean out the element
   d3.select(_this.container).text("");
 
+  var sanksize = _this.sankey.size();
+  _this.height = sanksize[1];
+  _this.width = sanksize[2];
+
   _this.svg = d3.select(element).append("svg")
-      .attr("width", _this.width + _this.margin.left + _this.margin.right)
-      .attr("height", _this.height + _this.margin.top + _this.margin.bottom)
+      .attr("width", sanksize[0] + _this.margin.left + _this.margin.right)
+      .attr("height",sanksize[1] + _this.margin.top + _this.margin.bottom)
     .append("g")
       .attr("transform", "translate(" + _this.margin.left + "," + _this.margin.top + ")");
 
@@ -141,7 +163,7 @@ d3.json(json_location, function(jsonData) {
     .enter().append("path")
       .attr("class", "link")
       .attr("d", _this.path)
-      .style("stroke-width", function(d) { return Math.max(d.sdy, d.tdy) / 2; })
+      .style("stroke-width", _this.personHeight() ) //function(d) { return Math.max(d.sdy, d.tdy) / 2; })
       .style("stroke", function(d) { if (d.gender === "Male") return '#1D5190'; return '#C33742';})
       .sort(function(a, b) { return b.dy - a.dy; });
       
@@ -160,14 +182,52 @@ d3.json(json_location, function(jsonData) {
       .on("dragstart", function() { this.parentNode.appendChild(this); })
       .on("drag", dragmove))
       .on("mouseover", function(d, i) {//console.log(d); console.log(i);
-          if (d.type === "person") {
-            d3.selectAll(".link").filter( function(l) { return (l.source === d || l.target === d) ? this : null; })
+          if (true) { //d.type === "person") {
+            d3.selectAll(".link").filter( function(l) { 
+                var nextEl = (l.source === d || l.target === d);
+                var elAfter = false;
+                if (d.type !== "person") {
+                    if (l.source && l.source.targetLinks)
+                       l.source.targetLinks.forEach(function (each) {
+                            if (each.source === d) elAfter = true;   
+                       });
+                    if (l.target && l.target.sourceLinks)
+                       l.target.sourceLinks.forEach(function (each) {
+                            if (each.target === d) elAfter = true;   
+                       });
+                }
+                // looking backwards:
+                //   l.target = the target of the edge
+                //   l.target.sourceLinks = list of edges that this target is the source of
+                //   l.target.sourceLinks[...].target = target of the target
+                
+                return (nextEl || elAfter) ? this : null; 
+            })
                .style("stroke-opacity", "0.8");
             //this.style("fill-opacity", "0.8");
           } })
       .on("mouseout", function(d, i) {//console.log(d); console.log(i);
-          if (d.type === "person") {
-            d3.selectAll(".link").filter( function(l) { return (l.source === d || l.target === d) ? this : null; })
+          if (true) { //d.type === "person") {
+            d3.selectAll(".link").filter( function(l) { 
+                var nextEl = (l.source === d || l.target === d);
+                var elAfter = false;
+                if (d.type !== "person") {
+                    if (l.source && l.source.targetLinks)
+                       l.source.targetLinks.forEach(function (each) {
+                            if (each.source === d) elAfter = true;   
+                       });
+                    if (l.target && l.target.sourceLinks)
+                       l.target.sourceLinks.forEach(function (each) {
+                            if (each.target === d) elAfter = true;   
+                       });
+                }
+                // looking backwards:
+                //   l.target = the target of the edge
+                //   l.target.sourceLinks = list of edges that this target is the source of
+                //   l.target.sourceLinks[...].target = target of the target
+                
+                return (nextEl || elAfter) ? this : null; 
+            })
                .style("stroke-opacity", "");
           } });
 
@@ -175,26 +235,28 @@ d3.json(json_location, function(jsonData) {
   node.filter(function(d) { return (d.type === "marriage") ? this : null;}).append("circle")
       .attr("r", function(d) { //console.log(d);
             var r = 0; 
-            if (d.x == 0 || d.x == _this.width - _this.sankey.nodeWidth()) 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
-            else 
-                r = Math.max(d.dy, _this.sankey.nodeWidth()) / 1.5; 
+            //r = d.dy / 2;
+            r = Math.max(d.dy, _this.sankey.nodeWidth()) / 2;
             return r;
       })
       .attr("cy", function(d) { return d.dy / 2; })
       .attr("cx", function(d) { return _this.sankey.nodeWidth() / 2; })
       .style("fill", function(d) { //console.log(d); 
-             return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ })
+          return d.color = _this.marriageUnitColor(d.level);   
+          //return d.color = "#bbbbbb"; /* "#D0A9F5"; color(d.name.replace( .*, ""));*/ 
+          })
       .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
       .on("click", show_info)
 
    // Draw the person nodes
    node.filter(function(d) { return (d.type === "person") ? this : null;}).append("rect")
-      .attr("height", function(d) { //console.log(d);
+      .attr("height", _this.personHeight()) 
+      /*
+       * function(d) { //console.log(d);
             var r = Math.max(d.dy, _this.sankey.nodeWidth()); 
             d.height = r/2;
             return d.height;
-      })
+      })*/
       .attr("width", function(d) { //console.log(d);
             return d.height;
       })

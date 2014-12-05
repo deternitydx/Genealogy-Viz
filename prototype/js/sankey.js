@@ -37,9 +37,11 @@ d3.sankey = function() {
   };
 
   sankey.layout = function(iterations) {
+    nodePadding = Math.max(nodePadding, sankey.nodeWidth());
     computeNodeLinks();
     computeNodeValues();
     computeNodeBreadths();
+    updateHeight();
     computeNodeDepths(iterations);
     computeLinkDepths();
     return sankey;
@@ -112,6 +114,9 @@ d3.sankey = function() {
   // Nodes are assigned the maximum breadth of incoming neighbors plus one;
   // nodes with no incoming links are assigned breadth zero, while
   // nodes with no outgoing links are assigned the maximum breadth.
+  //
+  // Note: node.sourceLinks are the nodes that are descendents (this node is their source)
+  //       node.targetLinks are the nodes that are ancestors (this node is their target)
   function computeNodeBreadths() {
     var remainingNodes = nodes,
         nextNodes,
@@ -130,17 +135,71 @@ d3.sankey = function() {
       ++x;
     }
 
+    // full depth is x - 1
+    var fullDepth = x - 1;
+
+    var changed = true;
+    while (changed) {
+        changed = false;
+        remainingNodes = nodes;
+        while (remainingNodes.length) {
+            nextNodes = [];
+            remainingNodes.forEach(function(node) {
+                // maybe we can move it
+                if (node.x < fullDepth) {
+                    // if it has nodes that count it as a source, then move it forward to just next to it's closest child
+                    if (node.sourceLinks.length) {
+                        node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
+                        //changed = true;
+                    }
+                    // if it has no nodes that count it as a source, then we need to look back
+                    // Note: edge nodes on the right will not be included here
+                    else {
+                        var currLevel = node.x;
+                        var minNext = currLevel;
+                        // If this node is counted as a target
+                        if (node.targetLinks.length) {
+                            // check each of the sources for the minimum next edge
+                            node.targetLinks.forEach( function (link) {
+                                if (link.target !== node) {
+                                    var minNextTmp = d3.min(link.source.sourceLinks, function(d) { return d.target.x; }) - 1;
+                                    if (minNextTmp < minNext)
+                                        minNext = minNextTmp;
+                                }
+                            });
+                        }
+
+                        if (minNext > currLevel) {
+                            node.x = minNext;
+                            //changed = true;
+                        }
+                    }
+                    node.targetLinks.forEach(function(link) {
+                        nextNodes.push(link.source);
+                    });
+                }
+            });
+            remainingNodes = nextNodes;
+        }
+    }
+
     //
-    moveSinksRight(x);
+    //moveSinksRight(x);
+    //moveSourcesRight();
     scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
   }
 
   function moveSourcesRight() {
-    nodes.forEach(function(node) {
-      if (!node.targetLinks.length) {
-        node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
-      }
-    });
+    var changed = true;
+    while (changed) {
+        changed = false;
+        nodes.forEach(function(node) {
+            if (!node.targetLinks.length) {
+                node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
+                changed = true;
+            }
+        });
+    }
   }
 
   function moveSinksRight(x) {
@@ -155,6 +214,15 @@ d3.sankey = function() {
     nodes.forEach(function(node) {
       node.x *= kx;
     });
+  }
+  function updateHeight() {
+    var nodesByBreadth = d3.nest()
+        .key(function(d) { return d.x; })
+        .sortKeys(d3.ascending)
+        .entries(nodes)
+        .map(function(d) { return d.values; });
+    var height = d3.max(nodesByBreadth, function(nodes) { return (nodes.length) * nodePadding; });
+    if (height > size[1]) size[1] = height;
   }
 
   function computeNodeDepths(iterations) {
@@ -173,6 +241,7 @@ d3.sankey = function() {
       relaxLeftToRight(alpha);
       resolveCollisions();
     }
+
 
     function initializeNodeDepth() {
       var ky = d3.min(nodesByBreadth, function(nodes) {
