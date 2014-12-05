@@ -87,7 +87,7 @@ foreach ($marriages as $marriage) {
 	}
 	
 	// Get the adopted children of this marriage
-	$result = pg_query($db, "SELECT DISTINCT *, p.\"BirthDate\", nms.\"Date\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
+	$result = pg_query($db, "SELECT DISTINCT p.\"ID\", p.\"DeathDate\", n.\"First\", n.\"Middle\", n.\"Last\", n.\"Prefix\", n.\"Suffix\", p.\"Gender\", p.\"BiologicalChildOfMarriage\",  p.\"BirthDate\", nms.\"Date\" as \"AdoptionDate\" FROM public.\"Person\" p LEFT JOIN public.\"Name\" n  ON p.\"ID\" = n.\"PersonID\" LEFT JOIN public.\"NonMaritalSealings\" nms ON nms.\"AdopteeID\" = p.\"ID\" WHERE nms.\"MarriageID\" = {$marriage['ID']} AND n.\"Type\" = 'authoritative' ORDER BY p.\"BirthDate\" ASC");
 	if (!$result) {
         print_empty("Error finding adopted children.");
 	    exit;
@@ -130,10 +130,14 @@ foreach ($toremove as $i) {
     unset($children[$i]);
 }
 
-//reorder the children by birthday
+//reorder the children by birthday or adoption date
 $births = array();
-foreach ($children as $k => $child)
-    $births[$k] = $child["BirthDate"];
+foreach ($children as $k => $child) {
+    if (isset($child["AdoptionDate"]) && $child["AdoptionDate"] != "")
+        $births[$k] = $child["AdoptionDate"];
+    else
+        $births[$k] = $child["BirthDate"];
+}
 array_multisort($births, $children);
 
 
