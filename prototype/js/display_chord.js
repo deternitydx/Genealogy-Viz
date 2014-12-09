@@ -234,8 +234,8 @@ function ChordDisplay(element) {
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder"]) //, "civil.eternity"])
-                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff"]);//, "url(#civil-eternity)"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder", "biological.adoption",  "civil.eternity"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff", "url(#biological-adoption)", "url(#civil-eternity)"]);
 
 
             _this.chord = d3.layout.chord()
@@ -278,20 +278,21 @@ function ChordDisplay(element) {
                 _this.hoverElement.html("&nbsp;<br>&nbsp;");
             }
 
-            /*
-            _this.defs = _this.svg.append("defs").append("linearGradient").attr("id","civil-eternity");
-            _this.defs.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
-            _this.defs.append("stop").attr("offset", "10%").attr("stop-color", "#AD85FF");
-            _this.defs.append("stop").attr("offset", "20%").attr("stop-color", "#FFB2E6");
-            _this.defs.append("stop").attr("offset", "30%").attr("stop-color", "#AD85FF");
-            _this.defs.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
-            _this.defs.append("stop").attr("offset", "50%").attr("stop-color", "#AD85FF");
-            _this.defs.append("stop").attr("offset", "60%").attr("stop-color", "#FFB2E6");
-            _this.defs.append("stop").attr("offset", "70%").attr("stop-color", "#AD85FF");
-            _this.defs.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
-            _this.defs.append("stop").attr("offset", "90%").attr("stop-color", "#AD85FF");
-            _this.defs.append("stop").attr("offset", "100%").attr("stop-color", "#FFB2E6");
-            */
+            _this.defs = _this.svg.append("defs");
+            var tmpdef = _this.defs.append("linearGradient").attr("id","civil-eternity");
+            tmpdef.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "20%").attr("stop-color", "#AD85FF");
+            tmpdef.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "60%").attr("stop-color", "#AD85FF");
+            tmpdef.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "100%").attr("stop-color", "#AD85FF");
+            tmpdef = _this.defs.append("linearGradient").attr("id","biological-adoption");
+            tmpdef.append("stop").attr("offset", "0%").attr("stop-color", "#FFCD81");
+            tmpdef.append("stop").attr("offset", "20%").attr("stop-color", "#A1CB87");
+            tmpdef.append("stop").attr("offset", "40%").attr("stop-color", "#FFCD81");
+            tmpdef.append("stop").attr("offset", "60%").attr("stop-color", "#A1CB87");
+            tmpdef.append("stop").attr("offset", "80%").attr("stop-color", "#FFCD81");
+            tmpdef.append("stop").attr("offset", "100%").attr("stop-color", "#A1CB87");
 
             var g = _this.svg.append("g");
 
@@ -342,9 +343,10 @@ function ChordDisplay(element) {
                         }
                 });
                 if (types.length > 0)
-                    //ret = _this.fillType(types.join("."));
-                    ret = _this.fillType(types[types.length -1]);
-
+                    ret = _this.fillType(types.join("."));
+                    //ret = _this.fillType(types[types.length -1]);
+                console.log(types.join("."));
+                console.log(ret);
                 return ret; })
             .style("stroke", function(d) { 
                 var ret = "none";

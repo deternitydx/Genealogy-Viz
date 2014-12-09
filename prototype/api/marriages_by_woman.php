@@ -110,7 +110,7 @@ foreach ($marriages as $marriage) {
             }
         if ($add)
             array_push($tmpchildren, $child);
-		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adopted\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $husband["ID"] . "\"}");
+		array_push($relations, "{\"desc\": \"Child Of\", \"type\":\"adoption\", \"from\":\"" . $child["ID"] . "\", \"to\":\"" . $husband["ID"] . "\"}");
 	}
 	$children = array_merge($children, $tmpchildren);//array_reverse($tmpchildren));
 }
