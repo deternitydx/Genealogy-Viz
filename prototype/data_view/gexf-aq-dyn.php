@@ -35,7 +35,7 @@
 // Combine submarriages with same husband/wife pair or same husband (latter is better)
 // Actually, could probably just use husband ID as marriage ID in the array and gexf, but would need to look up husband ID for child of marriage ID for each person (easy join)
 //
-//  select p.*, pm.PersonID from Person p, Marriage m, PersonMarriage pm where p.Gender='Male' and p.ChildOfMarriageID=m.ID and m.ID=pm.MarriageID and pm.Role = 'Husband';
+//  select p.*, pm.PersonID from Person p, Marriage m, PersonMarriage pm where p.Gender='Female' and p.ChildOfMarriageID=m.ID and m.ID=pm.MarriageID and pm.Role = 'Wife';
 //
 // For each result
 //  add marriage if it doesn't exist (p.ID, person's name as marriage label)
@@ -61,9 +61,9 @@ $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo p
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
     INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
-    WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
+    WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
@@ -75,14 +75,14 @@ process_results($result);
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
     INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
     LEFT OUTER JOIN
         (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
             FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' AND m2.\"Role\" = 'Wife' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
         ON (m.\"PersonID\" = p.\"ID\")
-    WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
+    WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
@@ -104,8 +104,8 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-            AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Male'
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
+            AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Female'
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -119,9 +119,9 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm,
             (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
-        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' AND m2.\"Role\" = 'Wife' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Male' 
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
             AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $allmales
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -136,13 +136,13 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
         INNER JOIN
             (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' AND m2.\"Role\" = 'Wife' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
             ON (m.\"PersonID\" = p.\"ID\")
-        WHERE p.\"Gender\" = 'Female' 
+        WHERE p.\"Gender\" = 'Male' 
             AND m.\"SpouseID\" in $allmales
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -155,13 +155,13 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
         INNER JOIN
     (SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
         ORDER BY p.\"ID\" asc) ch ON (ch.\"ChildOf\" = p.\"ID\")
 
         WHERE ch.\"ID\" in $allmales
@@ -177,8 +177,8 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
-        WHERE p.\"Gender\" = 'Male' AND p.\"ID\" in $newones 
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+        WHERE p.\"Gender\" = 'Female' AND p.\"ID\" in $newones 
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -206,7 +206,7 @@ function process_results($result) {
     global $newmales, $nodes, $edges, $dummyCounter;
     while ($person = pg_fetch_array($result)) {
         // if they don't have a to-marriage, then add one for their ID.
-        if ($person["Gender"] == "Male") {
+        if ($person["Gender"] == "Female") {
             $newmales[$person["ID"]] = true;
             $nodes[$person["ID"]] = array(
                 "id" => $person["ID"],
@@ -215,7 +215,7 @@ function process_results($result) {
 
         // set up the target
         $target = $person["ID"];
-        if ($person["Gender"] == "Female") {
+        if ($person["Gender"] == "Male") {
             if (isset($person["SpouseID"]) && $person["SpouseID"] != null && $person["SpouseID"] != "") {
                 $target = $person["SpouseID"];
                 $newmales[$target] = true;
