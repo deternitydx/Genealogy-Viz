@@ -59,10 +59,10 @@ $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo p
 
 // Query for all the main gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-    p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
+    p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
     LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
-    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
+    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
     WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
@@ -73,14 +73,15 @@ process_results($result);
 
 // Query for all the secondary gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-    p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
+    p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
     LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
     INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
     LEFT OUTER JOIN
-        (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
-            FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+        (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" as \"Type\"
+            FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
+            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m1.\"MarriageID\" = m.\"ID\"
+            GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
         ON (m.\"PersonID\" = p.\"ID\")
     WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
@@ -101,11 +102,11 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $newmales = array();
     // Get all males who are their children
     $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
-        FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
+        FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"Marriage\" m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-            AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Male'
+            AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Male' AND m.\"ID\" = pm.\"MarriageID\"
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -115,11 +116,11 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 
     // Get all the females who are their children
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm,
-            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
-                FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\"
+                FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
             AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $allmales
@@ -134,13 +135,13 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $result = pg_query($db, "
 
     SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\"
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
         LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
         INNER JOIN
-            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\" 
-                FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' GROUP BY m1.\"PersonID\", m2.\"PersonID\") m
+            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" 
+                FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
             ON (m.\"PersonID\" = p.\"ID\")
         WHERE p.\"Gender\" = 'Female' 
             AND m.\"SpouseID\" in $allmales
@@ -153,7 +154,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 
     // Get all the people who are their parents
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
         LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
         INNER JOIN
@@ -162,7 +163,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-        ORDER BY p.\"ID\" asc) ch ON (ch.\"ChildOf\" = p.\"ID\")
+        ORDER BY p.\"ID\" asc) ch ON (ch.\"ChildOf\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
 
         WHERE ch.\"ID\" in $allmales
         ORDER BY p.\"ID\" asc");
@@ -175,9 +176,10 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     // Look up all the new males we've just added and put them in
     $newones = "(" . implode(",", array_keys($newmales)) . ")";
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
-        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
         LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+        INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
         WHERE p.\"Gender\" = 'Male' AND p.\"ID\" in $newones 
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -230,11 +232,13 @@ function process_results($result) {
             $newmales[$childOf] = true;
         } else
             $childOf = $dummyCounter++;
+
         // Add the person link from their marriage of birth to their marriage of adulthood
         $edge = array(
             "source" => $childOf,
             "target" => $target, 
-            "label" => htmlspecialchars($person["First"] . " " . $person["Last"]));
+            "label" => htmlspecialchars($person["First"] . " " . $person["Last"]),
+            "weight" => calculate_weight($person["Type"], $person["Gender"])); // get the weight from the type
 
         // check that this edge is not already accounted for (inefficient)
         $inarray = false;
@@ -249,7 +253,17 @@ function process_results($result) {
     }
 }
 
-
+function calculate_weight($marriage_type, $gender) {
+    if ($gender == "Male")
+        return 4;
+    if ($marriage_type == "eternity")
+        return 3;
+    if ($marriage_type == "time")
+        return 2;
+    if ($marriage_type == "civil")
+        return 1;
+    return 0; // unknown and BYU types
+}
 
 
 //***************************************************************************************************
@@ -260,7 +274,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<gexf xmlns=\"http://www.gexf.net/1.2draft\" version=\"1.2\">\n";
 echo "<meta lastmodifieddate=\"" . date("Y-m-d") . "\">\n";
 echo "\t<creator>Robbie Hott</creator>\n";
-echo "\t<description>Nauvoo Graph</description>\n";
+echo "\t<description>Nauvoo Graph.  Created by " . $_SERVER['REQUEST_URI']. ".</description>\n";
 echo "</meta>\n";
 echo "<graph mode=\"static\" defaultedgetype=\"directed\">\n";
 
