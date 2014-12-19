@@ -92,13 +92,13 @@ $(document).ready( function () {
 <p>Click on a name below to view a list of their children.</p>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>ID</th><th>First</th><th>Middle</th><th>Last</th><th>Gender</th><th>Birth Date</th><th>Death Date</th><th>Private Notes</th><th>Public Notes</th></tr></thead>";
+echo "<thead><tr><th>ID</th><th>First</th><th>Middle</th><th>Last</th><th>Gender</th><th>Birth Date</th><th>Death Date</th><th>Private Notes</th><th>Public Notes</th><th>Chord Viz</th></tr></thead>";
 echo "</table>";
 ?>
 <div id="dialog" class="dialog" style="overflow: auto">
 <?php
 echo "<table id='children' class='display'>";
-echo "<thead><tr><th>ID</th><th>First</th><th>Middle</th><th>Last</th><th>Gender</th><th>Birth Date</th><th>Death Date</th><th>Private Notes</th><th>Public Notes</th></tr></thead>";
+echo "<thead><tr><th>ID</th><th>First</th><th>Middle</th><th>Last</th><th>Gender</th><th>Birth Date</th><th>Death Date</th><th>Private Notes</th><th>Public Notes</th><th>Chord Viz</th></tr></thead>";
 echo "</table>";
 ?>
 </div>
