@@ -105,10 +105,16 @@ function ChordDisplay(element) {
             parents = new Array();
 
             _this.data.parents.forEach(function(parent) {
+                // This if statement below only adds those parents who are either the main gender of the relationship,
+                // or a spouse that was married after this time point but the time point is before their death, and
+                // they are not divorced before this time point.
                 if (/*parent.birthDate <= timepoint && parent.deathDate >= timepoint &&*/
-                    ((parent.marriageDate <= timepoint && ((parent.deathDate >= timepoint)) // or they are married eternally or jilldb
-                        && (parent.divorceDate >= timepoint || parent.divorceDate == "")) || parent.gender == "Male")) // parent is alive and in marriage
+                    (parent.marriageDate <= timepoint && parent.deathDate >= timepoint 
+                        && (parent.divorceDate >= timepoint || parent.divorceDate == "")) 
+                        || (_this.patriarchal && parent.gender == "Male")
+                        || (!_this.patriarchal && parent.gender == "Female")) { 
                         parents.push(parent);
+                }
             });
             _this.data.children.forEach(function(child) {
                 if ((child.adoptionDate != "" && child.adoptionDate <= timepoint) || // child has been adopted
