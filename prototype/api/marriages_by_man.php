@@ -67,7 +67,7 @@ foreach ($marriages as $marriage) {
 	    array_push($parents,$wife);
 
     // Add the husband-wife relationship
-    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $husband["ID"] . "\", \"to\":\"" . $wife["ID"] . "\", \"root\":\"{$marriage["Root"]}\"}");
+    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $husband["ID"] . "\", \"to\":\"" . $wife["ID"] . "\", \"root\":\"{$marriage["Root"]}\", \"marriageDate\":\"{$wife["Married"]}\", \"divorceDate\":\"{$wife["Divorced"]}\"}");
 
 	// Get the biological children of this marriage
     $result = pg_query($db, "SELECT DISTINCT p.*, n.\"First\", n.\"Middle\", n.\"Last\" FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"] . " ORDER BY p.\"BirthDate\" ASC");

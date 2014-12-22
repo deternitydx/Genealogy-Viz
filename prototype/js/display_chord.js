@@ -345,8 +345,6 @@ function ChordDisplay(element) {
                 if (types.length > 0)
                     ret = _this.fillType(types.join("."));
                     //ret = _this.fillType(types[types.length -1]);
-                console.log(types.join("."));
-                console.log(ret);
                 return ret; })
             .style("stroke", function(d) { 
                 var ret = "none";
@@ -386,8 +384,6 @@ function ChordDisplay(element) {
     // check if is root
     this.isRoot = function (index) {
         var rootB = false;
-        console.log(_this.relationships);
-        console.log(index);
         _this.relationships.forEach(function(rel) {
             if (( rel.fromId === index || rel.toId === index ) && rel.root === "t")
                 rootB = true;
@@ -510,15 +506,26 @@ function ChordDisplay(element) {
                 else {
                     var types = new Array();
                     var ret = "";
+                    var moreinfo = "";
                     _this.relationships.forEach(function(rel) {
                         if ( (rel.fromId === g.source.index && rel.toId === g.target.index) ||
                             (rel.fromId === g.source.subindex && rel.toId === g.target.subindex) ) {
                             ret = _this.people[rel.fromId].name + " &nbsp;&nbsp;<i>" + rel.desc + "</i>&nbsp;&nbsp; " + _this.people[rel.toId].name;
-                            types.push(rel.type);
+                            if (rel.desc === "Married To") {
+                                moreinfo += "<i>" + rel.type.charAt(0).toUpperCase() + rel.type.slice(1) + " (" 
+                                                  + rel.marriageDate + " -- " + rel.divorceDate + ")</i><br>";
+                            } else {
+                                if (moreinfo === "")
+                                    moreinfo = "Type:"
+                                moreinfo += " " + rel.type + ",";
+                            }
                         }
                     });
-                    _this.hoverElement.html(ret); 
-                    _this.hoverElement.html(ret + "<br>Type: " + types.join(", ")); 
+                    if (moreinfo.charAt(moreinfo.length - 1) === ",")
+                        moreinfo = moreinfo.substring(0,moreinfo.length -1);
+                    if (moreinfo.charAt(moreinfo.length - 1) === ">")
+                        moreinfo = moreinfo.substring(0,moreinfo.length -4);
+                    _this.hoverElement.html(ret + "<br>" + moreinfo); 
                 }
             }
 

@@ -66,7 +66,7 @@ foreach ($marriages as $marriage) {
 	    array_push($parents,$husband);
 
     // Add the husband-wife relationship
-    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $wife["ID"] . "\", \"to\":\"" . $husband["ID"] . "\", \"root\":\"{$marriage["Root"]}\"}");
+    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $wife["ID"] . "\", \"to\":\"" . $husband["ID"] . "\", \"root\":\"{$marriage["Root"]}\", \"marriageDate\":\"{$husband["Married"]}\", \"divorceDate\":\"{$husband["Divorced"]}\"}");
 
 
     $result = pg_query($db, "SELECT DISTINCT p.*, n.\"First\", n.\"Middle\", n.\"Last\"  FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
