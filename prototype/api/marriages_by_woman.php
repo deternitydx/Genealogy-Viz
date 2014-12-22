@@ -25,7 +25,7 @@ $parents = array();
 $children = array();
 $relations = array();
 
-$result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriages[0]["WifeID"]);
+$result = pg_query($db, "SELECT p.*, n.\"First\", n.\"Middle\", n.\"Last\"  FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriages[0]["WifeID"]);
 if (!$result) {
     print_empty("No marriages with this woman.");
     exit;
@@ -42,7 +42,7 @@ array_push($parents, $arr[0]);
 
 // Get the husbands and their children and adoptions to this wife
 foreach ($marriages as $marriage) {
-    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
+    $result = pg_query($db, "SELECT DISTINCT p.*, n.\"First\", n.\"Middle\", n.\"Last\"   FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"ID\"=" . $marriage["HusbandID"]);
 	if (!$result) {
         print_empty("Error finding husband information.");
 	    exit;
@@ -66,10 +66,10 @@ foreach ($marriages as $marriage) {
 	    array_push($parents,$husband);
 
     // Add the husband-wife relationship
-    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $wife["ID"] . "\", \"to\":\"" . $husband["ID"] . "\", \"root\":\"{$marriage["Root"]}\"}");
+    array_push($relations, "{\"desc\": \"Married To\", \"type\":\"{$marriage["Type"]}\", \"from\":\"" . $wife["ID"] . "\", \"to\":\"" . $husband["ID"] . "\", \"root\":\"{$marriage["Root"]}\", \"marriageDate\":\"{$husband["Married"]}\", \"divorceDate\":\"{$husband["Divorced"]}\"}");
 
 
-    $result = pg_query($db, "SELECT DISTINCT * FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
+    $result = pg_query($db, "SELECT DISTINCT p.*, n.\"First\", n.\"Middle\", n.\"Last\"  FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative' AND p.\"BiologicalChildOfMarriage\"=" . $marriage["ID"]);
 	if (!$result) {
         print_empty("Error finding biological children.");
 	    exit;
@@ -125,7 +125,7 @@ array_multisort($births, $children);
 echo "{ \"parents\": [";
 $parPrint = array();
 foreach ($parents as $parent) {
-	array_push($parPrint, "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . "\", ".
+	array_push($parPrint, "{ \"id\": \"{$parent["ID"]}\", \"name\": \"" . $parent["Last"] . ", " . $parent["First"] . " " . $parent["Middle"] . "\", ".
 		"\"birthDate\":\"".$parent["BirthDate"]."\", \"deathDate\":\"".$parent["DeathDate"]."\", \"gender\": \"". $parent["Gender"] ."\", \"marriageDate\": \"".$parent["Married"]."\", \"divorceDate\":\"".$parent["Divorced"]."\"}");
 } 
 echo implode(",", $parPrint);
@@ -134,7 +134,7 @@ echo "], \"children\": [";
 
 $chiPrint = array();
 foreach ($children as $child) {
-	array_push($chiPrint, "{ \"id\": \"{$child["ID"]}\", \"name\": \"" . $child["Last"] . ", " . $child["First"] . "\", ".
+	array_push($chiPrint, "{ \"id\": \"{$child["ID"]}\", \"name\": \"" . $child["Last"] . ", " . $child["First"] . " " . $child["Middle"] . "\", ".
 		"\"birthDate\":\"".$child["BirthDate"]."\", \"deathDate\":\"".$child["DeathDate"]."\", ".
 		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
 } 

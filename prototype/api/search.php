@@ -34,6 +34,8 @@ foreach ($arr as $mar) {
         if ($first) array_push($firsta, "\"$k\"");
     }
 
+    // Add link to chord
+    array_push($resa, "\"<a href='../chord.html?temporal=1&id={$mar["ID"]}'>Temporal</a> - <a href='../chord.html?id={$mar["ID"]}'>Static</a>\"");
 
     array_push($json, "[" . implode(", ", $resa) . "]");
     $first = false;

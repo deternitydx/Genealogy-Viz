@@ -13,7 +13,7 @@
 <script src="js/display_chord.js"></script>
 </head>
 <body>
-<div id="bodyDiv">
+<div id="bodyDiv" style="height: 1000px">
 <div id="legend"></div>
 <div id="chordID"></div>
 <div id="bottom"></div>
@@ -42,21 +42,25 @@ var QueryString = function () {
 } ();
 
 var chordDiagram = new ChordDisplay("#chordID");
-if (QueryString.wife) {
-    chordDiagram.json_location = function(id) {return "api/marriages_by_woman.php?id=" + id;};
-    chordDiagram.patriarchal = false;
-} else
-    chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
-chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
-chordDiagram.nameAsTitle = true;
-chordDiagram.drawNumSigOthers = true;
-chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
-chordDiagram.drawLegend("#legend");
 
-if (QueryString.temporal) {
-    chordDiagram.drawTimeSlider("#bottom");
-}
+// Do query for gender
+d3.json("api/gender.php?id="+QueryString.id, function(data) {
+ 
+    if (data.gender == "Female") {
+        chordDiagram.json_location = function(id) {return "api/marriages_by_woman.php?id=" + id;};
+        chordDiagram.patriarchal = false;
+    } else
+        chordDiagram.json_location = function(id) {return "api/marriages_by_man.php?id=" + id;};
+    chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
+    chordDiagram.nameAsTitle = true;
+    chordDiagram.drawNumSigOthers = true;
+    chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
+    chordDiagram.drawLegend("#legend");
 
+    if (QueryString.temporal) {
+        chordDiagram.drawTimeSlider("#bottom");
+    }
+});
 </script>
 </div>
 </body>
