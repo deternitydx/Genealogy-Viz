@@ -134,7 +134,7 @@ function get_other_role() {
 function processID($id) {
     global $db, $marriageUnits, $people, $currentLevel, $ids;
     // Get the person's information    
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p, public.\"Name\" n  WHERE p.\"ID\"=$id
+    $result = pg_query($db, "SELECT p.\"ID\", n.\"First\", n.\"Middle\", n.\"Last\", p.\"Gender\", p.\"BiologicalChildOfMarriage\" FROM public.\"Person\" p, public.\"Name\" n  WHERE p.\"ID\"=$id
          AND p.\"ID\" = n.\"PersonID\" AND n.\"Type\"='authoritative'");
     if (!$result) {
         echo "An error occurred.\n";
