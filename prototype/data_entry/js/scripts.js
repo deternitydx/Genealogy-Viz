@@ -107,14 +107,48 @@ $(document).ready(function() {
 		$('.panel-group .panel:last-child').addClass('last-child');
 	}
     
+    // Code to handle adding new marriages to the page
+    var marriageid = 2;
+    if ($('#button-add-marriage').exists()){
+		$('#button-add-marriage').click(function(){
+			var text = $('#marriage-entry-hidden').clone();
+            var html = text.html().replace(/ZZ/g, marriageid);
+            $('#marital-sealings-formarea').append(html);
+            marriageid = marriageid + 1;
+            return false;
+		});
+	}
+
+    // Code to handle adding new nonmaritals to the page
+    var nonmaritalid = 2;
+    if ($('#button-add-nonmarital').exists()){
+		$('#button-add-nonmarital').click(function(){
+			var text = $('#nonmarital-entry-hidden').clone();
+            var html = text.html().replace(/ZZ/g, nonmaritalid);
+            $('#nonmarital-sealings-formarea').append(html);
+            nonmaritalid = nonmaritalid + 1;
+            return false;
+		});
+	}
+
+    // Code to handle adding new rites to the page
+    var riteid = 2;
+    if ($('#button-add-rite').exists()){
+		$('#button-add-rite').click(function(){
+			var text = $('#rite-entry-hidden').clone();
+            var html = text.html().replace(/ZZ/g, riteid);
+            $('#temple-rites-formarea').append(html);
+            riteid = riteid + 1;
+            return false;
+		});
+	}
+
     // Code to handle adding new names to the page
     var nameid = 3;
     if ($('#button-add-name').exists()){
 		$('#button-add-name').click(function(){
 			var text = $('#name-entry-hidden').clone();
-            console.log(text);
             var html = text.html().replace(/ZZ/g, nameid);
-            console.log(html);
             $('#alternative-names').append(html);
             nameid = nameid + 1;
             return false;
