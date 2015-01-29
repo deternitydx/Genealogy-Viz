@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nauvoo - Edit Entry</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+	<link href="css/form.css" rel="stylesheet" media="screen">
+	<link href="css/jquery.fancybox.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
+</head>
+<body>
+    <div id="wrapper">
+		<header>
+			<div class="container">
+                <strong class="logo"><a href="/">Nauvoo Database</a></strong>
+			</div><!-- container -->
+		</header><!-- header -->
+		<div class="main-area container">
+			<div class="page-header page-header-01">
+				<div class="frame">
+					<div class="clearfix">
+						<a href="#" class="back-link">Back to List</a>
+					</div>
+				</div><!-- frame -->
+				<h1>Edit Person</h1>
+			</div><!-- page-header -->
+			<div class="alert alert-01 alert-success" style="display: none">
+				<p>Successfully saved!</p>
+			</div><!-- end alert -->
+			<div class="clearfix">
+				<form id="nauvoo_form" action="#">
+                    <fieldset>
+                        <!-- This is the sidebar -->
+						<aside id="aside">
+							<h2 class="visible-md visible-lg">Record Information</h2>
+							<div class="box">
+								<a href="#" data-toggle="modal" data-target="#add-new" class="add-new">Add New record</a>
+							</div><!-- box -->
+							<div class="box">
+								<button id="button-record-save" class="btn btn-success btn-save ie-fix"><span>Save</span></button>
+							</div><!-- box -->
+							<div class="details-bar">
+								<a href="#" data-toggle="dropdown" class="open-close"></a>
+								<div class="drop dropdown-menu" role="menu">
+									<div class="info-box">
+										<dl>
+                                            <dt class="visible-md visible-lg">Person ID:</dt><dd class="visible-md visible-lg">10</dd>
+										</dl>
+									</div><!-- info-box -->
+								</div>
+							</div><!-- details-bar -->
+						</aside><!-- aside -->
+						<section class="tabs">
+							<ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab-01" data-toggle="tab">Personal Information</a></li>
+								<li><a href="#tab-02" data-toggle="tab">Temple Rites</a></li>
+								<li><a href="#tab-03" data-toggle="tab">Non-Marital Sealings</a></li>
+								<li><a href="#tab-04" data-toggle="tab">Marital Sealings</a></li>
+							</ul><!-- nav-tabs -->
+                            <div class="tab-content">
+                                <!-- Personal Information -->
+								<div class="tab-pane active" id="tab-01">
+									<section class="section">
+										<div class="heading">
+											<h2>Authoritative Name</h2>
+										</div>
+										<div class="form-area">
+											<div class="row-area">
+                                                    <input type="hidden" class="form-control" value="" id="1nameid" name="1nameid">
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="1prefix" name="1prefix" size="4">
+                                                        <label for="1prefix">Prefix</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="1first" name="1first" size="14">
+                                                        <label for="1first">First</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="1middle" name="1middle" size="13">
+                                                        <label for="1middle">Middle</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="1last" name="1last" size="14">
+                                                        <label for="1last">Last</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="1suffix" name="1suffix" size="4">
+                                                        <label for="1suffix">Suffix</label>
+													</div>
+											</div><!-- row-area -->
+										</div><!-- form-area -->
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Alternative Names (Also Known As)</h2>
+										</div>
+										<div class="form-area" id="alternative-names">
+											<div class="row-area">
+                                                    <input type="hidden" class="form-control" value="" id="2nameid" name="2nameid">
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="2prefix" name="2prefix" size="4">
+                                                        <label for="2prefix">Prefix</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="2first" name="2first" size="14">
+                                                        <label for="2first">First</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="2middle" name="2middle" size="13">
+                                                        <label for="2middle">Middle</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="2last" name="2last" size="14">
+                                                        <label for="2last">Last</label>
+													</div>
+													<div class="frame">
+                                                        <input type="text" class="form-control" value="" id="2suffix" name="2suffix" size="4">
+                                                        <label for="2suffix">Suffix</label>
+													</div>
+											</div><!-- row-area -->
+										</div><!-- form-area -->
+										<div class="form-area">
+                                            <div class="row-area">
+                                                <button id="button-add-name" class="btn btn-success btn-save ie-fix"><span>Add New Name</span></button>
+											</div><!-- row-area -->
+										</div><!-- form-area -->
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Birth Information</h2>
+                                        </div>
+                                        <div class="form-area">
+                                            <div class="row-area">
+                                                <div class="col-area">
+                                                    <div class="frame">
+                                                        <label class="fixed">Birth Date:</label>
+                                                        <input type="text" class="form-control" value="MM" name="birthmonth" size="2">
+                                                        <input type="text" class="form-control" value="DD" name="birthday" size="2">
+                                                        <input type="text" class="form-control" value="YYYY" name="birthyear" size="4">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row-area">
+                                                <div class="col-area">
+                                                    <div class="frame">
+                                                        <label class="fixed" for="bpid">Birth Place:</label>
+                                                        <select data-placeholder="Select Birth Place" class="form-control" id="bpid" name="bpid">
+                                                            <option value=""></option>
+															<option value="15">Nauvoo, ILL</option>
+														</select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row-area">
+                                                <div class="col-area">
+                                                    <div class="frame">
+                                                        <label class="fixed" for="bpmarriage">Birth Parent Marriage:</label>
+                                                        <select data-placeholder="Select Parent Marriage" class="form-control" id="bpmarriage" name="bpmarriage">
+                                                            <option value=""></option>
+															<option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
+															<option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
+														</select>
+                                                    </div>
+                                                </div>
+                                            </div>
+										</div>
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Death Information</h2>
+										</div>
+                                        <div class="form-area">
+                                            <div class="row-area">
+                                                <div class="col-area">
+                                                    <div class="frame">
+                                                        <label class="fixed">Death Date:</label>
+                                                        <input type="text" class="form-control" value="MM" name="deathmonth" size="2">
+                                                        <input type="text" class="form-control" value="DD" name="deathday" size="2">
+                                                        <input type="text" class="form-control" value="YYYY" name="deathyear" size="4">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row-area">
+                                                <div class="col-area">
+                                                    <div class="frame">
+                                                        <label class="fixed" for="dpid">Death Place:</label>
+                                                        <select data-placeholder="Select Death Place" class="form-control" id="dpid" name="dpid">
+                                                            <option value=""></option>
+															<option value="15">Nauvoo, ILL</option>
+														</select>
+                                                    </div>
+                                                </div>
+                                            </div>
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Notes</h2>
+										</div>
+										<div class="notes">
+											<textarea class="form-control" cols="1" rows="1"></textarea>
+										</div>
+									</section><!-- section -->
+                                </div><!-- tab-01 -->
+                                <!-- Temple Rites -->
+								<div class="tab-pane" id="tab-02">
+									<section class="section">
+										<div class="heading">
+											<h2>Temple Rites Information</h2>
+										</div>
+										<div>
+                                            Temple Rites form here.
+										</div><!-- info-form -->
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Notes</h2>
+										</div>
+										<div class="notes">
+											<textarea class="form-control" cols="1" rows="1"></textarea>
+										</div>
+									</section><!-- section -->
+                                </div><!-- tab-02 -->
+                                <!-- Non-Marital Sealings -->
+								<div class="tab-pane" id="tab-03">
+									<section class="section">
+										<div class="heading">
+											<h2>Non-Marital Sealing Information</h2>
+										</div>
+                                        <div>
+                                            Non-Marital Sealings form here.
+										</div><!-- info-form -->
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Notes</h2>
+										</div>
+										<div class="notes">
+											<textarea class="form-control" cols="1" rows="1"></textarea>
+										</div>
+									</section><!-- section -->
+								</div>
+								<div class="tab-pane" id="tab-04">
+									<section class="section">
+										<div class="heading">
+											<h2>Marital Sealing Information</h2>
+										</div>
+										<div>
+                                            Marital Sealings form here.
+										</div><!-- info-form -->
+									</section><!-- section -->
+									<section class="section">
+										<div class="heading">
+											<h2>Notes</h2>
+										</div>
+										<div class="notes">
+											<textarea class="form-control" cols="1" rows="1"></textarea>
+										</div>
+									</section><!-- section -->
+                                </div>
+						</section><!-- tabs -->
+					</fieldset>
+				</form>
+			</div>
+		</div><!-- main-area -->
+	</div><!-- wrapper -->
+    <div style="display:none;"><div id="name-entry-hidden">
+        <div class="row-area">
+            <input type="hidden" class="form-control" value="NEW" id="ZZnameid" name="ZZnameid">
+            <div class="frame">
+                <input type="text" class="form-control" value="" id="ZZprefix" name="ZZprefix" size="4">
+                <label for="ZZprefix">Prefix</label>
+            </div>
+            <div class="frame">
+                <input type="text" class="form-control" value="" id="ZZfirst" name="ZZfirst" size="14">
+                <label for="ZZfirst">First</label>
+            </div>
+            <div class="frame">
+                <input type="text" class="form-control" value="" id="ZZmiddle" name="ZZmiddle" size="13">
+                <label for="ZZmiddle">Middle</label>
+            </div>
+            <div class="frame">
+                <input type="text" class="form-control" value="" id="ZZlast" name="ZZlast" size="14">
+                <label for="ZZlast">Last</label>
+            </div>
+            <div class="frame">
+                <input type="text" class="form-control" value="" id="ZZsuffix" name="ZZsuffix" size="4">
+                <label for="ZZsuffix">Suffix</label>
+            </div>
+        </div><!-- row-area -->
+    </div></div>
+	<script type="text/javascript" src="js/jquery-1-10-2-min.js"></script>
+	<script type="text/javascript" src="js/chosen.jquery.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/custom-form.js"></script>
+    <script type="text/javascript" src="js/custom-form.scrollable.js"></script>
+    <script type="text/javascript" src="js/custom-form.file.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel-3.0.6.pack.js"></script>
+    <script type="text/javascript" src="js/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="js/scripts.js"></script>
+    <script type="text/javascript">
+        customForm.customForms.replaceAll();
+    </script>
+</body>
+</html>
