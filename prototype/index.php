@@ -46,8 +46,8 @@
 	<li>Samples of chord diagrams, both static and temporal, as well as flow diagrams, can be accessed for all <a href="data_view/aq.php">AQ Members</a> in our database.</li>
 </ul>
 
-<h2>Data Views Of UVA's Data</h2>
-<p>We have some real data that we are considering.  The links below allow access to some parts of that data.</p>
+<h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
+<p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  The links below allow access to some parts of that data.</p>
 <ul>
 	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
     <li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
@@ -71,7 +71,8 @@
 
 <hr style="width:100%;text-align:center;border:1px solid black;"/>
 
-<h2>Visualization Prototypes from BYU Data</h2>
+<h2>Visualization Prototypes from Initial NCP Data</h2>
+Using the initial database from the Nauvoo Community Project, we created sample visualizations to start collecting our ideas.
 <ul>
 	<li><a href="vizbyu/prototype_click_chord.html">Sankey Marriages, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
 	marriage units are represented by circles in the diagram.  
@@ -87,8 +88,8 @@
 	status to show  Links are created from women to their children in the marriage.</li>
 </ul>
 
-<h2>Data Views Of BYU's Data</h2>
-<p>We have some real data from BYU.  The links below allow access to some parts of that data.</p>
+<h2>Data Views of Initial NCP Data</h2>
+<p>To better understand the initial NCP database and allow our researchers to easily find individuals and marriages to update, we provide a few simple data tables from our copy of the initial database.  The links below allow access to some parts of that data.</p>
 <ul>
 	<li><a href="data_view/jill_db/people.php">People</a>: all people in the database.</li>
 	<li><a href="data_view/jill_db/marriages.php">Marriages</a>: all marriages in the database.</li>
