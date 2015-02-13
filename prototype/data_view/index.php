@@ -13,14 +13,14 @@
 <h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
 <p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  The links below allow access to some parts of that data.</p>
 <ul>
-	<li><a href="data_view/aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
-    <li><a href="data_view/people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
-    <li><form action="data_view/search.php" method="get">Search People: Search for all people in the database by name.  Uses a fuzzy search mechanism.  Results may be clicked to find a list of children. <br/>Name <input type="text" name="q" width="25"/> <input type="Submit" value="Search"></form>
+	<li><a href="aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
+    <li><a href="people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
+    <li><form action="search.php" method="get">Search People: Search for all people in the database by name.  Uses a fuzzy search mechanism.  Results may be clicked to find a list of children. <br/>Name <input type="text" name="q" width="25"/> <input type="Submit" value="Search"></form>
     </li>
-	<li><a href="data_view/marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
-	<li><a href="data_view/places.php">All Places</a>: Searchable list of all places currently in our database (using Official Name).</li>
-	<li><a href="data_view/documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
-	<li><a href="data_view/compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
+	<li><a href="marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
+	<li><a href="places.php">All Places</a>: Searchable list of all places currently in our database (using Official Name).</li>
+	<li><a href="documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
+	<li><a href="compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
 
 <h2>REST API Service</h2>
@@ -55,13 +55,13 @@ Using the initial database from the Nauvoo Community Project, we created sample 
 <h2>Data Views of Initial NCP Data</h2>
 <p>To better understand the initial NCP database and allow our researchers to easily find individuals and marriages to update, we provide a few simple data tables from our copy of the initial database.  The links below allow access to some parts of that data.</p>
 <ul>
-	<li><a href="data_view/jill_db/people.php">People</a>: all people in the database.</li>
-	<li><a href="data_view/jill_db/marriages.php">Marriages</a>: all marriages in the database.</li>
-	<li><a href="data_view/jill_db/multimarriages.php">Men with Multiple Wives</a>: list of all men and their number of wives (throughout their lifetime).</li>
-	<li><a href="data_view/jill_db/polyandry.php">Women with Multiple Husbands</a>: list of all women and their number of husbands (throughout their lifetime).</li>
-	<li><a href="data_view/jill_db/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
-	<li><a href="data_view/jill_db/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
-	<li><a href="data_view/jill_db/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
+	<li><a href="jill_db/people.php">People</a>: all people in the database.</li>
+	<li><a href="jill_db/marriages.php">Marriages</a>: all marriages in the database.</li>
+	<li><a href="jill_db/multimarriages.php">Men with Multiple Wives</a>: list of all men and their number of wives (throughout their lifetime).</li>
+	<li><a href="jill_db/polyandry.php">Women with Multiple Husbands</a>: list of all women and their number of husbands (throughout their lifetime).</li>
+	<li><a href="jill_db/plural_before_1846.php">Men with Multiple Wives before 1845</a>: list second and later wives of men before the completion of the temple, Dec 10 1845.</li>
+	<li><a href="jill_db/plural.php">Widower Remarriages before 1845</a>: list of men who married a second or later wife (after the death of their first), before the completion of the temple, Dec 10 1845.</li>
+	<li><a href="jill_db/orgs.php">Membership in Church Organizations</a>: all organization membership in the database.</li>
 </ul>
 </body>
 </html>
