@@ -43,7 +43,7 @@
             </li>
         </ul>
     </li>
-	<li>Samples of chord diagrams, both static and temporal, as well as flow diagrams, can be accessed for all <a href="data_view/aq.php">AQ Members</a> in our database.</li>
+	<li>Samples of chord diagrams, both static and temporal, as well as flow diagrams, can be accessed for all <a href="aqlist.php">AQ Members</a> in our database.</li>
 </ul>
 <p>We have collaborated with BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, who have supplied an initial database. Additional research was performed to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.</p> 
 </body>
