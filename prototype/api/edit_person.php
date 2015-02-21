@@ -2,7 +2,7 @@
     $id = null;
     // Get the person ID
     if (isset($_GET["id"]) && is_numeric($_GET["id"]))
-        $id = $_GET["id"]
+        $id = $_GET["id"];
     else
         die("Please provide a numeric id");
     
