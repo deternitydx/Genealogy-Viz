@@ -6,6 +6,26 @@
     * All person information can be had by querying get_places with a person ID.  This has ids for places.
 
 -->
+
+<?php
+    // load the person
+    $person = json_decode(file_get_contents("http://ford.cs.virginia.edu/nauvoo/api/edit_person.php?id=".$_GET["id"]), true);
+
+    $bdate = explode("-", $person["information"]["BirthDate"]);
+    if (!isset($bdate[0]) && !empty($bdate[0]))
+        $bdate[0] = "YYYY";
+    if (!isset($bdate[1]) && !empty($bdate[1]))
+        $bdate[1] = "MM";
+    if (!isset($bdate[2]) && !empty($bdate[2]))
+        $bdate[2] = "DD";
+    $ddate = explode("-", $person["information"]["DeathDate"]);
+    if (!isset($ddate[0]) && !empty($ddate[0]))
+        $ddate[0] = "YYYY";
+    if (!isset($ddate[1]) && !empty($ddate[1]))
+        $ddate[1] = "MM";
+    if (!isset($ddate[2]) && !empty($ddate[2]))
+        $ddate[2] = "DD";
+?>
 <html>
     <head>
         <title>Nauvoo - Edit Entry</title>
@@ -52,7 +72,8 @@
                                 <div class="drop dropdown-menu" role="menu">
                                     <div class="info-box">
                                         <dl>
-                                            <dt class="visible-md visible-lg">Person ID:</dt><dd class="visible-md visible-lg">10</dd>
+                                        <dt class="visible-md visible-lg">Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
+                                        <input type="hidden" name="ID" id="ID" value="<?=$person["information"]["ID"]?>">
                                         </dl>
                                     </div><!-- info-box -->
                                 </div>
@@ -73,29 +94,39 @@
                                         <h2>Authoritative Name</h2>
                                     </div>
                                     <div class="form-area name-form">
-                                        <div class="row-area">
-                                            <input type="hidden" class="form-control" value="" id="1nameid" name="1nameid">
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="1prefix" name="1prefix" size="4">
-                                                <label for="1prefix">Prefix</label>
+<?php
+    $n_i = 1;
+    foreach ($person["names"] as $name) {
+        if ($name["Type"] == 'authoritative') {
+            echo "
+                                        <div class=\"row-area\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"nameid_$n_i\" name=\"nameid_$n_i\">
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"prefix_$n_i\" name=\"prefix_$n_i\" size=\"4\">
+                                                <label for=\"prefix_$n_i\">Prefix</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="1first" name="1first" size="14">
-                                                <label for="1first">First</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"first_$n_i\" name=\"first_$n_i\" size=\"14\">
+                                                <label for=\"first_$n_i\">First</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="1middle" name="1middle" size="13">
-                                                <label for="1middle">Middle</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"middle_$n_i\" name=\"middle_$n_i\" size=\"13\">
+                                                <label for=\"middle_$n_i\">Middle</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="1last" name="1last" size="14">
-                                                <label for="1last">Last</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"last_$n_i\" name=\"last_$n_i\" size=\"14\">
+                                                <label for=\"last_$n_i\">Last</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="1suffix" name="1suffix" size="4">
-                                                <label for="1suffix">Suffix</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"suffix_$n_i\" name=\"suffix_$n_i\" size=\"4\">
+                                                <label for=\"suffix_$n_i\">Suffix</label>
                                             </div>
                                         </div><!-- row-area -->
+";
+            $n_i++;
+        } // endif
+    } // end foreach
+?>
                                     </div><!-- form-area -->
                                     </section><!-- section -->
                                     <section class="section">
@@ -103,29 +134,38 @@
                                         <h2>Alternative Names (Also Known As)</h2>
                                     </div>
                                     <div class="form-area name-form" id="alternative-names">
-                                        <div class="row-area">
-                                            <input type="hidden" class="form-control" value="" id="2nameid" name="2nameid">
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="2prefix" name="2prefix" size="4">
-                                                <label for="2prefix">Prefix</label>
+<?php
+    foreach ($person["names"] as $name) {
+        if ($name["Type"] == 'alternate') {
+            echo "
+                                        <div class=\"row-area\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"nameid_$n_i\" name=\"nameid_$n_i\">
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"prefix_$n_i\" name=\"prefix_$n_i\" size=\"4\">
+                                                <label for=\"prefix_$n_i\">Prefix</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="2first" name="2first" size="14">
-                                                <label for="2first">First</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"first_$n_i\" name=\"first_$n_i\" size=\"14\">
+                                                <label for=\"first_$n_i\">First</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="2middle" name="2middle" size="13">
-                                                <label for="2middle">Middle</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"middle_$n_i\" name=\"middle_$n_i\" size=\"13\">
+                                                <label for=\"middle_$n_i\">Middle</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="2last" name="2last" size="14">
-                                                <label for="2last">Last</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"last_$n_i\" name=\"last_$n_i\" size=\"14\">
+                                                <label for=\"last_$n_i\">Last</label>
                                             </div>
-                                            <div class="frame">
-                                                <input type="text" class="form-control" value="" id="2suffix" name="2suffix" size="4">
-                                                <label for="2suffix">Suffix</label>
+                                            <div class=\"frame\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"suffix_$n_i\" name=\"suffix_$n_i\" size=\"4\">
+                                                <label for=\"suffix_$n_i\">Suffix</label>
                                             </div>
                                         </div><!-- row-area -->
+";
+            $n_i++;
+        } // endif
+    } // end foreach
+?>
                                     </div><!-- form-area -->
                                     <div class="form-area">
                                         <div class="row-area">
@@ -142,9 +182,9 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Birth Date:</label>
-                                                    <input type="text" class="form-control" value="MM" name="birthmonth" size="2">
-                                                    <input type="text" class="form-control" value="DD" name="birthday" size="2">
-                                                    <input type="text" class="form-control" value="YYYY" name="birthyear" size="4">
+                                                    <input type="text" class="form-control" value="<?=$bdate[1]?>" name="birthmonth" size="2">
+                                                    <input type="text" class="form-control" value="<?=$bdate[2]?>" name="birthday" size="2">
+                                                    <input type="text" class="form-control" value="<?=$bdate[0]?>" name="birthyear" size="4">
                                                 </div>
                                             </div>
                                         </div>
@@ -182,9 +222,9 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Death Date:</label>
-                                                    <input type="text" class="form-control" value="MM" name="deathmonth" size="2">
-                                                    <input type="text" class="form-control" value="DD" name="deathday" size="2">
-                                                    <input type="text" class="form-control" value="YYYY" name="deathyear" size="4">
+                                                    <input type="text" class="form-control" value="<?=$ddate[1]?>" name="deathmonth" size="2">
+                                                    <input type="text" class="form-control" value="<?=$ddate[2]?>" name="deathday" size="2">
+                                                    <input type="text" class="form-control" value="<?=$ddate[0]?>" name="deathyear" size="4">
                                                 </div>
                                             </div>
                                         </div>
