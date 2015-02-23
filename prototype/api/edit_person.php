@@ -8,7 +8,7 @@
     
     header('Content-type: application/json');
     
-    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
     
     // Array to hold all information about the person
     $person = array();
@@ -48,21 +48,27 @@
     // Get All Marriages
     $result = null;
     if ($person["information"]["Gender"] == "Male") 
-        $result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
+        $result = pg_query($db, "
+                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
-                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m, 
-                                    public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
-                                    h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' 
-                                    AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' 
-                                    AND h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
+                                    wn.\"First\", wn.\"Middle\", wn.\"Last\",
+                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
+                            RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
+                            RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT OUTER JOIN public.\"Name\" wn 
+                                        ON w.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative'
+                                    WHERE h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
     else
-        $result = pg_query($db, "SELECT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
+        $result = pg_query($db, "
+                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
-                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m, 
-                                    public.\"PersonMarriage\" h, public.\"PersonMarriage\" w WHERE
-                                    h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband' 
-                                    AND w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife' 
-                                    AND w.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
+                                    hn.\"First\", hn.\"Middle\", hn.\"Last\",
+                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
+                            RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
+                            RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT OUTER JOIN public.\"Name\" hn 
+                                        ON h.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+                                    WHERE w.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
     
     if (!$result) {
         print_empty("Error finding marriages.");
