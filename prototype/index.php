@@ -11,7 +11,7 @@
 <h4>Notes <a href="http://www.cs.virginia.edu/~jh2jf/notes/">www.cs.virginia.edu/~jh2jf/notes/</a></h4>
 <h2>Visualization Prototypes</h2>
 <ul>
-	<li><a href="chord.html">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
+	<li><a href="chord.html?id=615">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
     real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.
     <ul><li><a href="chord.html?id=615">Sample Male-Oriented Chord Diagram</a>: Chord diagram of Brigham Young and his wives and children</li>
     <li><a href="chord.html?id=1907">Sample Female-Oriented Chord Diagram</a>: Chord diagram of Zina Huntington and her husbands and children</li>
