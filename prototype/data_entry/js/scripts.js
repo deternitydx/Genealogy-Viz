@@ -6,41 +6,10 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#accordion a:first .custom-radio i, #accordion2 a:first .custom-radio i').addClass('custom-radio-selected');
-    $('#artifact_type').val('Beads');
-    $('#artifact_type_list').html('Beads');
-    $('#subset_by').val('Context');
-    $('#subset_data_by_list').html('Context');
-	$('#accordion h4.panel-title a').on('click', function(){
-        $('#accordion h4.panel-title a i').removeClass('custom-radio-selected');
-        $(this).find('.custom-radio i').addClass('custom-radio-selected');
-        var artifact_type = $(this).find('label').html().split(' ').pop();
-        $('#artifact_type').val(artifact_type);
-        $('#artifact_type_list').html(artifact_type);
-	});
-    $('#accordion2 h4.panel-title a').on('click', function(){
-        $('#accordion2 h4.panel-title a i').removeClass('custom-radio-selected');
-        $(this).find('.custom-radio i').addClass('custom-radio-selected');
-        var subset = $(this).find('label').html().split(' ').pop();
-        $('#subset_by').val(subset);
-        $('#subset_data_by_list').html(subset);
-    });
-
     // function to test existence of items
 
 	$.fn.exists = function(){return this.length>0;}
 
-    // turn select fields into chosen fields
-
-    $("select").each(function() {
-        if($(this).attr('id').indexOf("_NUM_") == -1) {
-            var chosen_width = 300;
-			if($(this).attr('width') > 0) chosen_width = $(this).attr('width');
-			var threshold = 1;
-			if($(this).hasClass('no-autocomplete')) threshold = 100;
-            $(this).chosen({width: chosen_width+"px",disable_search_threshold: threshold});
-        }
-    });
 
     // variable for delete confirmations
 
@@ -106,7 +75,15 @@ $(document).ready(function() {
 	if ($('.panel-group .panel').exists()){
 		$('.panel-group .panel:last-child').addClass('last-child');
 	}
-    
+   
+
+    // turn select fields into select2 fields
+    selectsToSelect2();
+    // Load in places
+    loadPlacesSelect2();
+    // Load in marriages
+    loadMarriagesSelect2();
+
     // Code to handle adding new marriages to the page
     var marriageid = 2;
     if ($('#button-add-marriage').exists()){
@@ -185,3 +162,77 @@ $(document).ready(function(){
     });
     
 });
+
+
+// Helper Function: load places into the select boxes
+function loadPlacesSelect2() {
+    $("select").each(function() {
+        // Only modify the places
+        if($(this).attr('id').indexOf("place_id") != -1) {
+            $(this).select2({
+                ajax: {
+                    url: "../api/get_places.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 4,
+                width: '400px',
+                theme: 'classic'
+            });
+        }
+    });
+}
+
+// Helper Function: load marriages into the select boxes
+function loadMarriagesSelect2() {
+    $("select").each(function() {
+        // Only modify the places
+        if($(this).attr('id').indexOf("marriage_id") != -1) {
+            $(this).select2({
+                ajax: {
+                    url: "../api/get_marriages.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 4,
+                width: '400px',
+                theme: 'classic'
+            });
+        }
+    });
+}
+
+// Helper Function: Make Selects Select2 objects
+function selectsToSelect2() {
+    $("select").each(function() {
+        // Only modify non-places
+        if($(this).attr('id').indexOf("place_id") == -1 && $(this).attr('id').indexOf("marriage_id") == -1) {
+            $(this).select2({
+                width: '400px',
+                theme: 'classic'
+            });
+        }
+    });
+}

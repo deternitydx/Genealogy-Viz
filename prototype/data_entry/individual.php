@@ -38,6 +38,17 @@
         <link href="css/form.css" rel="stylesheet" media="screen">
         <link href="css/jquery.fancybox.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
+        <script type="text/javascript" src="js/jquery-1-10-2-min.js"></script>
+        <script type="text/javascript" src="js/chosen.jquery.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <!--<script type="text/javascript" src="js/custom-form.js"></script>
+        <script type="text/javascript" src="js/custom-form.scrollable.js"></script>
+        <script type="text/javascript" src="js/custom-form.file.js"></script>-->
+        <script type="text/javascript" src="js/jquery.mousewheel-3.0.6.pack.js"></script>
+        <script type="text/javascript" src="js/jquery.fancybox.pack.js"></script>
+        <script type="text/javascript" src="js/scripts.js"></script>
+        <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/js/select2.min.js"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -259,10 +270,9 @@
                                         <div class="row-area">
                                             <div class="col-area">
                                                 <div class="frame">
-                                                    <label class="fixed" for="bpid">Birth Place:</label>
-                                                    <select data-placeholder="Select Birth Place" class="form-control" id="bpid" name="bpid">
-                                                        <option value=""></option>
-                                                        <option value="15">Nauvoo, ILL</option>
+                                                    <label class="fixed" for="b_place_id">Birth Place:</label>
+                                                    <select data-placeholder="Select Birth Place" class="form-control" id="b_place_id" name="b_place_id">
+                                                        <option value="<?=$person["information"]["BirthPlaceID"]?>" selected="selected"><?=$person["information"]["BirthPlaceName"]?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -271,10 +281,8 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed" for="bpmarriage">Birth Parent Marriage:</label>
-                                                    <select data-placeholder="Select Parent Marriage" class="form-control" id="bpmarriage" name="bpmarriage">
+                                                    <select data-placeholder="Select Parent Marriage" class="form-control" id="b_marriage_id" name="b_marriage_id">
                                                         <option value=""></option>
-                                                        <option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
-                                                        <option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -299,10 +307,9 @@
                                         <div class="row-area">
                                             <div class="col-area">
                                                 <div class="frame">
-                                                    <label class="fixed" for="dpid">Death Place:</label>
-                                                    <select data-placeholder="Select Death Place" class="form-control" id="dpid" name="dpid">
-                                                        <option value=""></option>
-                                                        <option value="15">Nauvoo, ILL</option>
+                                                    <label class="fixed" for="d_place_id">Death Place:</label>
+                                                    <select data-placeholder="Select Death Place" class="form-control" id="d_place_id" name="d_place_id">
+                                                        <option value="<?=$person["information"]["DeathPlaceID"]?>" selected="selected"><?=$person["information"]["DeathPlaceName"]?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -347,8 +354,8 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-pid">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="rites1-pid" name="rites1-pid">
+                                                            <label class="fixed" for="rites1_place_id">Place:</label>
+                                                            <select data-placeholder="Select Place" class="form-control" id="rites1_place_id" name="rites1_place_id">
                                                                 <option value=""></option>
                                                                 <option value="15">Nauvoo, ILL</option>
                                                             </select>
@@ -457,8 +464,8 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-pid">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="sealings1-pid" name="sealings1-pid">
+                                                            <label class="fixed" for="sealings1_place_id">Place:</label>
+                                                            <select data-placeholder="Select Place" class="form-control" id="sealings1_place_id" name="sealings1_place_id">
                                                                 <option value=""></option>
                                                                 <option value="15">Nauvoo, ILL</option>
                                                             </select>
@@ -584,7 +591,7 @@
                                                             <label class="fixed" for="marriages1-spouse">Spouse:</label>
                                                             <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_<?=$m_i?>" name="marriages1-spouse">
                                                                 <!-- TODO: Grab all people and use the person id instead of the name -->        
-                                                                <option value=""><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
+                                                                <option value="<?=$marriage["WifeID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
                                                                 <option value="15">Brigham Young</option>
                                                                 <option value="15">Joseph Smith</option>
                                                             </select>
@@ -616,10 +623,9 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-pid">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="marriages1-pid" name="marriages1-pid">
-                                                                <option value=""></option>
-                                                                <option value="15">Nauvoo, ILL</option>
+                                                            <label class="fixed" for="marriages1_place_id">Place:</label>
+                                                            <select data-placeholder="Select Place" class="form-control" id="marriages1_place_id" name="marriages1_place_id">
+                                                                <option value="<?=$marriage["PlaceID"]?>" selected="selected"><?=$marriage["PlaceName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -744,8 +750,8 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-pid">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="ritesZZ-pid" name="ritesZZ-pid">
+                                    <label class="fixed" for="ritesZZ_place_id">Place:</label>
+                                    <select data-placeholder="Select Place" class="form-control" id="ritesZZ_place_id" name="ritesZZ_place_id">
                                         <option value=""></option>
                                         <option value="15">Nauvoo, ILL</option>
                                     </select>
@@ -831,8 +837,8 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-pid">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="sealingsZZ-pid" name="sealingsZZ-pid">
+                                    <label class="fixed" for="sealingsZZ_place_id">Place:</label>
+                                    <select data-placeholder="Select Place" class="form-control" id="sealingsZZ_place_id" name="sealingsZZ_place_id">
                                         <option value=""></option>
                                         <option value="15">Nauvoo, ILL</option>
                                     </select>
@@ -939,8 +945,8 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-pid">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="marriagesZZ-pid" name="marriagesZZ-pid">
+                                    <label class="fixed" for="marriagesZZ_place_id">Place:</label>
+                                    <select data-placeholder="Select Place" class="form-control" id="marriagesZZ_place_id" name="marriagesZZ_place_id">
                                         <option value=""></option>
                                         <option value="15">Nauvoo, ILL</option>
                                     </select>
@@ -990,17 +996,8 @@
                     </div>
 
                 </div>
-                <script type="text/javascript" src="js/jquery-1-10-2-min.js"></script>
-                <script type="text/javascript" src="js/chosen.jquery.js"></script>
-                <script type="text/javascript" src="js/bootstrap.min.js"></script>
-                <script type="text/javascript" src="js/custom-form.js"></script>
-                <script type="text/javascript" src="js/custom-form.scrollable.js"></script>
-                <script type="text/javascript" src="js/custom-form.file.js"></script>
-                <script type="text/javascript" src="js/jquery.mousewheel-3.0.6.pack.js"></script>
-                <script type="text/javascript" src="js/jquery.fancybox.pack.js"></script>
-                <script type="text/javascript" src="js/scripts.js"></script>
-                <script type="text/javascript">
+                <!--<script type="text/javascript">
                     customForm.customForms.replaceAll();
-                    </script>
+                    </script>-->
                 </body>
             </html>
