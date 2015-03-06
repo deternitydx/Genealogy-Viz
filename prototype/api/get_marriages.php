@@ -24,10 +24,8 @@
         LEFT JOIN public.\"Place\" pl ON m.\"PlaceID\" = pl.\"ID\"
 
         WHERE 
-        hn.\"Last\" ilike '%$q%'
-        OR hn.\"First\" ilike '%$q%'
-        OR wn.\"Last\" ilike '%$q%'
-        OR wn.\"First\" ilike '%$q%'
+        hn.\"First\" || ' ' || hn.\"Last\" ilike '%$q%'
+        OR wn.\"First\" || ' ' || wn.\"Last\" ilike '%$q%'
 
         ORDER BY hn.\"Last\", hn.\"First\", wn.\"Last\", wn.\"First\" ASC";
     // Need to select join personmarriage with name for the husbands and wives and marriage for the type
