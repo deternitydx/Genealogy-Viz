@@ -14,8 +14,10 @@
     $person = array();
 
     // Get Personal Information
-    $result = pg_query($db, "SELECT * FROM public.\"Person\" p
-    WHERE p.\"ID\"=$id");
+    $result = pg_query($db, "SELECT p.*, bp.\"OfficialName\" as \"BirthPlaceName\", dp.\"OfficialName\" as \"DeathPlaceName\" FROM public.\"Person\" p
+                                LEFT JOIN \"Place\" bp ON p.\"BirthPlaceID\" = bp.\"ID\"
+                                LEFT JOIN \"Place\" dp ON p.\"DeathPlaceID\" = dp.\"ID\"
+                             WHERE p.\"ID\"=$id");
     if (!$result) {
         exit;
     }
@@ -49,23 +51,25 @@
     $result = null;
     if ($person["information"]["Gender"] == "Male") 
         $result = pg_query($db, "
-                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
+                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
                                     wn.\"First\", wn.\"Middle\", wn.\"Last\",
                                     h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" wn 
                                         ON w.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative'
                                     WHERE h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
     else
         $result = pg_query($db, "
-                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", m.\"MarriageDate\", m.\"DivorceDate\",
+                        SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
                                     hn.\"First\", hn.\"Middle\", hn.\"Last\",
                                     h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" hn 
                                         ON h.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
                                     WHERE w.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
