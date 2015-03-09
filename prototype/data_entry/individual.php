@@ -282,7 +282,7 @@
                                                 <div class="frame">
                                                     <label class="fixed" for="bpmarriage">Birth Parent Marriage:</label>
                                                     <select data-placeholder="Select Parent Marriage" class="form-control" id="b_marriage_id" name="b_marriage_id">
-                                                        <option value=""></option>
+                                                    <option value="<?=$person["information"]["BiologicalChildOfMarriage"]?>"><?=$person["information"]["ParentMarriageString"]?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -589,11 +589,9 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1-spouse">Spouse:</label>
-                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_<?=$m_i?>" name="marriages1-spouse">
+                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="marriages1-spouse">
                                                                 <!-- TODO: Grab all people and use the person id instead of the name -->        
-                                                                <option value="<?=$marriage["WifeID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                                <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -624,7 +622,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1_place_id">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="marriages1_place_id" name="marriages1_place_id">
+                                                            <select data-placeholder="Select Place" class="form-control" id="mar_place_id_<?=$m_i?>" name="mar_place_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["PlaceID"]?>" selected="selected"><?=$marriage["PlaceName"]?></option>
                                                             </select>
                                                         </div>
@@ -632,40 +630,32 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1-officiator">Officiator:</label>
-                                                            <select data-placeholder="Select Officiator" class="form-control" id="marriages1-officiator" name="marriages1-officiator">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_<?=$m_i?>" name="mar_officiator_person_id_<?=$m_i?>">
+                                                                <option value="<?=$marriage["OfficiatorID"]?>" selected="selected"><?php echo $marriage["OfficiatorLast"] . ", " . $marriage["OfficiatorFirst"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1-proxy">Proxy:</label>
-                                                            <select data-placeholder="Select Proxy" class="form-control" id="marriages1-proxy" name="marriages1-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_<?=$m_i?>" name="mar_proxy_person_id_<?=$m_i?>">
+                                                                <option value="<?=$marriage["ProxyID"]?>" selected="selected"><?php echo $marriage["ProxyLast"] . ", " . $marriage["ProxyFirst"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1-spouse-proxy">Spouse Proxy:</label>
-                                                            <select data-placeholder="Select Spouse Proxy" class="form-control" id="marriages1-spouse-proxy" name="marriages1-spouse-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_<?=$m_i?>" name="mar_spouse_proxy_person_id_<?=$m_i?>">
+                                                                <option value="<?=$marriage["SpouseProxyID"]?>" selected="selected"><?php echo $marriage["SpouseProxyLast"] . ", " . $marriage["SpouseProxyFirst"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="marriages1-name">Name as Sealed:</label>
-                                                            <select data-placeholder="Select Name as Sealed" class="form-control" id="marriages1-name" name="marriages1-name">
+                                                            <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_<?=$m_i?>" name="mar_name_id_<?=$m_i?>">
                                                                 <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
                                                             </select>
                                                         </div>
                                                     </div>
