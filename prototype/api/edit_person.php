@@ -25,6 +25,27 @@
         $person["information"] = $res;
     }
 
+    // Get the biological birth parent marriage
+    $query = "
+        SELECT DISTINCT m.*, pl.\"OfficialName\" as \"PlaceName\", hn.\"First\" as \"HusbandFirst\", hn.\"Last\" as \"HusbandLast\", wn.\"First\" as \"WifeFirst\", wn.\"Last\" as \"WifeLast\" 
+        FROM public.\"Marriage\" m
+        LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"MarriageID\" = m.\"ID\" AND hpm.\"Role\" = 'Husband'
+        LEFT JOIN public.\"PersonMarriage\" wpm ON wpm.\"MarriageID\" = m.\"ID\" AND wpm.\"Role\" = 'Wife'
+        LEFT JOIN public.\"Name\" hn ON hpm.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+        LEFT JOIN public.\"Name\" wn ON wpm.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative' 
+        LEFT JOIN public.\"Place\" pl ON m.\"PlaceID\" = pl.\"ID\"
+        WHERE m.\"ID\" = {$person["information"]["BiologicalChildOfMarriage"]} 
+        ORDER BY hn.\"Last\", hn.\"First\", wn.\"Last\", wn.\"First\" ASC LIMIT 1";
+    $result = pg_query($db, $query);
+    if (!$result) {
+        exit;
+    }
+    $results = pg_fetch_all($result);
+    foreach($results as $res) {
+        $person["information"]["ParentMarriageString"] = $res["HusbandLast"] . ", " . $res["HusbandFirst"] . " to " . $res["WifeLast"] . ", " . $res["WifeFirst"] . " (" . $res["MarriageDate"] . " : " . $res["Type"] . ")";
+    }
+
+
     // Get All Names
     $result = pg_query($db, "SELECT * FROM public.\"Name\" n WHERE n.\"PersonID\"=$id");
     if (!$result) {
@@ -52,30 +73,56 @@
     if ($person["information"]["Gender"] == "Male") 
         $result = pg_query($db, "
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
-                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
+                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"SpouseID\", 
                                     wn.\"First\", wn.\"Middle\", wn.\"Last\",
-                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
+                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\",
+                                    off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
+                                    hp.\"PersonID\" as \"ProxyID\", hpn.\"First\" as \"ProxyFirst\", hpn.\"Last\" as \"ProxyLast\", 
+                                    wp.\"PersonID\" as \"SpouseProxyID\", wpn.\"First\" as \"SpouseProxyFirst\", wpn.\"Last\" as \"SpouseProxyLast\"  
+                            FROM public.\"Marriage\" m
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" wn 
                                         ON w.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" off ON off.\"MarriageID\" = m.\"ID\" AND off.\"Role\" = 'Officiator'
+                            LEFT OUTER JOIN public.\"Name\" offn 
+                                        ON off.\"PersonID\" = offn.\"PersonID\" AND offn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" hp ON hp.\"MarriageID\" = m.\"ID\" AND hp.\"Role\" = 'ProxyHusband'
+                            LEFT OUTER JOIN public.\"Name\" hpn 
+                                        ON hp.\"PersonID\" = hpn.\"PersonID\" AND hpn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" wp ON wp.\"MarriageID\" = m.\"ID\" AND wp.\"Role\" = 'ProxyWife'
+                            LEFT OUTER JOIN public.\"Name\" wpn 
+                                        ON wp.\"PersonID\" = wpn.\"PersonID\" AND wpn.\"Type\" = 'authoritative'
                                     WHERE h.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
     else
         $result = pg_query($db, "
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
                                     hn.\"First\", hn.\"Middle\", hn.\"Last\",
-                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\" FROM public.\"Marriage\" m 
+                                    h.\"PersonID\" as \"SpouseID\", m.\"Root\",
+                                    off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
+                                    hp.\"PersonID\" as \"SpouseProxyID\", hpn.\"First\" as \"SpouseProxyFirst\", hpn.\"Last\" as \"SpouseProxyLast\", 
+                                    wp.\"PersonID\" as \"ProxyID\", wpn.\"First\" as \"ProxyFirst\", wpn.\"Last\" as \"ProxyLast\" 
+                            FROM public.\"Marriage\" m 
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" hn 
                                         ON h.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" off ON off.\"MarriageID\" = m.\"ID\" AND off.\"Role\" = 'Officiator'
+                            LEFT OUTER JOIN public.\"Name\" offn 
+                                        ON off.\"PersonID\" = offn.\"PersonID\" AND offn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" hp ON hp.\"MarriageID\" = m.\"ID\" AND hp.\"Role\" = 'ProxyHusband'
+                            LEFT OUTER JOIN public.\"Name\" hpn 
+                                        ON hp.\"PersonID\" = hpn.\"PersonID\" AND hpn.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"PersonMarriage\" wp ON wp.\"MarriageID\" = m.\"ID\" AND wp.\"Role\" = 'ProxyWife'
+                            LEFT OUTER JOIN public.\"Name\" wpn 
+                                        ON wp.\"PersonID\" = wpn.\"PersonID\" AND wpn.\"Type\" = 'authoritative'
                                     WHERE w.\"PersonID\"=$id ORDER BY m.\"MarriageDate\" ASC");
     
     if (!$result) {
-        print_empty("Error finding marriages.");
+        die("Error finding marriages.");
         exit;
     }
 
