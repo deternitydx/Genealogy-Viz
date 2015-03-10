@@ -443,29 +443,48 @@
                                         </div>
                                         <div>
                                             <div id="nonmarital-sealings-formarea">
+<?php
+    $s_i = 1;
+    foreach ($person["non_marital_sealings"] as $sealing) {
+        
+        $sdate = explode("-", $sealing["Date"]);
+        if (!isset($sdate[0]) || empty($sdate[0]))
+            $sdate[0] = "YYYY";
+        if (!isset($sdate[1]) || empty($sdate[1]))
+            $sdate[1] = "MM";
+        if (!isset($sdate[2]) || empty($sdate[2]))
+            $sdate[2] = "DD";
+
+        if ($sealing["AdopteeProxyID"] == null)
+            $sealing["ProxyName"] = "";
+        if ($sealing["MarriageProxyID"] == null)
+            $sealing["ProxyMarriageString"] = "";
+
+
+
+?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1-type">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="sealings1-type" name="sealings1-type">
-                                                                <option value=""></option>
-                                                                <option value="adoption">Adoption</option>
-                                                                <option value="secondAnnointing">Second Annointing</option>
+                                                            <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
+                                                                <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?> >Adoption</option>
+                                                                <option value="secondAnnointing" <?php if ($sealing["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="MM" name="sealings1-month" size="2">
-                                                            <input type="text" class="form-control" value="DD" name="sealings1-day" size="2">
-                                                            <input type="text" class="form-control" value="YYYY" name="sealings1-year" size="4">
+                                                            <input type="text" class="form-control" value="<?=$sdate[1]?>" name="nms_date_month_<?=$s_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$sdate[2]?>" name="nms_date_day_<?=$s_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$sdate[0]?>" name="nms_date_year_<?=$s_i?>" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1_place_id">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="sealings1_place_id" name="sealings1_place_id">
+                                                            <select data-placeholder="Select Place" class="form-control" id="nms_place_id_<?=$s_i?>" name="nms_place_id_<?=$s_i?>">
                                                                 <option value=""></option>
                                                                 <option value="15">Nauvoo, ILL</option>
                                                             </select>
@@ -474,40 +493,32 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1-officiator">Officiator:</label>
-                                                            <select data-placeholder="Select Officiator" class="form-control" id="sealings1-officiator" name="sealings1-officiator">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="nms_officiator_person_id_<?=$s_i?>" name="nms_officiator_person_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["OfficiatorID"]?>"><?=$sealing["OfficiatorName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1-proxy">Proxy:</label>
-                                                            <select data-placeholder="Select Proxy" class="form-control" id="sealings1-proxy" name="sealings1-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Proxy" class="form-control" id="nms_proxy_person_id_<?=$s_i?>" name="nms_proxy_person_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["AdopteeProxyID"]?>"><?=$sealing["ProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1-sealed-to">Sealed to Marriage:</label>
-                                                            <select data-placeholder="Select Sealed to Marriage" class="form-control" id="sealings1-sealed-to" name="sealings1-sealed-to">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
-                                                                <option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
+                                                            <select data-placeholder="Select Sealed to Marriage" class="form-control" id="nms_marriage_id_<?=$s_i?>" name="nms_marriage_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["MarriageID"]?>"><?=$sealing["MarriageString"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1-sealed-to-proxy">Sealed to Marriage (Proxy):</label>
-                                                            <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="sealings1-sealed-to-proxy" name="sealings1-sealed-to-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
-                                                                <option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
+                                                            <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="nms_proxy_marriage_id_<?=$s_i?>" name="nms_proxy_marriage_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["MarriageProxyID"]?>"><?=$sealing["ProxyMarriageString"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -516,12 +527,14 @@
                                                             <label class="fixed" for="sealings1-name">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="sealings1-name" name="sealings1-name">
                                                                 <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
+<?php
+    $s_i++;
+    } // Non marital Sealing for loop
+?>
                                             </div>
                                         </div><!-- info-form -->
                                         <div class="form-area">
