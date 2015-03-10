@@ -54,7 +54,37 @@
     $person["names"] = pg_fetch_all($result);
 
     // Get Non-Marital Sealings
-    $result = pg_query($db, "SELECT * FROM public.\"NonMaritalSealings\" n WHERE n.\"AdopteeID\"=$id");
+    $result = pg_query($db, "
+
+        SELECT DISTINCT n.*, p.\"OfficialName\" as \"PlaceName\", pn.\"Last\" as \"ProxyLast\", pn.\"First\" as \"ProxyFirst\",
+                CONCAT(offn.\"Last\",\", \",offn.\"First\") as \"OfficiatorName\",
+                m.\"MarriageDate\", m.\"HusbandName\", m.\"WifeName\",
+                pm.\"MarriageDate\" as \"ProxyMarriageDate\", pm.\"HusbandName\" as \"ProxyHusbandName\", pm.\"WifeName\" as \"ProxyWifeName\"
+        FROM public.\"NonMaritalSealings\" n
+        LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
+        LEFT JOIN public.\"Name\" pn on pn.\"PersonID\" = n.\"AdopteeProxyID\" AND pn.\"Type\" = 'authoritative'
+        LEFT JOIN public.\"Name\" offn on offn.\"PersonID\" = n.\"OfficiatorID\" AND offn.\"Type\" = 'authoritative'
+        LEFT JOIN (
+                SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\", m.\"PublicNotes\", m.\"PrivateNotes\",
+                        CONCAT(hn.\"Last\",', ',hn.\"First\",' ',hn.\"Middle\") as \"HusbandName\", 
+                        CONCAT(wn.\"Last\",', ',wn.\"First\",' ',wn.\"Middle\") as \"WifeName\"
+                        FROM public.\"Marriage\" m
+                        LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"Role\" = 'Husband' AND hpm.\"MarriageID\" = m.\"ID\"
+                        LEFT JOIN public.\"Name\" hn ON hn.\"PersonID\" = hpm.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+                        LEFT JOIN public.\"PersonMarriage\" wpm ON wpm.\"Role\" = 'Wife' AND wpm.\"MarriageID\" = m.\"ID\"
+                        LEFT JOIN public.\"Name\" wn ON wn.\"PersonID\" = wpm.\"PersonID\" AND wn.\"Type\" = 'authoritative'
+                    ) m ON m.\"ID\" = n.\"MarriageID\"
+        LEFT JOIN (
+                SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\", m.\"PublicNotes\", m.\"PrivateNotes\",
+                        CONCAT(hn.\"Last\",', ',hn.\"First\",' ',hn.\"Middle\") as \"HusbandName\", 
+                        CONCAT(wn.\"Last\",', ',wn.\"First\",' ',wn.\"Middle\") as \"WifeName\"
+                        FROM public.\"Marriage\" m
+                        LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"Role\" = 'Husband' AND hpm.\"MarriageID\" = m.\"ID\"
+                        LEFT JOIN public.\"Name\" hn ON hn.\"PersonID\" = hpm.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+                        LEFT JOIN public.\"PersonMarriage\" wpm ON wpm.\"Role\" = 'Wife' AND wpm.\"MarriageID\" = m.\"ID\"
+                        LEFT JOIN public.\"Name\" wn ON wn.\"PersonID\" = wpm.\"PersonID\" AND wn.\"Type\" = 'authoritative'
+                    ) pm ON pm.\"ID\" = n.\"MarriageProxyID\"
+        WHERE n.\"AdopteeID\"=$id");
     if (!$result) {
         exit;
     }
