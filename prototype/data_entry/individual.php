@@ -332,78 +332,90 @@
                                         </div>
                                         <div>
                                             <div id="temple-rites-formarea">
+<?php
+    $r_i = 1;
+    foreach ($person["temple_rites"] as $rite) {
+        
+        $rdate = explode("-", $rite["Date"]);
+        if (!isset($rdate[0]) || empty($rdate[0]))
+            $rdate[0] = "YYYY";
+        if (!isset($rdate[1]) || empty($rdate[1]))
+            $rdate[1] = "MM";
+        if (!isset($rdate[2]) || empty($rdate[2]))
+            $rdate[2] = "DD";
+
+        if ($rite["ProxyID"] == null)
+            $rite["ProxyName"] = "";
+        if ($rite["AnnointedToID"] == null)
+            $rite["AnnointedToName"] = "";
+        if ($rite["AnnointedToProxyID"] == null)
+            $rite["AnnointedToProxyName"] = "";
+
+
+?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="rites1-type">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="rites1-type" name="rites1-type">
+                                                            <select data-placeholder="Select Type" class="form-control" id="tr_type_<?=$r_i?>" name="tr_type_<?=$r_i?>">
                                                                 <option value=""></option>
-                                                                <option value="baptism">Baptism</option>
-                                                                <option value="endowment">Endowment</option>
-                                                                <option value="secondAnnointing">Second Annointing</option>
+                                                                <option value="baptism" <?php if ($rite["Type"] == "baptism") echo "selected";?>>Baptism</option>
+                                                                <option value="endowment" <?php if ($rite["Type"] == "endowment") echo "selected";?>>Endowment</option>
+                                                                <option value="secondAnnointing" <?php if ($rite["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="MM" name="rites1-month" size="2">
-                                                            <input type="text" class="form-control" value="DD" name="rites1-day" size="2">
-                                                            <input type="text" class="form-control" value="YYYY" name="rites1-year" size="4">
+                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" name="nms_date_month_<?=$s_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" name="nms_date_day_<?=$s_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$rdate[0]?>" name="nms_date_year_<?=$s_i?>" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1_place_id">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="rites1_place_id" name="rites1_place_id">
-                                                                <option value=""></option>
-                                                                <option value="15">Nauvoo, ILL</option>
+                                                            <label class="fixed" for="tr_place_id_<?=$r_i?>">Place:</label>
+                                                            <select data-placeholder="Select Place" class="form-control" id="tr_place_id_<?=$r_1?>" name="tr_place_id_<?=$r_i?>">
+                                                                <option value="<?=$rite["PlaceID"]?>" selected="selected"><?=$rite["PlaceName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="rites1-officiator">Officiator:</label>
-                                                            <select data-placeholder="Select Officiator" class="form-control" id="rites1-officiator" name="rites1-officiator">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="tr_officiator_person_id_<?=$r_i?>" name="tr_officiator_person_id_<?=$r_i?>">
+                                                                <option value="<?=$rite["OfficiatorID"]?>"><?=$rite["OfficiatorName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-officiator-role">Officiator Role:</label>
-                                                            <input type="text" class="form-control" value="" id="rites1-officiator-role" name="rites1-officiator-role" size="25">
+                                                            <label class="fixed" for="tr_officiator_role_<?=$r_i?>">Officiator Role:</label>
+                                                            <input type="text" class="form-control" value="<?=$rite["OfficiatorRole"]?>" id="tr_officiator_role_<?=$r_i?>" name="tr_officiator_role_<?=$r_i?>" size="25">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="rites1-proxy">Proxy:</label>
-                                                            <select data-placeholder="Select Proxy" class="form-control" id="rites1-proxy" name="rites1-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_<?=$r_1?>" name="tr_proxy_person_id_<?=$r_1?>">
+                                                                <option value="<?=$rite["ProxyID"]?>"><?=$rite["ProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-annointed-to">Annointed To:</label>
-                                                            <select data-placeholder="Select Annointed To" class="form-control" id="rites1-annointed-to" name="rites1-annointed-to">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <label class="fixed" for="tr_annointed_to_person_id_<?=$r_1?>">Annointed To:</label>
+                                                            <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_1?>" name="tr_annointed_to_person_id_<?=$r_1?>">
+                                                                <option value="<?=$rite["AnnointedToID"]?>"><?=$rite["AnnointedToName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-annointed-to-proxy">Annointed To (Proxy):</label>
-                                                            <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="rites1-annointed-to-proxy" name="rites1-annointed-to-proxy">
-                                                                <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">Joseph Smith</option>
+                                                            <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_1?>">Annointed To (Proxy):</label>
+                                                            <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_1?>" name="tr_annointed_to_proxy_person_id_<?=$r_1?>">
+                                                                <option value="<?=$rite["AnnointedToProxyID"]?>"><?=$rite["AnnointedToProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -412,12 +424,14 @@
                                                             <label class="fixed" for="rites1-name">Name as Performed:</label>
                                                             <select data-placeholder="Select Name as Performed" class="form-control" id="rites1-name" name="rites1-name">
                                                                 <option value=""></option>
-                                                                <option value="15">Brigham Young</option>
-                                                                <option value="15">B Young</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
+<?php
+    $r_i++;
+    } // Temple Rites for loop
+?>
                                             </div>
                                         </div><!-- info-form -->
                                         <div class="form-area">
@@ -485,8 +499,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="sealings1_place_id">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="nms_place_id_<?=$s_i?>" name="nms_place_id_<?=$s_i?>">
-                                                                <option value=""></option>
-                                                                <option value="15">Nauvoo, ILL</option>
+                                                                <option value="<?=$sealing["PlaceID"]?>" selected="selected"><?=$sealing["PlaceName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>

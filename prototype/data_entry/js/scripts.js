@@ -83,6 +83,8 @@ $(document).ready(function() {
     loadPlacesSelect2();
     // Load in marriages
     loadMarriagesSelect2();
+    // Load in marriages
+    loadPersonSelect2();
 
     // Code to handle adding new marriages to the page
     var marriageid = 2;
@@ -224,11 +226,43 @@ function loadMarriagesSelect2() {
     });
 }
 
+// Helper Function: load persons into the select boxes
+function loadPersonSelect2() {
+    $("select").each(function() {
+        // Only modify the places
+        if($(this).attr('id').indexOf("person_id") != -1) {
+            $(this).select2({
+                ajax: {
+                    url: "../api/get_person.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 4,
+                width: '400px',
+                theme: 'classic'
+            });
+        }
+    });
+}
+
 // Helper Function: Make Selects Select2 objects
 function selectsToSelect2() {
     $("select").each(function() {
         // Only modify non-places
-        if($(this).attr('id').indexOf("place_id") == -1 && $(this).attr('id').indexOf("marriage_id") == -1) {
+        if($(this).attr('id').indexOf("place_id") == -1 
+                && $(this).attr('id').indexOf("marriage_id") == -1
+                && $(this).attr('id').indexOf("person_id") == -1) {
             $(this).select2({
                 width: '400px',
                 theme: 'classic'

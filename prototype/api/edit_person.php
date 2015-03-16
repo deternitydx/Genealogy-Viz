@@ -94,12 +94,24 @@
     $person["non_marital_sealings"] = pg_fetch_all($result);
 
     // Get Temple Rites
-    $result = pg_query($db, "SELECT * FROM public.\"NonMaritalTempleRites\" n WHERE n.\"PersonID\"=$id");
+    $result = pg_query($db, "
+        SELECT n.*, off.\"Role\" as \"OfficiatorRole\", p.\"OfficialName\" as \"PlaceName\",
+                CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
+                CONCAT(pn.\"Last\",', ',pn.\"First\") as \"ProxyName\",
+                CONCAT(atn.\"Last\",', ',atn.\"First\") as \"AnnointedToName\",
+                CONCAT(atpn.\"Last\",', ',atpn.\"First\") as \"AnnointedToProxyName\"
+        FROM public.\"NonMaritalTempleRites\" n 
+        LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
+        LEFT JOIN public.\"Name\" pn on pn.\"PersonID\" = n.\"ProxyID\" AND pn.\"Type\" = 'authoritative'
+        LEFT JOIN public.\"Name\" atn on atn.\"PersonID\" = n.\"AnnointedToID\" AND atn.\"Type\" = 'authoritative'
+        LEFT JOIN public.\"Name\" atpn on atpn.\"PersonID\" = n.\"AnnointedToProxyID\" AND atpn.\"Type\" = 'authoritative'
+        LEFT JOIN public.\"TempleRiteOfficiators\" off ON off.\"NonMaritalTempleRitesID\" = n.\"ID\"
+        LEFT JOIN public.\"Name\" offn on off.\"PersonID\" = offn.\"PersonID\" AND offn.\"Type\" = 'authoritative'
+        WHERE n.\"PersonID\"=$id");
     if (!$result) {
         exit;
     }
     $person["temple_rites"] = pg_fetch_all($result);
-
 
     // Get All Marriages
     $result = null;
