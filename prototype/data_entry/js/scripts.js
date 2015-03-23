@@ -87,7 +87,11 @@ $(document).ready(function() {
     loadPersonSelect2();
 
     // Code to handle adding new marriages to the page
-    var marriageid = 2;
+    var marriageid = 1;
+    if ($('#m_i').exists()) {
+        marriageid = parseInt($('#m_i').val());
+    }
+    console.log("Next Marriage ID: " + marriageid);
     if ($('#button-add-marriage').exists()){
 		$('#button-add-marriage').click(function(){
 			var text = $('#marriage-entry-hidden').clone();
@@ -99,7 +103,11 @@ $(document).ready(function() {
 	}
 
     // Code to handle adding new nonmaritals to the page
-    var nonmaritalid = 2;
+    var nonmaritalid = 1;
+    if ($('#s_i').exists()) {
+        nonmaritalid = parseInt($('#s_i').val());
+    }
+    console.log("Next Sealing ID: " + nonmaritalid);
     if ($('#button-add-nonmarital').exists()){
 		$('#button-add-nonmarital').click(function(){
 			var text = $('#nonmarital-entry-hidden').clone();
@@ -111,7 +119,11 @@ $(document).ready(function() {
 	}
 
     // Code to handle adding new rites to the page
-    var riteid = 2;
+    var riteid = 1;
+    if ($('#r_i').exists()) {
+        riteid = parseInt($('#r_i').val());
+    }
+    console.log("Next Rite ID: " + riteid);
     if ($('#button-add-rite').exists()){
 		$('#button-add-rite').click(function(){
 			var text = $('#rite-entry-hidden').clone();
@@ -124,6 +136,10 @@ $(document).ready(function() {
 
     // Code to handle adding new names to the page
     var nameid = 3;
+    if ($('#n_i').exists()) {
+        nameid = parseInt($('#n_i').val());
+    }
+    console.log("Next Name ID: " + nameid);
     if ($('#button-add-name').exists()){
 		$('#button-add-name').click(function(){
 			var text = $('#name-entry-hidden').clone();

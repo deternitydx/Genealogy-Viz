@@ -2,8 +2,6 @@
 <!--
     Notes
     -----
-    * Need to load all the places into JS localstore, as they will take a while to load.  They are in json at api/get_places.php
-    * All person information can be had by querying get_places with a person ID.  This has ids for places.
 
 -->
 
@@ -356,7 +354,7 @@
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-type">Type:</label>
+                                                            <label class="fixed" for="tr_type_<?=$r_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="tr_type_<?=$r_i?>" name="tr_type_<?=$r_i?>">
                                                                 <option value=""></option>
                                                                 <option value="baptism" <?php if ($rite["Type"] == "baptism") echo "selected";?>>Baptism</option>
@@ -368,22 +366,22 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" name="nms_date_month_<?=$s_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" name="nms_date_day_<?=$s_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$rdate[0]?>" name="nms_date_year_<?=$s_i?>" size="4">
+                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" name="tr_date_month_<?=$r_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" name="tr_date_day_<?=$r_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$rdate[0]?>" name="tr_date_year_<?=$r_i?>" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_place_id_<?=$r_i?>">Place:</label>
-                                                            <select data-placeholder="Select Place" class="form-control" id="tr_place_id_<?=$r_1?>" name="tr_place_id_<?=$r_i?>">
+                                                            <select data-placeholder="Select Place" class="form-control" id="tr_place_id_<?=$r_i?>" name="tr_place_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["PlaceID"]?>" selected="selected"><?=$rite["PlaceName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-officiator">Officiator:</label>
+                                                            <label class="fixed" for="tr_officiator_person_id_<?=$r_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="tr_officiator_person_id_<?=$r_i?>" name="tr_officiator_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["OfficiatorID"]?>"><?=$rite["OfficiatorName"]?></option>
                                                             </select>
@@ -397,32 +395,32 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-proxy">Proxy:</label>
-                                                            <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_<?=$r_1?>" name="tr_proxy_person_id_<?=$r_1?>">
+                                                            <label class="fixed" for="tr_proxy_person_id_<?=$r_i?>">Proxy:</label>
+                                                            <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_<?=$r_i?>" name="tr_proxy_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["ProxyID"]?>"><?=$rite["ProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="tr_annointed_to_person_id_<?=$r_1?>">Annointed To:</label>
-                                                            <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_1?>" name="tr_annointed_to_person_id_<?=$r_1?>">
+                                                            <label class="fixed" for="tr_annointed_to_person_id_<?=$r_i?>">Annointed To:</label>
+                                                            <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_i?>" name="tr_annointed_to_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["AnnointedToID"]?>"><?=$rite["AnnointedToName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_1?>">Annointed To (Proxy):</label>
-                                                            <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_1?>" name="tr_annointed_to_proxy_person_id_<?=$r_1?>">
+                                                            <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_i?>">Annointed To (Proxy):</label>
+                                                            <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_i?>" name="tr_annointed_to_proxy_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["AnnointedToProxyID"]?>"><?=$rite["AnnointedToProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="rites1-name">Name as Performed:</label>
-                                                            <select data-placeholder="Select Name as Performed" class="form-control" id="rites1-name" name="rites1-name">
+                                                            <label class="fixed" for="tr_name_id_<?=$r_i?>">Name as Performed:</label>
+                                                            <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_<?=$r_i?>" name="tr_name_id<?=$r_i?>">
                                                                 <option value=""></option>
                                                             </select>
                                                         </div>
@@ -480,7 +478,7 @@
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-type">Type:</label>
+                                                            <label class="fixed" for="nms_type_<?=$s_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
                                                                 <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?> >Adoption</option>
                                                                 <option value="secondAnnointing" <?php if ($sealing["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
@@ -497,7 +495,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1_place_id">Place:</label>
+                                                            <label class="fixed" for="nms_place_id_<?=$s_i?>">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="nms_place_id_<?=$s_i?>" name="nms_place_id_<?=$s_i?>">
                                                                 <option value="<?=$sealing["PlaceID"]?>" selected="selected"><?=$sealing["PlaceName"]?></option>
                                                             </select>
@@ -505,15 +503,15 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-officiator">Officiator:</label>
+                                                            <label class="fixed" for="nms_officiator_person_id_<?=$s_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="nms_officiator_person_id_<?=$s_i?>" name="nms_officiator_person_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["OfficiatorID"]?>"><?=$sealing["OfficiatorName"]?></option>
+                                                                <option value="<?=$sealing["OfficiatorID"]?>"><?=$sealing["OfficiatorName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-proxy">Proxy:</label>
+                                                            <label class="fixed" for="nms_proxy_person_id_<?=$s_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="nms_proxy_person_id_<?=$s_i?>" name="nms_proxy_person_id_<?=$s_i?>">
                                                             <option value="<?=$sealing["AdopteeProxyID"]?>"><?=$sealing["ProxyName"]?></option>
                                                             </select>
@@ -521,7 +519,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-sealed-to">Sealed to Marriage:</label>
+                                                            <label class="fixed" for="nms_marriage_id_<?=$s_i?>">Sealed to Marriage:</label>
                                                             <select data-placeholder="Select Sealed to Marriage" class="form-control" id="nms_marriage_id_<?=$s_i?>" name="nms_marriage_id_<?=$s_i?>">
                                                             <option value="<?=$sealing["MarriageID"]?>"><?=$sealing["MarriageString"]?></option>
                                                             </select>
@@ -529,7 +527,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-sealed-to-proxy">Sealed to Marriage (Proxy):</label>
+                                                            <label class="fixed" for="nms_proxy_marriage_id_<?=$s_i?>">Sealed to Marriage (Proxy):</label>
                                                             <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="nms_proxy_marriage_id_<?=$s_i?>" name="nms_proxy_marriage_id_<?=$s_i?>">
                                                             <option value="<?=$sealing["MarriageProxyID"]?>"><?=$sealing["ProxyMarriageString"]?></option>
                                                             </select>
@@ -537,8 +535,8 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="sealings1-name">Name as Sealed:</label>
-                                                            <select data-placeholder="Select Name as Sealed" class="form-control" id="sealings1-name" name="sealings1-name">
+                                                            <label class="fixed" for="nms_name_id_<?=$s_i?>">Name as Sealed:</label>
+                                                            <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_<?=$s_i?>" name="nms_name_id_<?=$s_i?>">
                                                                 <option value=""></option>
                                                             </select>
                                                         </div>
@@ -604,7 +602,7 @@
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-type">Type:</label>
+                                                            <label class="fixed" for="mar_type_<?=$m_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="mar_type_<?=$m_i?>" name="mar_type_<?=$m_i?>">
                                                                 <option value="eternity" <?php if ($marriage["Type"] == "eternity") echo "selected";?>>Sealed for Eternity</option>
                                                                 <option value="time" <?php if ($marriage["Type"] == "time") echo "selected";?>>Sealed for Time</option>
@@ -614,9 +612,8 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-spouse">Spouse:</label>
+                                                            <label class="fixed" for="mar_spouse_person_id_<?=$m_i?>">Spouse:</label>
                                                             <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="marriages1-spouse">
-                                                                <!-- TODO: Grab all people and use the person id instead of the name -->        
                                                                 <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
                                                             </select>
                                                         </div>
@@ -647,7 +644,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1_place_id">Place:</label>
+                                                            <label class="fixed" for="mar_place_id_<?=$m_i?>">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="mar_place_id_<?=$m_i?>" name="mar_place_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["PlaceID"]?>" selected="selected"><?=$marriage["PlaceName"]?></option>
                                                             </select>
@@ -655,7 +652,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-officiator">Officiator:</label>
+                                                            <label class="fixed" for="mar_officiator_person_id_<?=$m_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_<?=$m_i?>" name="mar_officiator_person_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["OfficiatorID"]?>" selected="selected"><?php echo $marriage["OfficiatorLast"] . ", " . $marriage["OfficiatorFirst"];?></option>
                                                             </select>
@@ -663,7 +660,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-proxy">Proxy:</label>
+                                                            <label class="fixed" for="mar_proxy_person_id_<?=$m_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_<?=$m_i?>" name="mar_proxy_person_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["ProxyID"]?>" selected="selected"><?php echo $marriage["ProxyLast"] . ", " . $marriage["ProxyFirst"];?></option>
                                                             </select>
@@ -671,7 +668,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-spouse-proxy">Spouse Proxy:</label>
+                                                            <label class="fixed" for="mar_spouse_proxy_person_id_<?=$m_i?>">Spouse Proxy:</label>
                                                             <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_<?=$m_i?>" name="mar_spouse_proxy_person_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["SpouseProxyID"]?>" selected="selected"><?php echo $marriage["SpouseProxyLast"] . ", " . $marriage["SpouseProxyFirst"];?></option>
                                                             </select>
@@ -679,7 +676,7 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="marriages1-name">Name as Sealed:</label>
+                                                            <label class="fixed" for="mar_name_id_<?=$m_i?>">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_<?=$m_i?>" name="mar_name_id_<?=$m_i?>">
                                                                 <option value=""></option>
                                                             </select>
@@ -709,6 +706,12 @@
                                     </div>
                                     </section><!-- tabs -->
                                 </fieldset>
+<?php
+    echo "<input type=\"hidden\" name=\"n_i\" id=\"n_i\" value=\"$n_i\">";
+    echo "<input type=\"hidden\" name=\"r_i\" id=\"r_i\" value=\"$r_i\">";
+    echo "<input type=\"hidden\" name=\"s_i\" id=\"s_i\" value=\"$s_i\">";
+    echo "<input type=\"hidden\" name=\"m_i\" id=\"m_i\" value=\"$m_i\">";
+?>
                             </form>
                         </div>
                     </div><!-- main-area -->
@@ -720,26 +723,26 @@
                 <div style="display:none;">
                     <div id="name-entry-hidden">
                         <div class="row-area">
-                            <input type="hidden" class="form-control" value="NEW" id="ZZnameid" name="ZZnameid">
+                            <input type="hidden" class="form-control" value="" id="nameid_ZZ" name="nameid_ZZ">
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="ZZprefix" name="ZZprefix" size="4">
-                                <label for="ZZprefix">Prefix</label>
+                                <input type="text" class="form-control" value="" id="prefix_ZZ" name="prefix_ZZ" size="4">
+                                <label for="prefix_ZZ">Prefix</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="ZZfirst" name="ZZfirst" size="14">
-                                <label for="ZZfirst">First</label>
+                                <input type="text" class="form-control" value="" id="first_ZZ" name="first_ZZ" size="14">
+                                <label for="first_ZZ">First</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="ZZmiddle" name="ZZmiddle" size="13">
-                                <label for="ZZmiddle">Middle</label>
+                                <input type="text" class="form-control" value="" id="middle_ZZ" name="middle_ZZ" size="13">
+                                <label for="middle_ZZ">Middle</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="ZZlast" name="ZZlast" size="14">
-                                <label for="ZZlast">Last</label>
+                                <input type="text" class="form-control" value="" id="last_ZZ" name="last_ZZ" size="14">
+                                <label for="last_ZZ">Last</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="ZZsuffix" name="ZZsuffix" size="4">
-                                <label for="ZZsuffix">Suffix</label>
+                                <input type="text" class="form-control" value="" id="suffix_ZZ" name="suffix_ZZ" size="4">
+                                <label for="suffix_ZZ">Suffix</label>
                             </div>
                         </div><!-- row-area -->
                     </div>
@@ -747,85 +750,70 @@
                         <div class="row-area form-area form-block">
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-type">Type:</label>
-                                    <select data-placeholder="Select Type" class="form-control" id="ritesZZ-type" name="ritesZZ-type">
+                                    <label class="fixed" for="tr_type_ZZ">Type:</label>
+                                    <select data-placeholder="Select Type" class="form-control" id="tr_type_ZZ" name="tr_type_ZZ">
                                         <option value=""></option>
-                                        <option value="baptism">Baptism</option>
-                                        <option value="endowment">Endowment</option>
-                                        <option value="secondAnnointing">Second Annointing</option>
+                                        <option value="baptism" >Baptism</option>
+                                        <option value="endowment" >Endowment</option>
+                                        <option value="secondAnnointing" >Second Annointing</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="ritesZZ-month" size="2">
-                                    <input type="text" class="form-control" value="DD" name="ritesZZ-day" size="2">
-                                    <input type="text" class="form-control" value="YYYY" name="ritesZZ-year" size="4">
+                                    <input type="text" class="form-control" value="MM" name="tr_date_month_ZZ" size="2">
+                                    <input type="text" class="form-control" value="DD" name="tr_date_day_ZZ" size="2">
+                                    <input type="text" class="form-control" value="YYYY" name="tr_date_year_ZZ" size="4">
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ_place_id">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="ritesZZ_place_id" name="ritesZZ_place_id">
-                                        <option value=""></option>
-                                        <option value="15">Nauvoo, ILL</option>
+                                    <label class="fixed" for="tr_place_id_ZZ">Place:</label>
+                                    <select data-placeholder="Select Place" class="form-control" id="tr_place_id_ZZ" name="tr_place_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-officiator">Officiator:</label>
-                                    <select data-placeholder="Select Officiator" class="form-control" id="ritesZZ-officiator" name="ritesZZ-officiator">
+                                    <label class="fixed" for="tr_officiator_person_id_ZZ">Officiator:</label>
+                                    <select data-placeholder="Select Officiator" class="form-control" id="tr_officiator_person_id_ZZ" name="tr_officiator_person_id_ZZ">
                                         <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-officiator-role">Officiator Role:</label>
-                                    <input type="text" class="form-control" value="" id="ritesZZ-officiator-role" name="ritesZZ-officiator-role" size="25">
+                                    <label class="fixed" for="tr_officiator_role_ZZ">Officiator Role:</label>
+                                    <input type="text" class="form-control" value="" id="tr_officiator_role_ZZ" name="tr_officiator_role_ZZ" size="25">
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-proxy">Proxy:</label>
-                                    <select data-placeholder="Select Proxy" class="form-control" id="ritesZZ-proxy" name="ritesZZ-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
+                                    <label class="fixed" for="tr_proxy_person_id_ZZ">Proxy:</label>
+                                    <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_ZZ" name="tr_proxy_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-annointed-to">Annointed To:</label>
-                                    <select data-placeholder="Select Annointed To" class="form-control" id="ritesZZ-annointed-to" name="ritesZZ-annointed-to">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
+                                    <label class="fixed" for="tr_annointed_to_person_id_ZZ">Annointed To:</label>
+                                    <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_ZZ" name="tr_annointed_to_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-annointed-to-proxy">Annointed To (Proxy):</label>
-                                    <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="ritesZZ-annointed-to-proxy" name="ritesZZ-annointed-to-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
+                                    <label class="fixed" for="tr_annointed_to_proxy_person_id_ZZ">Annointed To (Proxy):</label>
+                                    <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_ZZ" name="tr_annointed_to_proxy_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="ritesZZ-name">Name as Performed:</label>
-                                    <select data-placeholder="Select Name as Performed" class="form-control" id="ritesZZ-name" name="ritesZZ-name">
+                                    <label class="fixed" for="tr_name_id_ZZ">Name as Performed:</label>
+                                    <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_ZZ" name="tr_name_idZZ">
                                         <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">B Young</option>
                                     </select>
                                 </div>
                             </div>
@@ -835,180 +823,146 @@
                         <div class="row-area form-area form-block">
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-type">Type:</label>
-                                    <select data-placeholder="Select Type" class="form-control" id="sealingsZZ-type" name="sealingsZZ-type">
-                                        <option value=""></option>
-                                        <option value="adoption">Adoption</option>
-                                        <option value="secondAnnointing">Second Annointing</option>
+                                    <label class="fixed" for="nms_type_ZZ">Type:</label>
+                                    <select data-placeholder="Select Type" class="form-control" id="nms_type_ZZ" name="nms_type_ZZ">
+                                        <option value="adoption"  >Adoption</option>
+                                        <option value="secondAnnointing" >Second Annointing</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="sealingsZZ-month" size="2">
-                                    <input type="text" class="form-control" value="DD" name="sealingsZZ-day" size="2">
-                                    <input type="text" class="form-control" value="YYYY" name="sealingsZZ-year" size="4">
+                                    <input type="text" class="form-control" value="" name="nms_date_month_ZZ" size="2">
+                                    <input type="text" class="form-control" value="" name="nms_date_day_ZZ" size="2">
+                                    <input type="text" class="form-control" value="" name="nms_date_year_ZZ" size="4">
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ_place_id">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="sealingsZZ_place_id" name="sealingsZZ_place_id">
-                                        <option value=""></option>
-                                        <option value="15">Nauvoo, ILL</option>
+                                    <label class="fixed" for="nms_place_id_ZZ">Place:</label>
+                                    <select data-placeholder="Select Place" class="form-control" id="nms_place_id_ZZ" name="nms_place_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-officiator">Officiator:</label>
-                                    <select data-placeholder="Select Officiator" class="form-control" id="sealingsZZ-officiator" name="sealingsZZ-officiator">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
+                                    <label class="fixed" for="nms_officiator_person_id_ZZ">Officiator:</label>
+                                    <select data-placeholder="Select Officiator" class="form-control" id="nms_officiator_person_id_ZZ" name="nms_officiator_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-proxy">Proxy:</label>
-                                    <select data-placeholder="Select Proxy" class="form-control" id="sealingsZZ-proxy" name="sealingsZZ-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
+                                    <label class="fixed" for="nms_proxy_person_id_ZZ">Proxy:</label>
+                                    <select data-placeholder="Select Proxy" class="form-control" id="nms_proxy_person_id_ZZ" name="nms_proxy_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-sealed-to">Sealed to Marriage:</label>
-                                    <select data-placeholder="Select Sealed to Marriage" class="form-control" id="sealingsZZ-sealed-to" name="sealingsZZ-sealed-to">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
-                                        <option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
+                                    <label class="fixed" for="nms_marriage_id_ZZ">Sealed to Marriage:</label>
+                                    <select data-placeholder="Select Sealed to Marriage" class="form-control" id="nms_marriage_id_ZZ" name="nms_marriage_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-sealed-to-proxy">Sealed to Marriage (Proxy):</label>
-                                    <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="sealingsZZ-sealed-to-proxy" name="sealingsZZ-sealed-to-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young and Miriam Works (civil, 18xx-MM-DD)</option>
-                                        <option value="15">Brigham Young and Mary Angell  (eternal, 18xx-MM-DD)</option>
+                                    <label class="fixed" for="nms_proxy_marriage_id_ZZ">Sealed to Marriage (Proxy):</label>
+                                    <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="nms_proxy_marriage_id_ZZ" name="nms_proxy_marriage_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="sealingsZZ-name">Name as Sealed:</label>
-                                    <select data-placeholder="Select Name as Sealed" class="form-control" id="sealingsZZ-name" name="sealingsZZ-name">
+                                    <label class="fixed" for="nms_name_id_ZZ">Name as Sealed:</label>
+                                    <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_ZZ" name="nms_name_id_ZZ">
                                         <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id="marriage-entry-hidden">
-                        <div class="row-area form-area form-block">
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-type">Type:</label>
-                                    <select data-placeholder="Select Type" class="form-control" id="marriagesZZ-type" name="marriagesZZ-type">
-                                        <option value=""></option>
-                                        <option value="eternity">Eternity</option>
-                                        <option value="time">Time</option>
-                                        <option value="civil">Civil</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-spouse">Spouse:</label>
-                                    <select data-placeholder="Select Spouse" class="form-control" id="marriagesZZ-spouse" name="marriagesZZ-spouse">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="marriagesZZ-month" size="2">
-                                    <input type="text" class="form-control" value="DD" name="marriagesZZ-day" size="2">
-                                    <input type="text" class="form-control" value="YYYY" name="marriagesZZ-year" size="4">
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed">Divorce Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="marriagesZZ-divorce-month" size="2">
-                                    <input type="text" class="form-control" value="DD" name="marriagesZZ-divorce-day" size="2">
-                                    <input type="text" class="form-control" value="YYYY" name="marriagesZZ-divorce-year" size="4">
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed">Cancellation Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="marriagesZZ-cancel-month" size="2">
-                                    <input type="text" class="form-control" value="DD" name="marriagesZZ-cancel-day" size="2">
-                                    <input type="text" class="form-control" value="YYYY" name="marriagesZZ-cancel-year" size="4">
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ_place_id">Place:</label>
-                                    <select data-placeholder="Select Place" class="form-control" id="marriagesZZ_place_id" name="marriagesZZ_place_id">
-                                        <option value=""></option>
-                                        <option value="15">Nauvoo, ILL</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-officiator">Officiator:</label>
-                                    <select data-placeholder="Select Officiator" class="form-control" id="marriagesZZ-officiator" name="marriagesZZ-officiator">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-proxy">Proxy:</label>
-                                    <select data-placeholder="Select Proxy" class="form-control" id="marriagesZZ-proxy" name="marriagesZZ-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-spouse-proxy">Spouse Proxy:</label>
-                                    <select data-placeholder="Select Spouse Proxy" class="form-control" id="marriagesZZ-spouse-proxy" name="marriagesZZ-spouse-proxy">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
-                                    <label class="fixed" for="marriagesZZ-name">Name as Sealed:</label>
-                                    <select data-placeholder="Select Name as Sealed" class="form-control" id="marriagesZZ-name" name="marriagesZZ-name">
-                                        <option value=""></option>
-                                        <option value="15">Brigham Young</option>
-                                        <option value="15">Joseph Smith</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                                                <div class="row-area form-area form-block">
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_type_ZZ">Type:</label>
+                                                            <select data-placeholder="Select Type" class="form-control" id="mar_type_ZZ" name="mar_type_ZZ">
+                                                                <option value="eternity" >Sealed for Eternity</option>
+                                                                <option value="time" >Sealed for Time</option>
+                                                                <option value="civil" >Civil Marriage</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_spouse_person_id_ZZ">Spouse:</label>
+                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_ZZ" name="marriages1-spouse">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">Date:</label>
+                                                            <input type="text" class="form-control" value="MM" name="mar_date_month_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="DD" name="mar_date_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="YYYY" name="mar_date_year_ZZ" size="4">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">Divorce Date:</label>
+                                                            <input type="text" class="form-control" value="MM" name="mar_div_month_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="DD" name="mar_div_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="YYYY" name="mar_div_year_ZZ" size="4">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">Cancelled Date:</label>
+                                                            <input type="text" class="form-control" value="MM" name="mar_cancel_month_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="DD" name="mar_cancel_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="YYYY" name="mar_cancel_year_ZZ" size="4">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_place_id_ZZ">Place:</label>
+                                                            <select data-placeholder="Select Place" class="form-control" id="mar_place_id_ZZ" name="mar_place_id_ZZ">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_officiator_person_id_ZZ">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_ZZ" name="mar_officiator_person_id_ZZ">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_proxy_person_id_ZZ">Proxy:</label>
+                                                            <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_ZZ" name="mar_proxy_person_id_ZZ">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_spouse_proxy_person_id_ZZ">Spouse Proxy:</label>
+                                                            <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_ZZ" name="mar_spouse_proxy_person_id_ZZ">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_name_id_ZZ">Name as Sealed:</label>
+                                                            <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_ZZ" name="mar_name_id_ZZ">
+                                                                <option value=""></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
                     </div>
 
                 </div>
