@@ -79,12 +79,6 @@ $(document).ready(function() {
 
     // turn select fields into select2 fields
     selectsToSelect2();
-    // Load in places
-    loadPlacesSelect2();
-    // Load in marriages
-    loadMarriagesSelect2();
-    // Load in marriages
-    loadPersonSelect2();
 
     // Code to handle adding new marriages to the page
     var marriageid = 1;
@@ -98,6 +92,7 @@ $(document).ready(function() {
             var html = text.html().replace(/ZZ/g, marriageid);
             $('#marital-sealings-formarea').append(html);
             marriageid = marriageid + 1;
+            selectsToSelect2();
             return false;
 		});
 	}
@@ -114,6 +109,7 @@ $(document).ready(function() {
             var html = text.html().replace(/ZZ/g, nonmaritalid);
             $('#nonmarital-sealings-formarea').append(html);
             nonmaritalid = nonmaritalid + 1;
+            selectsToSelect2();
             return false;
 		});
 	}
@@ -130,6 +126,7 @@ $(document).ready(function() {
             var html = text.html().replace(/ZZ/g, riteid);
             $('#temple-rites-formarea').append(html);
             riteid = riteid + 1;
+            selectsToSelect2();
             return false;
 		});
 	}
@@ -186,7 +183,8 @@ $(document).ready(function(){
 function loadPlacesSelect2() {
     $("select").each(function() {
         // Only modify the places
-        if($(this).attr('id').indexOf("place_id") != -1) {
+        if($(this).attr('id').indexOf("place_id") != -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 ajax: {
                     url: "../api/get_places.php",
@@ -216,7 +214,8 @@ function loadPlacesSelect2() {
 function loadMarriagesSelect2() {
     $("select").each(function() {
         // Only modify the places
-        if($(this).attr('id').indexOf("marriage_id") != -1) {
+        if($(this).attr('id').indexOf("marriage_id") != -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 ajax: {
                     url: "../api/get_marriages.php",
@@ -246,7 +245,8 @@ function loadMarriagesSelect2() {
 function loadPersonSelect2() {
     $("select").each(function() {
         // Only modify the places
-        if($(this).attr('id').indexOf("person_id") != -1) {
+        if($(this).attr('id').indexOf("person_id") != -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 ajax: {
                     url: "../api/get_person.php",
@@ -274,11 +274,19 @@ function loadPersonSelect2() {
 
 // Helper Function: Make Selects Select2 objects
 function selectsToSelect2() {
+    // Load in places
+    loadPlacesSelect2();
+    // Load in marriages
+    loadMarriagesSelect2();
+    // Load in marriages
+    loadPersonSelect2();
+    // Do everything else
     $("select").each(function() {
         // Only modify non-places
         if($(this).attr('id').indexOf("place_id") == -1 
                 && $(this).attr('id').indexOf("marriage_id") == -1
-                && $(this).attr('id').indexOf("person_id") == -1) {
+                && $(this).attr('id').indexOf("person_id") == -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 width: '400px',
                 theme: 'classic'
