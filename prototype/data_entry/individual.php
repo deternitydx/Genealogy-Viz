@@ -261,6 +261,17 @@
                                         <div class="row-area">
                                             <div class="col-area">
                                                 <div class="frame">
+                                                    <label class="fixed" for="gender">Gender:</label>
+                                                    <select data-placeholder="Select Gender" class="form-control" id="gender" name="gender">
+                                                                <option value="Male" <?php if ($person["information"]["Gender"] == "Male") echo "selected";?>>Male</option>
+                                                                <option value="Female" <?php if ($person["information"]["Gender"] == "Female") echo "selected";?>>Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-area">
+                                            <div class="col-area">
+                                                <div class="frame">
                                                     <label class="fixed">Birth Date:</label>
                                                     <input type="text" class="form-control" value="<?=$bdate[1]?>" name="birthmonth" size="2"> /
                                                     <input type="text" class="form-control" value="<?=$bdate[2]?>" name="birthday" size="2"> /
