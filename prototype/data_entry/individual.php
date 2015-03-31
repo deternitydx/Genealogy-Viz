@@ -2,7 +2,7 @@
 <!--
     Notes
     -----
-
+    TODO: Need to add Marriage ID, Temple Rites ID, Name ID, and Sealing ID for any sealings pulled from the database
 -->
 
 <?php
@@ -86,6 +86,7 @@
                                             <dl>
                                             <dt class="visible-md visible-lg">Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
                                             <input type="hidden" name="ID" id="ID" value="<?=$person["information"]["ID"]?>">
+                                            <input type="hidden" name="BrownID" id="BrownID" value="<?=$_GET["brown"]?>">
                                             </dl>
                                         </div><!-- info-box -->
                                     </div>
@@ -177,26 +178,27 @@
         if ($name["Type"] == 'authoritative') {
             echo "
                                         <div class=\"row-area\">
-                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"nameid_$n_i\" name=\"nameid_$n_i\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"name_id_$n_i\" name=\"name_id_$n_i\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"authoritative\" id=\"name_type_$n_i\" name=\"name_type_$n_i\">
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"prefix_$n_i\" name=\"prefix_$n_i\" size=\"4\">
-                                                <label for=\"prefix_$n_i\">Prefix</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"name_prefix_$n_i\" name=\"name_prefix_$n_i\" size=\"4\">
+                                                <label for=\"name_prefix_$n_i\">Prefix</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"first_$n_i\" name=\"first_$n_i\" size=\"14\">
-                                                <label for=\"first_$n_i\">First</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"name_first_$n_i\" name=\"name_first_$n_i\" size=\"14\">
+                                                <label for=\"name_first_$n_i\">First</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"middle_$n_i\" name=\"middle_$n_i\" size=\"13\">
-                                                <label for=\"middle_$n_i\">Middle</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"13\">
+                                                <label for=\"name_middle_$n_i\">Middle</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"last_$n_i\" name=\"last_$n_i\" size=\"14\">
-                                                <label for=\"last_$n_i\">Last</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"name_last_$n_i\" name=\"name_last_$n_i\" size=\"14\">
+                                                <label for=\"name_last_$n_i\">Last</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"suffix_$n_i\" name=\"suffix_$n_i\" size=\"4\">
-                                                <label for=\"suffix_$n_i\">Suffix</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"name_suffix_$n_i\" name=\"name_suffix_$n_i\" size=\"4\">
+                                                <label for=\"name_suffix_$n_i\">Suffix</label>
                                             </div>
                                         </div><!-- row-area -->
 ";
@@ -216,26 +218,27 @@
         if ($name["Type"] == 'alternate') {
             echo "
                                         <div class=\"row-area\">
-                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"nameid_$n_i\" name=\"nameid_$n_i\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"name_id_$n_i\" name=\"name_id_$n_i\">
+                                            <input type=\"hidden\" class=\"form-control\" value=\"alternate\" id=\"name_type_$n_i\" name=\"name_type_$n_i\">
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"prefix_$n_i\" name=\"prefix_$n_i\" size=\"4\">
-                                                <label for=\"prefix_$n_i\">Prefix</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Prefix"]}\" id=\"name_prefix_$n_i\" name=\"name_prefix_$n_i\" size=\"4\">
+                                                <label for=\"name_prefix_$n_i\">Prefix</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"first_$n_i\" name=\"first_$n_i\" size=\"14\">
-                                                <label for=\"first_$n_i\">First</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["First"]}\" id=\"name_first_$n_i\" name=\"name_first_$n_i\" size=\"14\">
+                                                <label for=\"name_first_$n_i\">First</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"middle_$n_i\" name=\"middle_$n_i\" size=\"13\">
-                                                <label for=\"middle_$n_i\">Middle</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"13\">
+                                                <label for=\"name_middle_$n_i\">Middle</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"last_$n_i\" name=\"last_$n_i\" size=\"14\">
-                                                <label for=\"last_$n_i\">Last</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Last"]}\" id=\"name_last_$n_i\" name=\"name_last_$n_i\" size=\"14\">
+                                                <label for=\"name_last_$n_i\">Last</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"suffix_$n_i\" name=\"suffix_$n_i\" size=\"4\">
-                                                <label for=\"suffix_$n_i\">Suffix</label>
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Suffix"]}\" id=\"name_suffix_$n_i\" name=\"name_suffix_$n_i\" size=\"4\">
+                                                <label for=\"name_suffix_$n_i\">Suffix</label>
                                             </div>
                                         </div><!-- row-area -->
 ";
@@ -259,8 +262,8 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Birth Date:</label>
-                                                    <input type="text" class="form-control" value="<?=$bdate[1]?>" name="birthmonth" size="2">
-                                                    <input type="text" class="form-control" value="<?=$bdate[2]?>" name="birthday" size="2">
+                                                    <input type="text" class="form-control" value="<?=$bdate[1]?>" name="birthmonth" size="2"> /
+                                                    <input type="text" class="form-control" value="<?=$bdate[2]?>" name="birthday" size="2"> /
                                                     <input type="text" class="form-control" value="<?=$bdate[0]?>" name="birthyear" size="4">
                                                 </div>
                                             </div>
@@ -296,8 +299,8 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Death Date:</label>
-                                                    <input type="text" class="form-control" value="<?=$ddate[1]?>" name="deathmonth" size="2">
-                                                    <input type="text" class="form-control" value="<?=$ddate[2]?>" name="deathday" size="2">
+                                                    <input type="text" class="form-control" value="<?=$ddate[1]?>" name="deathmonth" size="2"> /
+                                                    <input type="text" class="form-control" value="<?=$ddate[2]?>" name="deathday" size="2"> /
                                                     <input type="text" class="form-control" value="<?=$ddate[0]?>" name="deathyear" size="4">
                                                 </div>
                                             </div>
@@ -353,6 +356,7 @@
 ?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
+                                                        <input type="hidden" name="tr_id_<?=$r_i?>" id="tr_id_<?=$r_i?>" value="<?=$rite["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_type_<?=$r_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="tr_type_<?=$r_i?>" name="tr_type_<?=$r_i?>">
@@ -366,8 +370,8 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" name="tr_date_month_<?=$r_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" name="tr_date_day_<?=$r_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" name="tr_date_month_<?=$r_i?>" size="2"> /
+                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" name="tr_date_day_<?=$r_i?>" size="2"> /
                                                             <input type="text" class="form-control" value="<?=$rdate[0]?>" name="tr_date_year_<?=$r_i?>" size="4">
                                                         </div>
                                                     </div>
@@ -420,7 +424,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_name_id_<?=$r_i?>">Name as Performed:</label>
-                                                            <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_<?=$r_i?>" name="tr_name_id<?=$r_i?>">
+                                                            <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_<?=$r_i?>" name="tr_name_id_<?=$r_i?>">
                                                                 <option value=""></option>
                                                             </select>
                                                         </div>
@@ -477,10 +481,11 @@
 ?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
+                                                    <input type="hidden" name="nms_id_<?=$s_i?>" id="nms_id_<?=$s_i?>" value="<?=$sealing["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_type_<?=$s_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
-                                                                <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?> >Adoption</option>
+                                                                <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?>>Adoption</option>
                                                                 <option value="secondAnnointing" <?php if ($sealing["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
                                                             </select>
                                                         </div>
@@ -488,8 +493,8 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$sdate[1]?>" name="nms_date_month_<?=$s_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$sdate[2]?>" name="nms_date_day_<?=$s_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$sdate[1]?>" name="nms_date_month_<?=$s_i?>" size="2"> /
+                                                            <input type="text" class="form-control" value="<?=$sdate[2]?>" name="nms_date_day_<?=$s_i?>" size="2"> /
                                                             <input type="text" class="form-control" value="<?=$sdate[0]?>" name="nms_date_year_<?=$s_i?>" size="4">
                                                         </div>
                                                     </div>
@@ -601,6 +606,7 @@
 ?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
+                                                        <input type="hidden" name="mar_id_<?=$m_i?>" id="mar_id_<?=$m_i?>" value="<?=$marriage["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_type_<?=$m_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="mar_type_<?=$m_i?>" name="mar_type_<?=$m_i?>">
@@ -613,7 +619,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_person_id_<?=$m_i?>">Spouse:</label>
-                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="marriages1-spouse">
+                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="mar_spouse_person_id_<?=$m_i?>">
                                                                 <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
                                                             </select>
                                                         </div>
@@ -621,24 +627,24 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$mdate[1]?>" name="mar_date_month_<?=$m_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$mdate[2]?>" name="mar_date_day_<?=$m_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$mdate[1]?>" name="mar_date_month_<?=$m_i?>" size="2"> /
+                                                            <input type="text" class="form-control" value="<?=$mdate[2]?>" name="mar_date_day_<?=$m_i?>" size="2"> /
                                                             <input type="text" class="form-control" value="<?=$mdate[0]?>" name="mar_date_year_<?=$m_i?>" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Divorce Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$divdate[1]?>" name="mar_div_month_<?=$m_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$divdate[2]?>" name="mar_div_day_<?=$m_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$divdate[1]?>" name="mar_div_month_<?=$m_i?>" size="2"> /
+                                                            <input type="text" class="form-control" value="<?=$divdate[2]?>" name="mar_div_day_<?=$m_i?>" size="2"> /
                                                             <input type="text" class="form-control" value="<?=$divdate[0]?>" name="mar_div_year_<?=$m_i?>" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Cancelled Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$cdate[1]?>" name="mar_cancel_month_<?=$m_i?>" size="2">
-                                                            <input type="text" class="form-control" value="<?=$cdate[2]?>" name="mar_cancel_day_<?=$m_i?>" size="2">
+                                                            <input type="text" class="form-control" value="<?=$cdate[1]?>" name="mar_cancel_month_<?=$m_i?>" size="2"> /
+                                                            <input type="text" class="form-control" value="<?=$cdate[2]?>" name="mar_cancel_day_<?=$m_i?>" size="2"> /
                                                             <input type="text" class="form-control" value="<?=$cdate[0]?>" name="mar_cancel_year_<?=$m_i?>" size="4">
                                                         </div>
                                                     </div>
@@ -723,47 +729,49 @@
                 <div style="display:none;">
                     <div id="name-entry-hidden">
                         <div class="row-area">
-                            <input type="hidden" class="form-control" value="" id="nameid_ZZ" name="nameid_ZZ">
+                            <input type="hidden" class="form-control" value="NEW" id="name_id_ZZ" name="name_id_ZZ">
+                            <input type="hidden" class="form-control" value="alternate" id="name_type_ZZ" name="name_type_ZZ">
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="prefix_ZZ" name="prefix_ZZ" size="4">
-                                <label for="prefix_ZZ">Prefix</label>
+                                <input type="text" class="form-control" value="" id="name_prefix_ZZ" name="name_prefix_ZZ" size="4">
+                                <label for="name_prefix_ZZ">Prefix</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="first_ZZ" name="first_ZZ" size="14">
-                                <label for="first_ZZ">First</label>
+                                <input type="text" class="form-control" value="" id="name_first_ZZ" name="name_first_ZZ" size="14">
+                                <label for="name_first_ZZ">First</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="middle_ZZ" name="middle_ZZ" size="13">
-                                <label for="middle_ZZ">Middle</label>
+                                <input type="text" class="form-control" value="" id="name_middle_ZZ" name="name_middle_ZZ" size="13">
+                                <label for="name_middle_ZZ">Middle</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="last_ZZ" name="last_ZZ" size="14">
-                                <label for="last_ZZ">Last</label>
+                                <input type="text" class="form-control" value="" id="name_last_ZZ" name="name_last_ZZ" size="14">
+                                <label for="name_last_ZZ">Last</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="suffix_ZZ" name="suffix_ZZ" size="4">
-                                <label for="suffix_ZZ">Suffix</label>
+                                <input type="text" class="form-control" value="" id="name_suffix_ZZ" name="name_suffix_ZZ" size="4">
+                                <label for="name_suffix_ZZ">Suffix</label>
                             </div>
                         </div><!-- row-area -->
                     </div>
                     <div id="rite-entry-hidden">
                         <div class="row-area form-area form-block">
                             <div class="row-area">
+                                <input type="hidden" name="tr_id_ZZ" id="tr_id_ZZ" value="NEW">
                                 <div class="frame">
                                     <label class="fixed" for="tr_type_ZZ">Type:</label>
                                     <select data-placeholder="Select Type" class="form-control" id="tr_type_ZZ" name="tr_type_ZZ">
                                         <option value=""></option>
-                                        <option value="baptism" >Baptism</option>
-                                        <option value="endowment" >Endowment</option>
-                                        <option value="secondAnnointing" >Second Annointing</option>
+                                        <option value="baptism">Baptism</option>
+                                        <option value="endowment">Endowment</option>
+                                        <option value="secondAnnointing">Second Annointing</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" value="MM" name="tr_date_month_ZZ" size="2">
-                                    <input type="text" class="form-control" value="DD" name="tr_date_day_ZZ" size="2">
+                                    <input type="text" class="form-control" value="MM" name="tr_date_month_ZZ" size="2"> /
+                                    <input type="text" class="form-control" value="DD" name="tr_date_day_ZZ" size="2"> /
                                     <input type="text" class="form-control" value="YYYY" name="tr_date_year_ZZ" size="4">
                                 </div>
                             </div>
@@ -812,7 +820,7 @@
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed" for="tr_name_id_ZZ">Name as Performed:</label>
-                                    <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_ZZ" name="tr_name_idZZ">
+                                    <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_ZZ" name="tr_name_id_ZZ">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -822,20 +830,21 @@
                     <div id="nonmarital-entry-hidden">
                         <div class="row-area form-area form-block">
                             <div class="row-area">
+                                <input type="hidden" name="nms_id_ZZ" id="nms_id_ZZ" value="NEW">
                                 <div class="frame">
                                     <label class="fixed" for="nms_type_ZZ">Type:</label>
                                     <select data-placeholder="Select Type" class="form-control" id="nms_type_ZZ" name="nms_type_ZZ">
-                                        <option value="adoption"  >Adoption</option>
-                                        <option value="secondAnnointing" >Second Annointing</option>
+                                        <option value="adoption">Adoption</option>
+                                        <option value="secondAnnointing">Second Annointing</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" value="" name="nms_date_month_ZZ" size="2">
-                                    <input type="text" class="form-control" value="" name="nms_date_day_ZZ" size="2">
-                                    <input type="text" class="form-control" value="" name="nms_date_year_ZZ" size="4">
+                                    <input type="text" class="form-control" value="MM" name="nms_date_month_ZZ" size="2"> /
+                                    <input type="text" class="form-control" value="DD" name="nms_date_day_ZZ" size="2"> /
+                                    <input type="text" class="form-control" value="YYYY" name="nms_date_year_ZZ" size="4">
                                 </div>
                             </div>
                             <div class="row-area">
@@ -886,12 +895,13 @@
                     <div id="marriage-entry-hidden">
                                                 <div class="row-area form-area form-block">
                                                     <div class="row-area">
+                                                        <input type="hidden" name="mar_id_ZZ" id="mar_id_ZZ" value="NEW">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_type_ZZ">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="mar_type_ZZ" name="mar_type_ZZ">
-                                                                <option value="eternity" >Sealed for Eternity</option>
-                                                                <option value="time" >Sealed for Time</option>
-                                                                <option value="civil" >Civil Marriage</option>
+                                                                <option value="eternity">Sealed for Eternity</option>
+                                                                <option value="time">Sealed for Time</option>
+                                                                <option value="civil">Civil Marriage</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -905,24 +915,24 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="MM" name="mar_date_month_ZZ" size="2">
-                                                            <input type="text" class="form-control" value="DD" name="mar_date_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="MM" name="mar_date_month_ZZ" size="2"> /
+                                                            <input type="text" class="form-control" value="DD" name="mar_date_day_ZZ" size="2"> /
                                                             <input type="text" class="form-control" value="YYYY" name="mar_date_year_ZZ" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Divorce Date:</label>
-                                                            <input type="text" class="form-control" value="MM" name="mar_div_month_ZZ" size="2">
-                                                            <input type="text" class="form-control" value="DD" name="mar_div_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="MM" name="mar_div_month_ZZ" size="2"> /
+                                                            <input type="text" class="form-control" value="DD" name="mar_div_day_ZZ" size="2"> /
                                                             <input type="text" class="form-control" value="YYYY" name="mar_div_year_ZZ" size="4">
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Cancelled Date:</label>
-                                                            <input type="text" class="form-control" value="MM" name="mar_cancel_month_ZZ" size="2">
-                                                            <input type="text" class="form-control" value="DD" name="mar_cancel_day_ZZ" size="2">
+                                                            <input type="text" class="form-control" value="MM" name="mar_cancel_month_ZZ" size="2"> /
+                                                            <input type="text" class="form-control" value="DD" name="mar_cancel_day_ZZ" size="2"> /
                                                             <input type="text" class="form-control" value="YYYY" name="mar_cancel_year_ZZ" size="4">
                                                         </div>
                                                     </div>
