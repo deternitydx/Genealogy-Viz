@@ -1,4 +1,46 @@
 <?php
+$db = null;
+
+function logger($str, $comment) {
+    global $output;
+    $c = "";
+    if ($comment) $c = "-- ";
+    fwrite($output, $c . $str . "\n");
+}
+
+function setup_db() {
+    global $db;
+    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+}
+
+function query_db($q) {
+    global $db;
+
+    if ($db == null) {
+        logger("Database not initialized", true);
+        return null;
+    }
+
+    $result = pg_query($db, $q);
+    if (!$result) {
+        logger(pg_last_error($result), true);
+        return null;
+    }
+
+    // Get the last insert value (if needed)
+    $res = pg_query($db, "SELECT lastval()");
+    $temprow = pg_fetch_Array($res);
+
+    // Return the new id
+    return $temprow[0];
+
+}
+
+function close_db() {
+    global $db;
+    pg_close($db);
+}
+
 function get_insert_statement($tableName, $arr) {
     $insert = "INSERT INTO public.\"$tableName\" ";
     $cols = "";
@@ -43,14 +85,17 @@ function get_update_statement($tableName, $arr, $match) {
 
 function insert($tableName, $arr) {
     global $output;
+    // Logging output just in case
     fwrite($output, get_insert_statement($tableName, $arr) . "\n");
 
-    // must return the last id after inserting
+    // Insert into the database
+
     return 1;
 }
 
 function update($tableName, $arr, $match) {
     global $output;
+    // Logging output just in case
     fwrite($output, get_update_statement($tableName, $arr, $match) . "\n");
 
     // must return true/false if the update succeeded

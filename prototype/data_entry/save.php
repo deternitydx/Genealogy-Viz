@@ -47,18 +47,9 @@
     // Logging
     //
     $output = fopen("submissions.txt", "a+");
-    fwrite($output, "=======================================\n");
-    fwrite($output, date(DATE_RFC2822, time()) . "\n");
-    fwrite($output, "=======================================\n");
-    //fwrite($output, print_r($_POST, true));
-
-    //fwrite($output, "=======================================\n");
-
-    //fwrite($output, print_r($personal, true));
-    //fwrite($output, print_r($names, true));
-    //fwrite($output, print_r($marriages, true));
-    //fwrite($output, print_r($sealings, true));
-    //fwrite($output, print_r($rites, true));
+    fwrite($output, "\n");
+    fwrite($output, "-- " . date(DATE_RFC2822, time()) . "\n");
+    fwrite($output, "-- ---------------------------------------\n");
 
     // Some constants (marital roles)
     $mrole = "Wife";
