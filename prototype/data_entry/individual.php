@@ -67,6 +67,9 @@
                 <div class="alert alert-01 alert-success" style="display: none">
                     <p>Successfully saved!</p>
                 </div><!-- end alert -->
+                <div class="alert alert-01 alert-failure" style="display: none">
+                    <p>An error occured while saving</p>
+                </div><!-- end alert -->
                 <div class="clearfix">
                     <form id="nauvoo_form" action="#">
                         <fieldset>

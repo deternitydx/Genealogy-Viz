@@ -2802,6 +2802,11 @@ footer .frame .copy {
 	border:solid 1px #7faec9;
 	color:#153c53;
 }
+.alert-failure{
+	background:#e0b2b2;
+	border:solid 1px #990000;
+	color:#8a0000;
+}
 .success-deleted{
 	background:#bfa281;
 	border:solid 1px #9a5f25;

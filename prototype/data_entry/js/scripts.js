@@ -29,8 +29,13 @@ $(document).ready(function() {
                     setTimeout(function(){
                         $('.alert-success').slideUp();
                     }, 3000);
+                    unsaved = false;
+                } else {
+                    $('.alert-failure').slideDown();
+                    setTimeout(function(){
+                        $('.alert-failure').slideUp();
+                    }, 3000);
                 }
-                unsaved = false;
             });
             return false;
 		});
