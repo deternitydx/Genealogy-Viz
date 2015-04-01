@@ -10,7 +10,7 @@ function logger($str, $comment) {
 
 function setup_db() {
     global $db;
-    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 }
 
 function query_db($q) {
@@ -18,13 +18,13 @@ function query_db($q) {
 
     if ($db == null) {
         logger("Database not initialized", true);
-        return null;
+        return false;
     }
 
     $result = pg_query($db, $q);
     if (!$result) {
-        logger(pg_last_error($result), true);
-        return null;
+        logger(pg_result_error($result), true);
+        return false;
     }
 
     // Get the last insert value (if needed)
@@ -46,12 +46,12 @@ function get_insert_statement($tableName, $arr) {
     $cols = "";
     $vals = "";
     foreach ($arr as $k => $v) {
-        $cols .= "\"$k\",";
+        $cols .= pg_escape_identifier($k) . ",";
         if ($v == "") $v = "NULL";
         if (is_numeric($v) || $v == "NULL")
             $vals .= "$v,";
         else
-            $vals .= "'$v',";
+            $vals .= pg_escape_literal($v) . ",";
     }
     $cols = substr($cols, 0, -1);
     $vals = substr($vals, 0, -1);
@@ -66,12 +66,12 @@ function get_update_statement($tableName, $arr, $match) {
     $cols = "";
     $vals = "";
     foreach ($arr as $k => $v) {
-        $cols .= "\"$k\",";
+        $cols .= pg_escape_identifier($k) .",";
         if ($v == "") $v = "NULL";
         if (is_numeric($v) || $v == "NULL")
             $vals .= "$v,";
         else
-            $vals .= "'$v',";
+            $vals .= pg_escape_literal($v) . ",";
     }
     $cols = substr($cols, 0, -1);
     $vals = substr($vals, 0, -1);
@@ -85,21 +85,21 @@ function get_update_statement($tableName, $arr, $match) {
 
 function insert($tableName, $arr) {
     global $output;
+
+    $insert = get_insert_statement($tableName, $arr);
     // Logging output just in case
-    fwrite($output, get_insert_statement($tableName, $arr) . "\n");
-
-    // Insert into the database
-
-    return 1;
+    logger($insert, false);
+    return query_db($insert);
 }
 
 function update($tableName, $arr, $match) {
     global $output;
-    // Logging output just in case
-    fwrite($output, get_update_statement($tableName, $arr, $match) . "\n");
 
-    // must return true/false if the update succeeded
-    return false;
+    $update = get_update_statement($tableName, $arr, $match);
+    
+    // Logging output just in case
+    logger($update, false);
+    return query_db($update) === false ? false : true;
 }
 
 

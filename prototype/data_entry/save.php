@@ -1,5 +1,8 @@
 <?php
     include_once("common_functions.php");
+
+    setup_db();
+    
     $sealings = array();
     $marriages = array();
     $rites = array();
@@ -54,7 +57,7 @@
     // Some constants (marital roles)
     $mrole = "Wife";
     $srole = "Husband";
-    if ($personal["gender"] == "Male") {
+    if (isset($personal["gender"]) && $personal["gender"] == "Male") {
         $mrole = "Husband";
         $srole = "Wife";
     }
@@ -110,7 +113,7 @@
         $vals["PersonID"] = $personal["ID"];
         $vals["Role"] = $mrole;
         if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-            " AND \"Role\" = \"" . $vals["Role"] . "\""))
+            " AND \"Role\" = '" . $vals["Role"] . "'"))
             insert("PersonMarriage", $vals);
         // Spouse
         if (isset($marriage["spouse_person_id"]) && $marriage["spouse_person_id"] != "") {
@@ -119,7 +122,7 @@
             $vals["PersonID"] = $marriage["spouse_person_id"];
             $vals["Role"] = $srole;
             if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = \"" . $vals["Role"] . "\""))
+                " AND \"Role\" = '" . $vals["Role"] . "'"))
                 insert("PersonMarriage", $vals);
         }
         // Proxy
@@ -129,7 +132,7 @@
             $vals["PersonID"] = $marriage["proxy_person_id"];
             $vals["Role"] = "Proxy".$mrole;
             if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = \"" . $vals["Role"] . "\""))
+                " AND \"Role\" = '" . $vals["Role"] . "'"))
                 insert("PersonMarriage", $vals);
         }
         // Spouse Proxy
@@ -139,7 +142,7 @@
             $vals["PersonID"] = $marriage["spouse_proxy_person_id"];
             $vals["Role"] = "Proxy".$srole;
             if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = \"" . $vals["Role"] . "\""))
+                " AND \"Role\" = '" . $vals["Role"] . "'"))
                 insert("PersonMarriage", $vals);
         }
         // Officiator
@@ -149,7 +152,7 @@
             $vals["PersonID"] = $marriage["officiator_person_id"];
             $vals["Role"] = "Officiator";
             if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = \"" . $vals["Role"] . "\""))
+                " AND \"Role\" = '" . $vals["Role"] . "'"))
                 insert("PersonMarriage", $vals);
         }
     }
@@ -342,6 +345,8 @@
 
     fwrite($output, "\n\n");
     fclose($output);
+    close_db();
 
     echo "success";
+
 ?>
