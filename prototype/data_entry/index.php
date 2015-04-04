@@ -44,7 +44,7 @@ $(document).ready( function () {
 <h1>Database Edit</h1>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Death Date</th><th>Gender</th><th>Links</th></tr></thead>";
+echo "<thead><tr><th>First</th><th>Middle</th><th>Last</th><th>Birth Date</th><th>Death Date</th><th>Gender</th><th>Links</th></tr></thead>";
 echo "</table>";
 ?>
 </body>
