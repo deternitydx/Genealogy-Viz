@@ -8,7 +8,7 @@
     
     header('Content-type: application/json');
     
-    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
+    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
     
     // Array to hold all information about the person
     $person = array();

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Brown Data</title>
+<title>Edit Individuals</title>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
@@ -37,14 +37,14 @@ var QueryString = function () {
 } ();
 
 $(document).ready( function () {
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/brown.php", deferRender: true, saveState: true, order: [[ 2, "asc" ]]});
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/people_edit_list.php", deferRender: true, saveState: true, order: [[ 2, "asc" ]]});
 } );
 </script>
 <body>
-<h1>Data Entry : Brown</h1>
+<h1>Database Edit</h1>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Status</th><th>Links</th></tr></thead>";
+echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Death Date</th><th>Gender</th><th>Links</th></tr></thead>";
 echo "</table>";
 ?>
 </body>
