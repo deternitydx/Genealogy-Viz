@@ -332,7 +332,18 @@
         $vals["BirthDate"] = combine_date($personal["birthyear"], $personal["birthmonth"], $personal["birthday"]);
     if(isset($personal["deathyear"]) && isset($personal["deathmonth"]) && isset($personal["deathday"]))
         $vals["DeathDate"] = combine_date($personal["deathyear"], $personal["deathmonth"], $personal["deathday"]);
-    
+    $notes = "";
+    if(isset($personal["personal_notes"]))
+        $notes .= $personal["personal_notes"];
+    if(isset($personal["notes_marriage"]))
+        $notes .= $personal["notes_marriage"];
+    if(isset($personal["non_marital_notes"]))
+        $notes .= $personal["non_marital_notes"];
+    if(isset($personal["temple_rite_notes"]))
+        $notes .= $personal["temple_rite_notes"];
+
+    $vals["PrivateNotes"] = $notes;
+
     if ($personal["ID"] == "NEW")
         // do insert
         insert("Person", $vals);
