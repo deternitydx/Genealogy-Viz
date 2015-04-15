@@ -151,8 +151,11 @@
             $vals["MarriageID"] = $marriage["id"];
             $vals["PersonID"] = $marriage["officiator_person_id"];
             $vals["Role"] = "Officiator";
-            if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = '" . $vals["Role"] . "'"))
+            // Temporary: only select or insert for Officiators, to avoid messing up the data!
+            //if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
+            //    " AND \"Role\" = '" . $vals["Role"] . "'"))
+            if (!search("PersonMarriage", "\"MarriageID\" = " . $vals["MarriageID"] . 
+                " AND \"Role\" = '" . $vals["Role"] . "' AND \"PersonID\" = " . $vals["PersonID"]))
                 insert("PersonMarriage", $vals);
         }
     }

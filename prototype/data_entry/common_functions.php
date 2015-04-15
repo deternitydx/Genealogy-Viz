@@ -83,6 +83,13 @@ function get_update_statement($tableName, $arr, $match) {
     return $insert;
 }
 
+function get_search_statement($tableName, $match) {
+    $insert = "SELECT * FROM public.\"$tableName\" ";
+    $insert .= " WHERE $match;";
+
+    return $insert;
+}
+
 function insert($tableName, $arr) {
     global $output;
 
@@ -96,6 +103,16 @@ function update($tableName, $arr, $match) {
     global $output;
 
     $update = get_update_statement($tableName, $arr, $match);
+    
+    // Logging output just in case
+    logger($update, false);
+    return query_db($update) === false ? false : true;
+}
+
+function search($tableName, $match) {
+    global $output;
+
+    $update = get_search_statement($tableName, $match);
     
     // Logging output just in case
     logger($update, false);
