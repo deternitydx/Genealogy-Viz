@@ -1107,10 +1107,18 @@ footer .frame .copy {
 	margin:0 -16px;
 	padding:9px 14px;
 }
+#aside h4 {
+	color:#153c53;
+}
 #aside .box {
 	border-bottom:1px solid #dfdfdf;
 	padding:14px 16px 12px;
 	margin:0 -16px;
+	overflow:hidden;
+}
+#aside .subbox {
+	padding-left: 10px;
+    padding-right: 10px;
 	overflow:hidden;
 }
 .add-new {

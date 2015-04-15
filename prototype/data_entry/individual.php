@@ -87,76 +87,54 @@
                                     <div class="drop dropdown-menu" role="menu">
                                         <div class="info-box">
                                             <dl>
-                                            <dt class="visible-md visible-lg">Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
+                                            <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
+                                            <dt class="visible-md visible-lg">Brown ID:</dt><dd class="visible-md visible-lg"><?=$_GET["brown"]?></dd>
                                             <input type="hidden" name="ID" id="ID" value="<?=$person["information"]["ID"]?>">
                                             <input type="hidden" name="BrownID" id="BrownID" value="<?=$_GET["brown"]?>">
                                             </dl>
                                         </div><!-- info-box -->
                                     </div>
                                 </div><!-- details-bar -->
-                                <div class="aside-accordion" id="aside-accordion">
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-01">Name</a></h2>
-                                        <div id="collapse-01" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["Name"]?></h3>
-                                                <p><?=$brown["NameFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                <h2 class="visible-md visible-lg">Brown Information</h2>
+                                <div class="box">
+                                    <h3>Context</h3>
+                                    <div class="subbox">
+                                        <p><?=$brown["context"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-02">Birthdate</a></h2>
-                                        <div id="collapse-02" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["BD"]?></h3>
-                                                <p><?=$brown["BDFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Name</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["Name"]?></h4>
+                                        <p><?=$brown["NameFootnotes"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-03">Priesthood</a></h2>
-                                        <div id="collapse-03" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["PH"]?></h3>
-                                                <p><?=$brown["PHFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Birthdate</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["BD"]?></h4>
+                                        <p><?=$brown["BDFootnotes"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-04">Endowment</a></h2>
-                                        <div id="collapse-04" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["E"]?></h3>
-                                                <p><?=$brown["EFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Priesthood</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["PH"]?></h4>
+                                        <p><?=$brown["PHFootnotes"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-05">Sealed / Marriage</a></h2>
-                                        <div id="collapse-05" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["SM"]?></h3>
-                                                <p><?=$brown["SMFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Endowment</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["E"]?></h4>
+                                        <p><?=$brown["EFootnotes"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-06">ASC</a></h2>
-                                        <div id="collapse-06" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["ASC"]?></h3>
-                                                <p><?=$brown["ASCFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Sealed / Marriage</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["SM"]?></h4>
+                                        <p><?=$brown["SMFootnotes"]?></p>
                                     </div>
-                                    <div class="panel">
-                                        <h2><a class="collapsed" data-toggle="collapse" data-parent="#aside-accordion" href="#collapse-07">Second Annointing</a></h2>
-                                        <div id="collapse-07" class="panel-collapse collapse">
-                                            <div class="frame">
-                                                <h3><?=$brown["SA"]?></h3>
-                                                <p><?=$brown["SAFootnotes"]?></p>
-                                            </div>
-                                        </div>
+                                    <h3>Adopted</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["ASC"]?></h4>
+                                        <p><?=$brown["ASCFootnotes"]?></p>
+                                    </div>
+                                    <h3>Second Annointing</h3>
+                                    <div class="subbox">
+                                        <h4><?=$brown["SA"]?></h4>
+                                        <p><?=$brown["SAFootnotes"]?></p>
                                     </div>
                                 </div>
                             </aside><!-- aside -->
