@@ -2,16 +2,17 @@
 <!--
     Notes
     -----
-    TODO: Need to add Marriage ID, Temple Rites ID, Name ID, and Sealing ID for any sealings pulled from the database
 -->
 
 <?php
+    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $split = explode("data_entry", $url);
+    $base_url = $split[0];
     // load the person
-    $person = json_decode(file_get_contents("http://ford.cs.virginia.edu/nauvoo/api/edit_person.php?id=".$_GET["id"]), true);
+    $person = json_decode(file_get_contents($base_url . "api/edit_person.php?id=".$_GET["id"]), true);
     // load the brown data
-    $brown = json_decode(file_get_contents("http://ford.cs.virginia.edu/nauvoo/api/brown_individual.php?id=".$_GET["brown"]), true);
+    $brown = json_decode(file_get_contents($base_url . "api/brown_individual.php?id=".$_GET["brown"]), true);
     $brown = $brown[0];
-
     $bdate = explode("-", $person["information"]["BirthDate"]);
     if (!isset($bdate[0]) || empty($bdate[0]))
         $bdate[0] = "YYYY";
