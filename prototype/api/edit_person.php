@@ -25,26 +25,31 @@
         $person["information"] = $res;
     }
 
-    // Get the biological birth parent marriage
-    $query = "
-        SELECT DISTINCT m.*, pl.\"OfficialName\" as \"PlaceName\", hn.\"First\" as \"HusbandFirst\", hn.\"Last\" as \"HusbandLast\", wn.\"First\" as \"WifeFirst\", wn.\"Last\" as \"WifeLast\" 
-        FROM public.\"Marriage\" m
-        LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"MarriageID\" = m.\"ID\" AND hpm.\"Role\" = 'Husband'
-        LEFT JOIN public.\"PersonMarriage\" wpm ON wpm.\"MarriageID\" = m.\"ID\" AND wpm.\"Role\" = 'Wife'
-        LEFT JOIN public.\"Name\" hn ON hpm.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
-        LEFT JOIN public.\"Name\" wn ON wpm.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative' 
-        LEFT JOIN public.\"Place\" pl ON m.\"PlaceID\" = pl.\"ID\"
-        WHERE m.\"ID\" = {$person["information"]["BiologicalChildOfMarriage"]} 
-        ORDER BY hn.\"Last\", hn.\"First\", wn.\"Last\", wn.\"First\" ASC LIMIT 1";
-    $result = pg_query($db, $query);
-    if (!$result) {
-        exit;
+    // Get the biological birth parent marriage, if it exists
+    if (isset($person["information"]) && 
+        isset($person["information"]["BiologicalChildOfMarriage"]) && 
+        is_numeric($person["information"]["BiologicalChildOfMarriage"])) {
+        
+        $query = "
+            SELECT DISTINCT m.*, pl.\"OfficialName\" as \"PlaceName\", hn.\"First\" as \"HusbandFirst\", hn.\"Last\" as \"HusbandLast\", wn.\"First\" as \"WifeFirst\", wn.\"Last\" as \"WifeLast\" 
+            FROM public.\"Marriage\" m
+            LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"MarriageID\" = m.\"ID\" AND hpm.\"Role\" = 'Husband'
+            LEFT JOIN public.\"PersonMarriage\" wpm ON wpm.\"MarriageID\" = m.\"ID\" AND wpm.\"Role\" = 'Wife'
+            LEFT JOIN public.\"Name\" hn ON hpm.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'
+            LEFT JOIN public.\"Name\" wn ON wpm.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative' 
+            LEFT JOIN public.\"Place\" pl ON m.\"PlaceID\" = pl.\"ID\"
+            WHERE m.\"ID\" = {$person["information"]["BiologicalChildOfMarriage"]} 
+            ORDER BY hn.\"Last\", hn.\"First\", wn.\"Last\", wn.\"First\" ASC LIMIT 1";
+        $result = pg_query($db, $query);
+        if (!$result) {
+            exit;
+        }
+        $results = pg_fetch_all($result);
+        foreach($results as $res) {
+            if (!isset($person["information"])) $person["information"] = array();
+            $person["information"]["ParentMarriageString"] = $res["HusbandLast"] . ", " . $res["HusbandFirst"] . " to " . $res["WifeLast"] . ", " . $res["WifeFirst"] . " (" . $res["MarriageDate"] . " : " . $res["Type"] . ")";
+        }
     }
-    $results = pg_fetch_all($result);
-    foreach($results as $res) {
-        $person["information"]["ParentMarriageString"] = $res["HusbandLast"] . ", " . $res["HusbandFirst"] . " to " . $res["WifeLast"] . ", " . $res["WifeFirst"] . " (" . $res["MarriageDate"] . " : " . $res["Type"] . ")";
-    }
-
 
     // Get All Names
     $result = pg_query($db, "SELECT * FROM public.\"Name\" n WHERE n.\"PersonID\"=$id");
