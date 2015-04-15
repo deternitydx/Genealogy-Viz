@@ -27,12 +27,13 @@ foreach ($arr as $mar) {
         $clean = htmlspecialchars($v);
         if ($clean == "") $clean = "&nbsp;";
         if ($k=="ChildOf") {
-            $clean = "<a href='/nauvoo/data_view/marriages.php?idSearch=$clean'>$clean</a>";    
+            $clean = "<a href='marriages.php?idSearch=$clean'>$clean</a>";    
         }
         array_push($resa, "\"$clean\"");
         if ($first) array_push($firsta, "\"$k\"");
     }
 
+    array_push($resa, "\"<a href='../data_entry/individual.php?id={$mar["ID"]}'>Edit</a>\"");
 
     array_push($json, "[" . implode(", ", $resa) . "]");
     $first = false;

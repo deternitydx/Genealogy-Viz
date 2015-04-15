@@ -11,8 +11,13 @@
     // load the person
     $person = json_decode(file_get_contents($base_url . "api/edit_person.php?id=".$_GET["id"]), true);
     // load the brown data
-    $brown = json_decode(file_get_contents($base_url . "api/brown_individual.php?id=".$_GET["brown"]), true);
-    $brown = $brown[0];
+    $brown = array();
+    if (isset($_GET["brown"])) {
+        $brown_id = $_GET["brown"];
+        $brown = json_decode(file_get_contents($base_url . "api/brown_individual.php?id=".$brown_id), true);
+        $brown = $brown[0];
+    } else
+        $brown_id = "UNKNOWN";
     $bdate = explode("-", $person["information"]["BirthDate"]);
     if (!isset($bdate[0]) || empty($bdate[0]))
         $bdate[0] = "YYYY";
@@ -89,9 +94,9 @@
                                         <div class="info-box">
                                             <dl>
                                             <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
-                                            <dt class="visible-md visible-lg">Brown ID:</dt><dd class="visible-md visible-lg"><?=$_GET["brown"]?></dd>
+                                            <dt class="visible-md visible-lg">Brown ID:</dt><dd class="visible-md visible-lg"><?=$brown_id?></dd>
                                             <input type="hidden" name="ID" id="ID" value="<?=$person["information"]["ID"]?>">
-                                            <input type="hidden" name="BrownID" id="BrownID" value="<?=$_GET["brown"]?>">
+                                            <input type="hidden" name="BrownID" id="BrownID" value="<?=$brown_id?>">
                                             </dl>
                                         </div><!-- info-box -->
                                     </div>
@@ -100,42 +105,42 @@
                                 <div class="box">
                                     <h3>Context</h3>
                                     <div class="subbox">
-                                        <p><?=$brown["context"]?></p>
+                                        <p><?=isset($brown["context"]) ? $brown["context"]:""?></p>
                                     </div>
                                     <h3>Name</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["Name"]?></h4>
-                                        <p><?=$brown["NameFootnotes"]?></p>
+                                        <h4><?=isset($brown["Name"])?$brown["Name"]:""?></h4>
+                                        <p><?=isset($brown["NameFootnotes"])?$brown["NameFootnotes"]:""?></p>
                                     </div>
                                     <h3>Birthdate</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["BD"]?></h4>
-                                        <p><?=$brown["BDFootnotes"]?></p>
+                                        <h4><?=isset($brown["BD"])?$brown["BD"]:""?></h4>
+                                        <p><?=isset($brown["BDFootnotes"])?$brown["BDFootnotes"]:""?></p>
                                     </div>
                                     <h3>Priesthood</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["PH"]?></h4>
-                                        <p><?=$brown["PHFootnotes"]?></p>
+                                        <h4><?=isset($brown["PH"])?$brown["PH"]:""?></h4>
+                                        <p><?=isset($brown["PHFootnotes"])?$brown["PHFootnotes"]:""?></p>
                                     </div>
                                     <h3>Endowment</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["E"]?></h4>
-                                        <p><?=$brown["EFootnotes"]?></p>
+                                        <h4><?=isset($brown["E"])?$brown["E"]:""?></h4>
+                                        <p><?=isset($brown["EFootnotes"])?$brown["EFootnotes"]:""?></p>
                                     </div>
                                     <h3>Sealed / Marriage</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["SM"]?></h4>
-                                        <p><?=$brown["SMFootnotes"]?></p>
+                                        <h4><?=isset($brown["SM"])?$brown["SM"]:""?></h4>
+                                        <p><?=isset($brown["SMFootnotes"])?$brown["SMFootnotes"]:""?></p>
                                     </div>
-                                    <h3>Adopted</h3>
+                                    <h3>Adopted / Sealed Child</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["ASC"]?></h4>
-                                        <p><?=$brown["ASCFootnotes"]?></p>
+                                        <h4><?=isset($brown["ASC"])?$brown["ASC"]:""?></h4>
+                                        <p><?=isset($brown["ASCFootnotes"])?$brown["ASCFootnotes"]:""?></p>
                                     </div>
                                     <h3>Second Annointing</h3>
                                     <div class="subbox">
-                                        <h4><?=$brown["SA"]?></h4>
-                                        <p><?=$brown["SAFootnotes"]?></p>
+                                        <h4><?=isset($brown["SA"])?$brown["SA"]:""?></h4>
+                                        <p><?=isset($brown["SAFootnotes"])?$brown["SAFootnotes"]:""?></p>
                                     </div>
                                 </div>
                             </aside><!-- aside -->
