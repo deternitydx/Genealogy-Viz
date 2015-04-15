@@ -109,14 +109,14 @@ function combine_date($year, $month, $day) {
         $date .= $year;
         if ($month != "MM" && $month != "") {
             if (intval($month) < 10)
-                $date .= "-0" . $month;
+                $date .= "-0" . intval($month);
             else
-                $date .= "-" . $month;
+                $date .= "-" . intval($month);
             if ($day != "DD" && $day != "") {
                 if (intval($day) < 10)
-                    $date .= "-0" . $day;
+                    $date .= "-0" . intval($day);
                 else
-                    $date .= "-" . $day;
+                    $date .= "-" . intval($day);
             }
         }
     }
