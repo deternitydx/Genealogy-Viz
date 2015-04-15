@@ -25,6 +25,46 @@
         $person["information"] = $res;
     }
 
+    $person["notes"] = array(
+        "personal" => "",
+        "marriage" => "",
+        "nms" => "",
+        "rites" => "");
+    
+    // Split out the notes sections
+    // They always appear as:
+    //  ...personal notes... 
+    //  ==MARRIAGE== 
+    //  ...marriage notes...
+    //  ==NON-MARITAL==
+    //  ...nms notes...
+    //  ==TEMPLE-RITES==
+    //  ...temple rite notes ...
+    if (isset($person["information"]) && isset($person["information"]["PrivateNotes"])) {
+        $notes = $person["information"]["PrivateNotes"];
+        $pieces = explode("\n==MARRIAGE==\n", $notes);
+        // Personal first
+        if (isset($pieces[0]))
+            $person["notes"]["personal"] = $pieces[0];
+        if (isset($pieces[1])) {
+            $rest = $pieces[1];
+            $pieces = explode("\n==NON-MARITAL==\n", $rest);
+            // Marriage next
+            if(isset($pieces[0]))
+                $person["notes"]["marriage"] = $pieces[0];
+            if (isset($pieces[1])) {
+                $rest = $pieces[1];
+                $pieces = explode("\n==TEMPLE-RITES==\n", $rest);
+                // Non-Marital next
+                if(isset($pieces[0]))
+                    $person["notes"]["nms"] = $pieces[0];
+                // Temple Rites last
+                if(isset($pieces[1]))
+                    $person["notes"]["rites"] = $pieces[1];
+            }
+        }
+    }
+
     // Get the biological birth parent marriage, if it exists
     if (isset($person["information"]) && 
         isset($person["information"]["BiologicalChildOfMarriage"]) && 

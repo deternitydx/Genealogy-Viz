@@ -314,7 +314,7 @@
                                             <h2>Notes</h2>
                                         </div>
                                         <div class="notes">
-                                        <textarea class="form-control" cols="1" rows="1" id="personal_notes" name="personal_notes"><?=$person["information"]["PrivateNotes"]?></textarea>
+                                        <textarea class="form-control" cols="1" rows="1" id="personal_notes" name="personal_notes"><?=$person["notes"]["personal"]?></textarea>
                                         </div>
                                         </section><!-- section -->
                                     </div><!-- tab-01 -->
@@ -440,7 +440,7 @@
                                             <h2>Notes</h2>
                                         </div>
                                         <div class="notes">
-                                            <textarea class="form-control" cols="1" rows="1" id="temple_rite_notes" name="temple_rite_notes"></textarea>
+                                        <textarea class="form-control" cols="1" rows="1" id="temple_rite_notes" name="temple_rite_notes"><?=$person["notes"]["rites"]?></textarea>
                                         </div>
                                         </section><!-- section -->
                                     </div><!-- tab-02 -->
@@ -557,7 +557,7 @@
                                             <h2>Notes</h2>
                                         </div>
                                         <div class="notes">
-                                            <textarea class="form-control" cols="1" rows="1" id="non_marital_notes" name="non_marital_notes"></textarea>
+                                            <textarea class="form-control" cols="1" rows="1" id="non_marital_notes" name="non_marital_notes"><?=$person["notes"]["nms"]?></textarea>
                                         </div>
                                         </section><!-- section -->
                                     </div>
@@ -699,7 +699,7 @@
                                             <h2>Notes</h2>
                                         </div>
                                         <div class="notes">
-                                            <textarea class="form-control" cols="1" rows="1" id="notes_marriage" name="notes_marriage"></textarea>
+                                            <textarea class="form-control" cols="1" rows="1" id="notes_marriage" name="notes_marriage"><?=$person["notes"]["marriage"]?></textarea>
                                         </div>
                                         </section><!-- section -->
                                     </div>

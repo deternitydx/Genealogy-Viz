@@ -335,10 +335,13 @@
     $notes = "";
     if(isset($personal["personal_notes"]))
         $notes .= $personal["personal_notes"];
+    $notes .= "\n==MARRIAGE==\n";
     if(isset($personal["notes_marriage"]))
         $notes .= $personal["notes_marriage"];
+    $notes .= "\n==NON-MARITAL==\n";
     if(isset($personal["non_marital_notes"]))
         $notes .= $personal["non_marital_notes"];
+    $notes .= "\n==TEMPLE-RITES==\n";
     if(isset($personal["temple_rite_notes"]))
         $notes .= $personal["temple_rite_notes"];
 
