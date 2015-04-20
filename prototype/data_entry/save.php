@@ -282,6 +282,10 @@
             $vals["AdopteeProxyID"] = $sealing["proxy_person_id"];
         if (isset($sealing["marriage_id"]))
             $vals["MarriageID"] = $sealing["marriage_id"];
+        if (isset($sealing["proxy_father_person_id"]))
+            $vals["FatherProxyID"] = $sealing["proxy_father_person_id"];
+        if (isset($sealing["proxy_mother_person_id"]))
+            $vals["MotherProxyID"] = $sealing["proxy_mother_person_id"];
         if (isset($sealing["proxy_marriage_id"]))
             $vals["MarriageProxyID"] = $sealing["proxy_marriage_id"];
         if (isset($sealing["officiator_person_id"]))
