@@ -484,7 +484,6 @@
                                                             <label class="fixed" for="nms_type_<?=$s_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
                                                                 <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?>>Adoption</option>
-                                                                <option value="secondAnnointing" <?php if ($sealing["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
                                                             </select>
                                                         </div>
                                                     </div>

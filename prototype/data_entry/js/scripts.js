@@ -24,7 +24,18 @@ $(document).ready(function() {
             // save the data
             $.post("save.php", $("#nauvoo_form").serialize(), function (data) {
                 // what to do after the save
-                if (data == "success") {
+                if (data.retval == "success") {
+                    for (var key in data.updates) {
+                        if (data.updates.hasOwnProperty(key)) {
+                            // If there is an element and it is actually part of this list
+                            // and not in the prototype, then set the id values throughout
+                            // the document
+                            var toupdate = "#" + key;
+                            console.log(toupdate);
+                            console.log(data.updates[key]);
+                            $(toupdate).val(data.updates[key]);
+                        }
+                    }
                     $('.alert-success').slideDown();
                     setTimeout(function(){
                         $('.alert-success').slideUp();

@@ -9,6 +9,8 @@
     $personal = array();
     $names = array();
 
+    $updates = array();
+
     // Break apart the POST values into their respective parts
     foreach ($_POST as $key => $val) {
         $pieces = explode("_", $key);
@@ -63,7 +65,7 @@
     }
 
     // Handle each part of the submit to insert into the database
-    foreach ($marriages as $marriage) {
+    foreach ($marriages as $index => $marriage) {
         $vals = array();
         /**
             [1] => Array
@@ -101,9 +103,10 @@
             $vals["DivorceDate"] = combine_date($marriage["div_year"] , $marriage["div_month"], $marriage["div_day"]);
         if (isset($marriage["cancel_year"]) && isset($marriage["cancel_month"]) && isset($marriage["cancel_day"]))
             $vals["CancelledDate"] = combine_date($marriage["cancel_year"] , $marriage["cancel_month"], $marriage["cancel_day"]);
-        if ($marriage["id"] == "NEW")
+        if ($marriage["id"] == "NEW") {
             $marriage["id"] = insert("Marriage", $vals);
-        else
+            $updates["mar_id_".$index] = $marriage["id"];
+        } else
             update("Marriage", $vals, "\"ID\" = " . $marriage["id"]);
 
         // Handle each of the Participants
@@ -160,7 +163,7 @@
         }
     }
 
-    foreach ($names as $name) {
+    foreach ($names as $index => $name) {
         $vals = array();
         /**
             [1] => Array
@@ -190,16 +193,17 @@
         // Add the person id from the main page
         $vals["PersonID"] = $personal["ID"];
 
-        if ($name["id"] == "NEW")
+        if ($name["id"] == "NEW") {
             // do insert
-            insert("Name", $vals);
-        else {
+            $nameid = insert("Name", $vals);
+            $updates["name_id_".$index] = $nameid;
+        } else {
             // do update
             update("Name", $vals, "\"ID\" = " . $name["id"]);
         }
     }
 
-    foreach ($rites as $rite) {
+    foreach ($rites as $index => $rite) {
         $vals = array();
         /**
             [1] => Array
@@ -232,9 +236,10 @@
         if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
             $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
 
-        if ($rite["id"] == "NEW")
+        if ($rite["id"] == "NEW") {
             $rite["id"] = insert("NonMaritalTempleRites", $vals);
-        else {
+            $updates["tr_id_".$index] = $rite["id"];
+        } else {
             update("NonMaritalTempleRites", $vals, "\"ID\" = " . $rite["id"]);
         }
 
@@ -251,7 +256,7 @@
 
     }
 
-    foreach ($sealings as $sealing) {
+    foreach ($sealings as $index => $sealing) {
         $vals = array();
         /**
             [1] => Array
@@ -290,10 +295,11 @@
         if (isset($sealing["date_year"]) && isset($sealing["date_year"]) && isset($sealing["date_year"]))
             $date = combine_date($sealing["date_year"], $sealing["date_month"], $sealing["date_day"]);;
 
-        if ($sealing["id"] == "NEW")
+        if ($sealing["id"] == "NEW") {
             // do insert
-            insert("NonMaritalSealings", $vals);
-        else {
+            $sealid = insert("NonMaritalSealings", $vals);
+            $updates["nms_id_".$index] = $sealid;
+        } else {
             // do update
             update("NonMaritalSealings", $vals, "\"ID\" = " . $sealing["id"]);
         }
@@ -364,6 +370,11 @@
     fclose($output);
     close_db();
 
-    echo "success";
+    $returnval = array();
+    $returnval["retval"] = "success";
+    $returnval["updates"] = $updates;
+
+    header('Content-type: application/json');
+    echo json_encode($returnval);
 
 ?>
