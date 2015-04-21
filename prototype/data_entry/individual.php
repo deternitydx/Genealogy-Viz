@@ -484,6 +484,7 @@
                                                             <label class="fixed" for="nms_type_<?=$s_i?>">Type:</label>
                                                             <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
                                                                 <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?>>Adoption</option>
+                                                                <option value="natural" <?php if ($sealing["Type"] == "natural") echo "selected";?>>Natural</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -529,9 +530,17 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="nms_proxy_marriage_id_<?=$s_i?>">Sealed to Marriage (Proxy):</label>
-                                                            <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="nms_proxy_marriage_id_<?=$s_i?>" name="nms_proxy_marriage_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["MarriageProxyID"]?>"><?=$sealing["ProxyMarriageString"]?></option>
+                                                            <label class="fixed" for="nms_proxy_father_person_id_<?=$s_i?>">Proxy Father:</label>
+                                                            <select data-placeholder="Select Proxy Father" class="form-control" id="nms_proxy_father_person_id_<?=$s_i?>" name="nms_proxy_father_person_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["FatherProxyID"]?>"><?=$sealing["ProxyFatherName"] != NULL ? $sealing["ProxyFatherName"] : ""?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="nms_proxy_mother_person_id_<?=$s_i?>">Proxy Mother:</label>
+                                                            <select data-placeholder="Select Proxy Mother" class="form-control" id="nms_proxy_mother_person_id_<?=$s_i?>" name="nms_proxy_mother_person_id_<?=$s_i?>">
+                                                            <option value="<?=$sealing["MotherProxyID"]?>"><?=$sealing["ProxyMotherName"] != NULL ? $sealing["ProxyMotherName"] : ""?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -874,8 +883,15 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="nms_proxy_marriage_id_ZZ">Sealed to Marriage (Proxy):</label>
-                                    <select data-placeholder="Select Sealed to Marriage (Proxy)" class="form-control" id="nms_proxy_marriage_id_ZZ" name="nms_proxy_marriage_id_ZZ">
+                                    <label class="fixed" for="nms_proxy_father_person_id_ZZ">Proxy Father:</label>
+                                    <select data-placeholder="Select Proxy Father" class="form-control" id="nms_proxy_father_person_id_ZZ" name="nms_proxy_father_person_id_ZZ">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row-area">
+                                <div class="frame">
+                                    <label class="fixed" for="nms_proxy_mother_person_id_ZZ">Proxy Mother:</label>
+                                    <select data-placeholder="Select Proxy Mother" class="form-control" id="nms_proxy_mother_person_id_ZZ" name="nms_proxy_mother_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>

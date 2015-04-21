@@ -296,8 +296,8 @@
         // need to add Name as Sealed to the DB
         // $vals["NameID"] = $sealing["name_id"];
 
-        if (isset($sealing["date_year"]) && isset($sealing["date_year"]) && isset($sealing["date_year"]))
-            $date = combine_date($sealing["date_year"], $sealing["date_month"], $sealing["date_day"]);;
+        if (isset($sealing["date_year"]) && isset($sealing["date_month"]) && isset($sealing["date_day"]))
+            $vals["Date"] = combine_date($sealing["date_year"], $sealing["date_month"], $sealing["date_day"]);
 
         if ($sealing["id"] == "NEW") {
             // do insert
