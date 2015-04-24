@@ -83,9 +83,6 @@
                             <aside id="aside">
                                 <h2 class="visible-md visible-lg">Record Information</h2>
                                 <div class="box">
-                                    <a href="#" data-toggle="modal" data-target="#add-new" class="add-new">Add New record</a>
-                                </div><!-- box -->
-                                <div class="box">
                                     <button id="button-record-save" class="btn btn-success btn-save ie-fix"><span>Save</span></button>
                                 </div><!-- box -->
                                 <div class="details-bar">
