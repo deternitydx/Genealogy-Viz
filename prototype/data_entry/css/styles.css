@@ -85,15 +85,20 @@ a:hover {
 	color:#f4f4eb;
 }
 .btn-warning {
-	background-color:#9e5f20;
-	border-color:#9e5f20;
+	background-color:#B90000;
+	border-color:#B90000;
 	color:#f4f4eb;
+	padding:6px 8px 6px;
+	min-width:auto;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
 }
 .btn-warning:focus,
 .btn-warning:active,
 .btn-warning:hover {
-	background-color:#804d1a;
-	border-color:#804d1a;
+	background-color:#992312;
+	border-color:#992312;
 	color:#f4f4eb;
 }
 h1 {
@@ -4815,6 +4820,11 @@ footer .frame .copy {
     border-bottom: 1px solid #153c53;
     padding-bottom: 5px;
     margin-bottom: 10px;
+}
+
+.delete-area {
+    float: right;
+    clear: none;
 }
 
 select.form-control {
