@@ -288,6 +288,36 @@ function loadPersonSelect2() {
     });
 }
 
+// Helper Function: load namess into the select boxes
+function loadNameSelect2() {
+    $("select").each(function() {
+        // Only modify the names
+        if($(this).attr('id').indexOf("name_id") != -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
+            $(this).select2({
+                ajax: {
+                    url: "../api/get_name.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: $("#ID").val(),
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                width: '400px',
+                theme: 'classic'
+            });
+        }
+    });
+}
+
 // Helper Function: Make Selects Select2 objects
 function selectsToSelect2() {
     // Load in places
@@ -296,12 +326,15 @@ function selectsToSelect2() {
     loadMarriagesSelect2();
     // Load in marriages
     loadPersonSelect2();
+    // Load in names
+    loadNameSelect2();
     // Do everything else
     $("select").each(function() {
         // Only modify non-places
         if($(this).attr('id').indexOf("place_id") == -1 
                 && $(this).attr('id').indexOf("marriage_id") == -1
                 && $(this).attr('id').indexOf("person_id") == -1
+                && $(this).attr('id').indexOf("name_id") == -1
                 && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 width: '400px',
