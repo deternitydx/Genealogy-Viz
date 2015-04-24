@@ -841,7 +841,6 @@
                                     <label class="fixed" for="nms_type_ZZ">Type:</label>
                                     <select data-placeholder="Select Type" class="form-control" id="nms_type_ZZ" name="nms_type_ZZ">
                                         <option value="adoption">Adoption</option>
-                                        <option value="secondAnnointing">Second Annointing</option>
                                     </select>
                                 </div>
                             </div>
