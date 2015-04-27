@@ -428,6 +428,7 @@
                                                             <label class="fixed" for="tr_name_id_<?=$r_i?>">Name as Performed:</label>
                                                             <select data-placeholder="Select Name as Performed" class="form-control" id="tr_name_id_<?=$r_i?>" name="tr_name_id_<?=$r_i?>">
                                                                 <option value=""></option>
+                                                                <option value="<?=$rite["NameUsedID"]?>" selected="selected"><?=trim($rite["NameUsed"])?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -550,6 +551,7 @@
                                                             <label class="fixed" for="nms_name_id_<?=$s_i?>">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_<?=$s_i?>" name="nms_name_id_<?=$s_i?>">
                                                                 <option value=""></option>
+                                                                <option value="<?=$sealing["NameUsedID"]?>" selected="selected"><?=trim($sealing["NameUsed"])?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -668,6 +670,7 @@
                                                             <label class="fixed" for="mar_name_id_<?=$m_i?>">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_<?=$m_i?>" name="mar_name_id_<?=$m_i?>">
                                                                 <option value=""></option>
+                                                                <option value="<?=$marriage["NameUsedID"]?>" selected="selected"><?=trim($marriage["NameUsed"])?></option>
                                                             </select>
                                                         </div>
                                                     </div>

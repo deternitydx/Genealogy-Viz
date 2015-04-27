@@ -102,6 +102,7 @@
     $result = pg_query($db, "
 
         SELECT DISTINCT n.*, p.\"OfficialName\" as \"PlaceName\", 
+                CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
                 CONCAT(pn.\"Last\",', ', pn.\"First\") as \"ProxyName\",
                 CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
                 CONCAT(m.\"HusbandName\", ' to ',  m.\"WifeName\", ' (',m.\"MarriageDate\",' : ',m.\"Type\", ')') as \"MarriageString\",
@@ -109,6 +110,7 @@
                 CONCAT(pmn.\"Last\",', ', pmn.\"First\") as \"ProxyMotherName\"
         FROM public.\"NonMaritalSealings\" n
         LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
+        LEFT JOIN public.\"Name\" nas on nas.\"ID\" = n.\"NameUsedID\"
         LEFT JOIN public.\"Name\" pn on pn.\"PersonID\" = n.\"AdopteeProxyID\" AND pn.\"Type\" = 'authoritative'
         LEFT JOIN public.\"Name\" offn on offn.\"PersonID\" = n.\"OfficiatorID\" AND offn.\"Type\" = 'authoritative'
         LEFT JOIN (
@@ -133,12 +135,14 @@
     // Get Temple Rites
     $result = pg_query($db, "
         SELECT n.*, off.\"Role\" as \"OfficiatorRole\", p.\"OfficialName\" as \"PlaceName\",
+                CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
                 CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
                 CONCAT(pn.\"Last\",', ',pn.\"First\") as \"ProxyName\",
                 CONCAT(atn.\"Last\",', ',atn.\"First\") as \"AnnointedToName\",
                 CONCAT(atpn.\"Last\",', ',atpn.\"First\") as \"AnnointedToProxyName\"
         FROM public.\"NonMaritalTempleRites\" n 
         LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
+        LEFT JOIN public.\"Name\" nas on nas.\"ID\" = n.\"NameUsedID\"
         LEFT JOIN public.\"Name\" pn on pn.\"PersonID\" = n.\"ProxyID\" AND pn.\"Type\" = 'authoritative'
         LEFT JOIN public.\"Name\" atn on atn.\"PersonID\" = n.\"AnnointedToID\" AND atn.\"Type\" = 'authoritative'
         LEFT JOIN public.\"Name\" atpn on atpn.\"PersonID\" = n.\"AnnointedToProxyID\" AND atpn.\"Type\" = 'authoritative'
@@ -157,13 +161,15 @@
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"SpouseID\", 
                                     wn.\"First\", wn.\"Middle\", wn.\"Last\",
-                                    h.\"PersonID\" as \"HusbandID\", m.\"Root\",
+                                    h.\"PersonID\" as \"HusbandID\", h.\"NameUsedID\", m.\"Root\",
+                                    CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
                                     off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
                                     hp.\"PersonID\" as \"ProxyID\", hpn.\"First\" as \"ProxyFirst\", hpn.\"Last\" as \"ProxyLast\", 
                                     wp.\"PersonID\" as \"SpouseProxyID\", wpn.\"First\" as \"SpouseProxyFirst\", wpn.\"Last\" as \"SpouseProxyLast\"  
                             FROM public.\"Marriage\" m
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"Name\" nas on nas.\"ID\" = h.\"NameUsedID\"
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" wn 
                                         ON w.\"PersonID\" = wn.\"PersonID\" AND wn.\"Type\" = 'authoritative'
@@ -180,15 +186,17 @@
     else
         $result = pg_query($db, "
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
-                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", 
+                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", w.\"NameUsedID\",
                                     hn.\"First\", hn.\"Middle\", hn.\"Last\",
                                     h.\"PersonID\" as \"SpouseID\", m.\"Root\",
+                                    CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
                                     off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
                                     hp.\"PersonID\" as \"SpouseProxyID\", hpn.\"First\" as \"SpouseProxyFirst\", hpn.\"Last\" as \"SpouseProxyLast\", 
                                     wp.\"PersonID\" as \"ProxyID\", wpn.\"First\" as \"ProxyFirst\", wpn.\"Last\" as \"ProxyLast\" 
                             FROM public.\"Marriage\" m 
                             RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"Name\" nas on nas.\"ID\" = w.\"NameUsedID\"
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" hn 
                                         ON h.\"PersonID\" = hn.\"PersonID\" AND hn.\"Type\" = 'authoritative'

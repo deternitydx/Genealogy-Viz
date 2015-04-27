@@ -115,6 +115,9 @@
         $vals["MarriageID"] = $marriage["id"];
         $vals["PersonID"] = $personal["ID"];
         $vals["Role"] = $mrole;
+        if (isset($marriage["name_id"]))
+            $vals["NameUsedID"] = $marriage["name_id"];
+
         if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
             " AND \"Role\" = '" . $vals["Role"] . "'"))
             insert("PersonMarriage", $vals);
@@ -233,6 +236,8 @@
             $vals["AnnointedToProxyID"] = $rite["annointed_to_proxy_person_id"];
         if (isset($rite["place_id"]))
             $vals["PlaceID"] = $rite["place_id"];
+        if (isset($rite["name_id"]))
+            $vals["NameUsedID"] = $rite["name_id"];
         if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
             $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
 
@@ -292,6 +297,8 @@
             $vals["OfficiatorID"] = $sealing["officiator_person_id"];
         if (isset($sealing["place_id"]))
             $vals["PlaceID"] = $sealing["place_id"];
+        if (isset($sealing["name_id"]))
+            $vals["NameUsedID"] = $sealing["name_id"];
 
         // need to add Name as Sealed to the DB
         // $vals["NameID"] = $sealing["name_id"];
