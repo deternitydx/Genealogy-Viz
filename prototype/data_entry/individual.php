@@ -28,8 +28,16 @@
         if (!isset($dateSplit[2]) || empty($dateSplit[2]))
             $dateSplit[2] = "";
 
-        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[1]}\" placeholder=\"MM\" name=\"{$prefix}month{$suffix}\" size=\"2\"> /\n";
-        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[2]}\" placeholder=\"DD\" name=\"{$prefix}day{$suffix}\" size=\"2\"> /\n";
+        $month_options = '<option></option>';
+        for( $i = 1; $i <= 12; $i++ ) {
+            $attr = "";
+            if ($i == $dateSplit[1])
+                $attr = " selected";
+            $month_name = date( 'F', mktime( 0, 0, 0, $i + 1, 0, 0, 0 ) );
+            $month_options .= "<option value=\"$i\"$attr>$month_name</option>";
+        }
+        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[2]}\" placeholder=\"DD\" name=\"{$prefix}day{$suffix}\" size=\"2\"> \n";
+        echo "<select class=\"form-date\" data-placeholder=\"Month\" name=\"{$prefix}month{$suffix}\" id=\"{$prefix}month{$suffix}\">$month_options</select> \n";
         echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[0]}\" placeholder=\"YYYY\" name=\"{$prefix}year{$suffix}\" size=\"4\">\n";
 
     }
@@ -248,9 +256,10 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed" for="gender">Gender:</label>
-                                                    <select data-placeholder="Select Gender" class="form-control" id="gender" name="gender">
-                                                                <option value="Male" <?php if ($person["information"]["Gender"] == "Male") echo "selected";?>>Male</option>
-                                                                <option value="Female" <?php if ($person["information"]["Gender"] == "Female") echo "selected";?>>Female</option>
+                                                    <select class="form-selector" data-placeholder="Select Gender" id="gender" name="gender">
+                                                        <option></option>
+                                                        <option value="Male" <?php if ($person["information"]["Gender"] == "Male") echo "selected";?>>Male</option>
+                                                        <option value="Female" <?php if ($person["information"]["Gender"] == "Female") echo "selected";?>>Female</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -268,6 +277,7 @@
                                                 <div class="frame">
                                                     <label class="fixed" for="b_place_id">Birth Place:</label>
                                                     <select data-placeholder="Select Birth Place" class="form-control" id="b_place_id" name="b_place_id">
+                                                        <option></option>
                                                         <option value="<?=$person["information"]["BirthPlaceID"]?>" selected="selected"><?=$person["information"]["BirthPlaceName"]?></option>
                                                     </select>
                                                 </div>
@@ -278,7 +288,8 @@
                                                 <div class="frame">
                                                     <label class="fixed" for="bpmarriage">Birth Parent Marriage:</label>
                                                     <select data-placeholder="Select Parent Marriage" class="form-control" id="b_marriage_id" name="b_marriage_id">
-                                                    <option value="<?=$person["information"]["BiologicalChildOfMarriage"]?>"><?=$person["information"]["ParentMarriageString"]?></option>
+                                                        <option></option>
+                                                        <option value="<?=$person["information"]["BiologicalChildOfMarriage"]?>"><?=$person["information"]["ParentMarriageString"]?></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -303,6 +314,7 @@
                                                 <div class="frame">
                                                     <label class="fixed" for="d_place_id">Death Place:</label>
                                                     <select data-placeholder="Select Death Place" class="form-control" id="d_place_id" name="d_place_id">
+                                                        <option></option>
                                                         <option value="<?=$person["information"]["DeathPlaceID"]?>" selected="selected"><?=$person["information"]["DeathPlaceName"]?></option>
                                                     </select>
                                                 </div>
@@ -344,7 +356,7 @@
                                                         <input type="hidden" name="tr_id_<?=$r_i?>" id="tr_id_<?=$r_i?>" value="<?=$rite["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_type_<?=$r_i?>">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="tr_type_<?=$r_i?>" name="tr_type_<?=$r_i?>">
+                                                            <select class="form-selector" data-placeholder="Select Type" id="tr_type_<?=$r_i?>" name="tr_type_<?=$r_i?>">
                                                                 <option value=""></option>
                                                                 <option value="baptism" <?php if ($rite["Type"] == "baptism") echo "selected";?>>Baptism</option>
                                                                 <option value="endowment" <?php if ($rite["Type"] == "endowment") echo "selected";?>>Endowment</option>
@@ -362,6 +374,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_place_id_<?=$r_i?>">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="tr_place_id_<?=$r_i?>" name="tr_place_id_<?=$r_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$rite["PlaceID"]?>" selected="selected"><?=$rite["PlaceName"]?></option>
                                                             </select>
                                                         </div>
@@ -370,7 +383,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_officiator_person_id_<?=$r_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="tr_officiator_person_id_<?=$r_i?>" name="tr_officiator_person_id_<?=$r_i?>">
-                                                                <option value="<?=$rite["OfficiatorID"]?>"><?=$rite["OfficiatorName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$rite["OfficiatorID"]?>" selected="selected"><?=$rite["OfficiatorName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -384,7 +398,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_proxy_person_id_<?=$r_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_<?=$r_i?>" name="tr_proxy_person_id_<?=$r_i?>">
-                                                                <option value="<?=$rite["ProxyID"]?>"><?=$rite["ProxyName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$rite["ProxyID"]?>" selected="selected"><?=$rite["ProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -392,7 +407,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_annointed_to_person_id_<?=$r_i?>">Anointed To:</label>
                                                             <select data-placeholder="Select Anointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_i?>" name="tr_annointed_to_person_id_<?=$r_i?>">
-                                                                <option value="<?=$rite["AnnointedToID"]?>"><?=$rite["AnnointedToName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$rite["AnnointedToID"]?>" selected="selected"><?=$rite["AnnointedToName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -400,7 +416,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_i?>">Anointed To (Proxy):</label>
                                                             <select data-placeholder="Select Anointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_i?>" name="tr_annointed_to_proxy_person_id_<?=$r_i?>">
-                                                                <option value="<?=$rite["AnnointedToProxyID"]?>"><?=$rite["AnnointedToProxyName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$rite["AnnointedToProxyID"]?>" selected="selected"><?=$rite["AnnointedToProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -459,7 +476,8 @@
                                                     <input type="hidden" name="nms_id_<?=$s_i?>" id="nms_id_<?=$s_i?>" value="<?=$sealing["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_type_<?=$s_i?>">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
+                                                            <select class="form-selector" data-placeholder="Select Type" id="nms_type_<?=$s_i?>" name="nms_type_<?=$s_i?>">
+                                                                <option></option>
                                                                 <option value="adoption" <?php if ($sealing["Type"] == "adoption") echo "selected";?>>Adoption</option>
                                                                 <option value="natural" <?php if ($sealing["Type"] == "natural") echo "selected";?>>Natural</option>
                                                             </select>
@@ -475,6 +493,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_place_id_<?=$s_i?>">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="nms_place_id_<?=$s_i?>" name="nms_place_id_<?=$s_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$sealing["PlaceID"]?>" selected="selected"><?=$sealing["PlaceName"]?></option>
                                                             </select>
                                                         </div>
@@ -483,7 +502,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_officiator_person_id_<?=$s_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="nms_officiator_person_id_<?=$s_i?>" name="nms_officiator_person_id_<?=$s_i?>">
-                                                                <option value="<?=$sealing["OfficiatorID"]?>"><?=$sealing["OfficiatorName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$sealing["OfficiatorID"]?>" selected="selected"><?=$sealing["OfficiatorName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -491,7 +511,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_proxy_person_id_<?=$s_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="nms_proxy_person_id_<?=$s_i?>" name="nms_proxy_person_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["AdopteeProxyID"]?>"><?=$sealing["ProxyName"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$sealing["AdopteeProxyID"]?>" selected="selected"><?=$sealing["ProxyName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -499,7 +520,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_marriage_id_<?=$s_i?>">Sealed to Marriage:</label>
                                                             <select data-placeholder="Select Sealed to Marriage" class="form-control" id="nms_marriage_id_<?=$s_i?>" name="nms_marriage_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["MarriageID"]?>"><?=$sealing["MarriageString"]?></option>
+                                                                <option></option>
+                                                                <option value="<?=$sealing["MarriageID"]?>" selected="selected"><?=$sealing["MarriageString"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -507,7 +529,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_proxy_father_person_id_<?=$s_i?>">Proxy Father:</label>
                                                             <select data-placeholder="Select Proxy Father" class="form-control" id="nms_proxy_father_person_id_<?=$s_i?>" name="nms_proxy_father_person_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["FatherProxyID"]?>"><?=$sealing["ProxyFatherName"] != NULL ? $sealing["ProxyFatherName"] : ""?></option>
+                                                                <option></option>
+                                                                <option value="<?=$sealing["FatherProxyID"]?>" selected="selected"><?=$sealing["ProxyFatherName"] != NULL ? $sealing["ProxyFatherName"] : ""?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -515,7 +538,8 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="nms_proxy_mother_person_id_<?=$s_i?>">Proxy Mother:</label>
                                                             <select data-placeholder="Select Proxy Mother" class="form-control" id="nms_proxy_mother_person_id_<?=$s_i?>" name="nms_proxy_mother_person_id_<?=$s_i?>">
-                                                            <option value="<?=$sealing["MotherProxyID"]?>"><?=$sealing["ProxyMotherName"] != NULL ? $sealing["ProxyMotherName"] : ""?></option>
+                                                                <option></option>
+                                                                <option value="<?=$sealing["MotherProxyID"]?>" selected="selected"><?=$sealing["ProxyMotherName"] != NULL ? $sealing["ProxyMotherName"] : ""?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -566,7 +590,8 @@
                                                         <input type="hidden" name="mar_id_<?=$m_i?>" id="mar_id_<?=$m_i?>" value="<?=$marriage["ID"]?>">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_type_<?=$m_i?>">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="mar_type_<?=$m_i?>" name="mar_type_<?=$m_i?>">
+                                                            <select class="form-selector" data-placeholder="Select Type" id="mar_type_<?=$m_i?>" name="mar_type_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="eternity" <?php if ($marriage["Type"] == "eternity") echo "selected";?>>Sealed for Eternity</option>
                                                                 <option value="time" <?php if ($marriage["Type"] == "time") echo "selected";?>>Sealed for Time</option>
                                                                 <option value="civil" <?php if ($marriage["Type"] == "civil") echo "selected";?>>Civil Marriage</option>
@@ -577,6 +602,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_person_id_<?=$m_i?>">Spouse:</label>
                                                             <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="mar_spouse_person_id_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
                                                             </select>
                                                         </div>
@@ -603,6 +629,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_place_id_<?=$m_i?>">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="mar_place_id_<?=$m_i?>" name="mar_place_id_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$marriage["PlaceID"]?>" selected="selected"><?=$marriage["PlaceName"]?></option>
                                                             </select>
                                                         </div>
@@ -611,6 +638,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_officiator_person_id_<?=$m_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_<?=$m_i?>" name="mar_officiator_person_id_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$marriage["OfficiatorID"]?>" selected="selected"><?php echo $marriage["OfficiatorLast"] . ", " . $marriage["OfficiatorFirst"];?></option>
                                                             </select>
                                                         </div>
@@ -619,6 +647,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_proxy_person_id_<?=$m_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_<?=$m_i?>" name="mar_proxy_person_id_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$marriage["ProxyID"]?>" selected="selected"><?php echo $marriage["ProxyLast"] . ", " . $marriage["ProxyFirst"];?></option>
                                                             </select>
                                                         </div>
@@ -627,6 +656,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_proxy_person_id_<?=$m_i?>">Spouse Proxy:</label>
                                                             <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_<?=$m_i?>" name="mar_spouse_proxy_person_id_<?=$m_i?>">
+                                                                <option></option>
                                                                 <option value="<?=$marriage["SpouseProxyID"]?>" selected="selected"><?php echo $marriage["SpouseProxyLast"] . ", " . $marriage["SpouseProxyFirst"];?></option>
                                                             </select>
                                                         </div>
@@ -710,7 +740,7 @@
                                 <input type="hidden" name="tr_id_ZZ" id="tr_id_ZZ" value="NEW">
                                 <div class="frame">
                                     <label class="fixed" for="tr_type_ZZ">Type:</label>
-                                    <select data-placeholder="Select Type" class="form-control" id="tr_type_ZZ" name="tr_type_ZZ">
+                                    <select class="form-selector" data-placeholder="Select Type" id="tr_type_ZZ" name="tr_type_ZZ">
                                         <option value=""></option>
                                         <option value="baptism">Baptism</option>
                                         <option value="endowment">Endowment</option>
@@ -721,15 +751,14 @@
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" placeholder="MM" name="tr_date_month_ZZ" size="2"> /
-                                    <input type="text" class="form-control" placeholder="DD" name="tr_date_day_ZZ" size="2"> /
-                                    <input type="text" class="form-control" placeholder="YYYY" name="tr_date_year_ZZ" size="4">
+                                    <?php displayDate("", "tr_date_", "_ZZ"); ?>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed" for="tr_place_id_ZZ">Place:</label>
                                     <select data-placeholder="Select Place" class="form-control" id="tr_place_id_ZZ" name="tr_place_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -751,6 +780,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="tr_proxy_person_id_ZZ">Proxy:</label>
                                     <select data-placeholder="Select Proxy" class="form-control" id="tr_proxy_person_id_ZZ" name="tr_proxy_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -758,6 +788,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="tr_annointed_to_person_id_ZZ">Anointed To:</label>
                                     <select data-placeholder="Select Anointed To" class="form-control" id="tr_annointed_to_person_id_ZZ" name="tr_annointed_to_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -765,6 +796,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="tr_annointed_to_proxy_person_id_ZZ">Anointed To (Proxy):</label>
                                     <select data-placeholder="Select Anointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_ZZ" name="tr_annointed_to_proxy_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -784,23 +816,24 @@
                                 <input type="hidden" name="nms_id_ZZ" id="nms_id_ZZ" value="NEW">
                                 <div class="frame">
                                     <label class="fixed" for="nms_type_ZZ">Type:</label>
-                                    <select data-placeholder="Select Type" class="form-control" id="nms_type_ZZ" name="nms_type_ZZ">
+                                    <select class="form-selector" data-placeholder="Select Type" id="nms_type_ZZ" name="nms_type_ZZ">
+                                        <option></option>
                                         <option value="adoption">Adoption</option>
+                                        <option value="natural">Natural</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed">Date:</label>
-                                    <input type="text" class="form-control" placeholder="MM" name="nms_date_month_ZZ" size="2"> /
-                                    <input type="text" class="form-control" placeholder="DD" name="nms_date_day_ZZ" size="2"> /
-                                    <input type="text" class="form-control" placeholder="YYYY" name="nms_date_year_ZZ" size="4">
+                                    <?php displayDate("", "nms_date_", "_ZZ"); ?>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed" for="nms_place_id_ZZ">Place:</label>
                                     <select data-placeholder="Select Place" class="form-control" id="nms_place_id_ZZ" name="nms_place_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -808,6 +841,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="nms_officiator_person_id_ZZ">Officiator:</label>
                                     <select data-placeholder="Select Officiator" class="form-control" id="nms_officiator_person_id_ZZ" name="nms_officiator_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -815,6 +849,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="nms_proxy_person_id_ZZ">Proxy:</label>
                                     <select data-placeholder="Select Proxy" class="form-control" id="nms_proxy_person_id_ZZ" name="nms_proxy_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -822,6 +857,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="nms_marriage_id_ZZ">Sealed to Marriage:</label>
                                     <select data-placeholder="Select Sealed to Marriage" class="form-control" id="nms_marriage_id_ZZ" name="nms_marriage_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -829,6 +865,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="nms_proxy_father_person_id_ZZ">Proxy Father:</label>
                                     <select data-placeholder="Select Proxy Father" class="form-control" id="nms_proxy_father_person_id_ZZ" name="nms_proxy_father_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -836,6 +873,7 @@
                                 <div class="frame">
                                     <label class="fixed" for="nms_proxy_mother_person_id_ZZ">Proxy Mother:</label>
                                     <select data-placeholder="Select Proxy Mother" class="form-control" id="nms_proxy_mother_person_id_ZZ" name="nms_proxy_mother_person_id_ZZ">
+                                        <option></option>
                                     </select>
                                 </div>
                             </div>
@@ -855,7 +893,8 @@
                                                         <input type="hidden" name="mar_id_ZZ" id="mar_id_ZZ" value="NEW">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_type_ZZ">Type:</label>
-                                                            <select data-placeholder="Select Type" class="form-control" id="mar_type_ZZ" name="mar_type_ZZ">
+                                                            <select class="form-selector" data-placeholder="Select Type" id="mar_type_ZZ" name="mar_type_ZZ">
+                                                                <option></option>
                                                                 <option value="eternity">Sealed for Eternity</option>
                                                                 <option value="time">Sealed for Time</option>
                                                                 <option value="civil">Civil Marriage</option>
@@ -866,37 +905,33 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_person_id_ZZ">Spouse:</label>
                                                             <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_ZZ" name="marriages1-spouse">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" placeholder="MM" name="mar_date_month_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="DD" name="mar_date_day_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="YYYY" name="mar_date_year_ZZ" size="4">
+                                                            <?php displayDate("", "mar_date_", "_ZZ"); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Divorce Date:</label>
-                                                            <input type="text" class="form-control" placeholder="MM" name="mar_div_month_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="DD" name="mar_div_day_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="YYYY" name="mar_div_year_ZZ" size="4">
+                                                            <?php displayDate("", "mar_div_", "_ZZ"); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Cancelled Date:</label>
-                                                            <input type="text" class="form-control" placeholder="MM" name="mar_cancel_month_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="DD" name="mar_cancel_day_ZZ" size="2"> /
-                                                            <input type="text" class="form-control" placeholder="YYYY" name="mar_cancel_year_ZZ" size="4">
+                                                            <?php displayDate("", "mar_cancel_", "_ZZ"); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_place_id_ZZ">Place:</label>
                                                             <select data-placeholder="Select Place" class="form-control" id="mar_place_id_ZZ" name="mar_place_id_ZZ">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -904,6 +939,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_officiator_person_id_ZZ">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_ZZ" name="mar_officiator_person_id_ZZ">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -911,6 +947,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_proxy_person_id_ZZ">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_ZZ" name="mar_proxy_person_id_ZZ">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -918,6 +955,7 @@
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_proxy_person_id_ZZ">Spouse Proxy:</label>
                                                             <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_ZZ" name="mar_spouse_proxy_person_id_ZZ">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>

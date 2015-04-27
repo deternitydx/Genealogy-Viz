@@ -220,6 +220,7 @@ function loadPlacesSelect2() {
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 minimumInputLength: 4,
                 width: '400px',
+                allowClear: true,
                 theme: 'classic'
             });
         }
@@ -251,6 +252,7 @@ function loadMarriagesSelect2() {
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 minimumInputLength: 4,
                 width: '400px',
+                allowClear: true,
                 theme: 'classic'
             });
         }
@@ -282,6 +284,7 @@ function loadPersonSelect2() {
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 minimumInputLength: 4,
                 width: '400px',
+                allowClear: true,
                 theme: 'classic'
             });
         }
@@ -312,6 +315,7 @@ function loadNameSelect2() {
                 },
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 width: '400px',
+                allowClear: true,
                 theme: 'classic'
             });
         }
@@ -337,7 +341,9 @@ function selectsToSelect2() {
                 && $(this).attr('id').indexOf("name_id") == -1
                 && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
-                width: '400px',
+                width: 'resolve',
+                minimumResultsForSearch: Infinity,
+                allowClear: true,
                 theme: 'classic'
             });
         }

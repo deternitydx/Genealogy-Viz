@@ -4819,6 +4819,16 @@ footer .frame .copy {
 
 select.form-control {
     text-align: left;
+    width: 400px;
+}
+
+select.form-selector {
+    text-align: left;
+    width: 400px;
+}
+select.form-date {
+    text-align: left;
+    width: 200px;
 }
 /* Chosen v1.1.0 | (c) 2011-2013 by Harvest | MIT License, https://github.com/harvesthq/chosen/blob/master/LICENSE.md */
 
