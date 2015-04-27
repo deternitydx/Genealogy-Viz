@@ -134,7 +134,7 @@
                                         <h4><?=isset($brown["ASC"])?$brown["ASC"]:""?></h4>
                                         <p><?=isset($brown["ASCFootnotes"])?$brown["ASCFootnotes"]:""?></p>
                                     </div>
-                                    <h3>Second Annointing</h3>
+                                    <h3>Second Anointing</h3>
                                     <div class="subbox">
                                         <h4><?=isset($brown["SA"])?$brown["SA"]:""?></h4>
                                         <p><?=isset($brown["SAFootnotes"])?$brown["SAFootnotes"]:""?></p>
@@ -144,9 +144,9 @@
                             <section class="tabs">
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#tab-01" data-toggle="tab">Personal Information</a></li>
-                                <li><a href="#tab-02" data-toggle="tab">Temple Rites</a></li>
-                                <li><a href="#tab-03" data-toggle="tab">Non-Marital Sealings</a></li>
-                                <li><a href="#tab-04" data-toggle="tab">Marital Sealings</a></li>
+                                <li><a href="#tab-02" data-toggle="tab">Non-Sealing Ordinances (NSO)</a></li>
+                                <li><a href="#tab-03" data-toggle="tab">Sealed Child (SC)</a></li>
+                                <li><a href="#tab-04" data-toggle="tab">Marriages (M)</a></li>
                             </ul><!-- nav-tabs -->
                             <div class="tab-content">
                                 <!-- Personal Information -->
@@ -324,7 +324,7 @@
                                     <div class="tab-pane" id="tab-02">
                                         <section class="section">
                                         <div class="heading">
-                                            <h2>Temple Rites Information</h2>
+                                            <h2>Non-Sealing Ordinances Information</h2>
                                         </div>
                                         <div>
                                             <div id="temple-rites-formarea">
@@ -358,7 +358,7 @@
                                                                 <option value=""></option>
                                                                 <option value="baptism" <?php if ($rite["Type"] == "baptism") echo "selected";?>>Baptism</option>
                                                                 <option value="endowment" <?php if ($rite["Type"] == "endowment") echo "selected";?>>Endowment</option>
-                                                                <option value="secondAnnointing" <?php if ($rite["Type"] == "secondAnnointing") echo "selected";?>>Second Annointing</option>
+                                                                <option value="secondAnnointing" <?php if ($rite["Type"] == "secondAnnointing") echo "selected";?>>Second Anointing</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -402,16 +402,16 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="tr_annointed_to_person_id_<?=$r_i?>">Annointed To:</label>
-                                                            <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_i?>" name="tr_annointed_to_person_id_<?=$r_i?>">
+                                                            <label class="fixed" for="tr_annointed_to_person_id_<?=$r_i?>">Anointed To:</label>
+                                                            <select data-placeholder="Select Anointed To" class="form-control" id="tr_annointed_to_person_id_<?=$r_i?>" name="tr_annointed_to_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["AnnointedToID"]?>"><?=$rite["AnnointedToName"]?></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_i?>">Annointed To (Proxy):</label>
-                                                            <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_i?>" name="tr_annointed_to_proxy_person_id_<?=$r_i?>">
+                                                            <label class="fixed" for="tr_annointed_to_proxy_person_id_<?=$r_i?>">Anointed To (Proxy):</label>
+                                                            <select data-placeholder="Select Anointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_<?=$r_i?>" name="tr_annointed_to_proxy_person_id_<?=$r_i?>">
                                                                 <option value="<?=$rite["AnnointedToProxyID"]?>"><?=$rite["AnnointedToProxyName"]?></option>
                                                             </select>
                                                         </div>
@@ -433,7 +433,7 @@
                                         </div><!-- info-form -->
                                         <div class="form-area">
                                             <div class="row-area">
-                                                <button id="button-add-rite" class="btn btn-success btn-save ie-fix"><span>Add New Temple Rite Information</span></button>
+                                                <button id="button-add-rite" class="btn btn-success btn-save ie-fix"><span>Add New Non-Sealing Ordinance</span></button>
                                             </div><!-- row-area -->
                                         </div><!-- form-area -->
                                         </section><!-- section -->
@@ -450,7 +450,7 @@
                                     <div class="tab-pane" id="tab-03">
                                         <section class="section">
                                         <div class="heading">
-                                            <h2>Non-Marital Sealing Information</h2>
+                                            <h2>Sealed Child Information</h2>
                                         </div>
                                         <div>
                                             <div id="nonmarital-sealings-formarea">
@@ -558,7 +558,7 @@
                                         </div><!-- info-form -->
                                         <div class="form-area">
                                             <div class="row-area">
-                                                <button id="button-add-nonmarital" class="btn btn-success btn-save ie-fix"><span>Add New Non-Marital Sealing</span></button>
+                                                <button id="button-add-nonmarital" class="btn btn-success btn-save ie-fix"><span>Add New Sealed Child Information</span></button>
                                             </div><!-- row-area -->
                                         </div><!-- form-area -->
                                         </section><!-- section -->
@@ -574,7 +574,7 @@
                                     <div class="tab-pane" id="tab-04">
                                         <section class="section">
                                         <div class="heading">
-                                            <h2>Marital Sealing Information</h2>
+                                            <h2>Marriages</h2>
                                         </div>
                                         <div>
                                             <div id="marital-sealings-formarea">
@@ -766,7 +766,7 @@
                                         <option value=""></option>
                                         <option value="baptism">Baptism</option>
                                         <option value="endowment">Endowment</option>
-                                        <option value="secondAnnointing">Second Annointing</option>
+                                        <option value="secondAnnointing">Second Anointing</option>
                                     </select>
                                 </div>
                             </div>
@@ -808,15 +808,15 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="tr_annointed_to_person_id_ZZ">Annointed To:</label>
-                                    <select data-placeholder="Select Annointed To" class="form-control" id="tr_annointed_to_person_id_ZZ" name="tr_annointed_to_person_id_ZZ">
+                                    <label class="fixed" for="tr_annointed_to_person_id_ZZ">Anointed To:</label>
+                                    <select data-placeholder="Select Anointed To" class="form-control" id="tr_annointed_to_person_id_ZZ" name="tr_annointed_to_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="tr_annointed_to_proxy_person_id_ZZ">Annointed To (Proxy):</label>
-                                    <select data-placeholder="Select Annointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_ZZ" name="tr_annointed_to_proxy_person_id_ZZ">
+                                    <label class="fixed" for="tr_annointed_to_proxy_person_id_ZZ">Anointed To (Proxy):</label>
+                                    <select data-placeholder="Select Anointed To (Proxy)" class="form-control" id="tr_annointed_to_proxy_person_id_ZZ" name="tr_annointed_to_proxy_person_id_ZZ">
                                     </select>
                                 </div>
                             </div>
