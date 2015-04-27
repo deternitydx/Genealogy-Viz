@@ -255,9 +255,22 @@
         if (isset($rite["officiator_role"]))
             $vals["Role"] = $rite["officiator_role"];
         $vals["NonMaritalTempleRitesID"] = $rite["id"];
-        if (!update("TempleRiteOfficiators", $vals, "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]
-            . " AND \"PersonID\" = " . $vals["PersonID"]))
-            insert("TempleRiteOfficiators", $vals);
+        // Assumption right now: there is only ONE officiator (only one is allowed on the data entry screen right now)
+        if (search("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"])) {
+            // found something
+            if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
+                // Need to overwrite it with the new values
+                update("TempleRiteOfficiators", $vals, "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+            } else {
+                // Either person is null or empty, so delete the record in the db
+                dbdelete("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+            }
+        } else {
+            // Didn't find one, so insert if needed
+            if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
+                insert("TempleRiteOfficiators", $vals);
+            }
+        } 
 
     }
 

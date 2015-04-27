@@ -134,7 +134,7 @@
 
     // Get Temple Rites
     $result = pg_query($db, "
-        SELECT n.*, off.\"Role\" as \"OfficiatorRole\", p.\"OfficialName\" as \"PlaceName\",
+        SELECT n.*, off.\"PersonID\" as \"OfficiatorID\", off.\"Role\" as \"OfficiatorRole\", p.\"OfficialName\" as \"PlaceName\",
                 CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
                 CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
                 CONCAT(pn.\"Last\",', ',pn.\"First\") as \"ProxyName\",

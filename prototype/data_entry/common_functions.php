@@ -13,7 +13,7 @@ function setup_db() {
     $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 }
 
-function query_db($q) {
+function query_db($q, $is_select) {
     global $db;
 
     if ($db == null) {
@@ -23,7 +23,12 @@ function query_db($q) {
 
     $result = pg_query($db, $q);
     if (!$result) {
-        logger(pg_result_error($result), true);
+        logger("Error: " . pg_result_error($result), true);
+        return false;
+    }
+
+    // If selecting only, and nothing is returned, then this is a false
+    if ($is_select && pg_num_rows($result) == 0) {
         return false;
     }
 
@@ -90,13 +95,20 @@ function get_search_statement($tableName, $match) {
     return $insert;
 }
 
+function get_delete_statement($tableName, $match) {
+    $insert = "DELETE FROM public.\"$tableName\" ";
+    $insert .= " WHERE $match;";
+
+    return $insert;
+}
+
 function insert($tableName, $arr) {
     global $output;
 
     $insert = get_insert_statement($tableName, $arr);
     // Logging output just in case
     logger($insert, false);
-    return query_db($insert);
+    return query_db($insert, false);
 }
 
 function update($tableName, $arr, $match) {
@@ -106,7 +118,7 @@ function update($tableName, $arr, $match) {
     
     // Logging output just in case
     logger($update, false);
-    return query_db($update) === false ? false : true;
+    return query_db($update, false) === false ? false : true;
 }
 
 function search($tableName, $match) {
@@ -116,9 +128,18 @@ function search($tableName, $match) {
     
     // Logging output just in case
     logger($update, false);
-    return query_db($update) === false ? false : true;
+    return query_db($update, true) === false ? false : true;
 }
 
+function dbdelete($tableName, $match) {
+    global $output;
+
+    $update = get_delete_statement($tableName, $match);
+    
+    // Logging output just in case
+    logger($update, false);
+    return query_db($update, true) === false ? false : true;
+}
 
 function combine_date($year, $month, $day) {
     $date = "";
