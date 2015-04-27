@@ -167,8 +167,8 @@
                                     hp.\"PersonID\" as \"ProxyID\", hpn.\"First\" as \"ProxyFirst\", hpn.\"Last\" as \"ProxyLast\", 
                                     wp.\"PersonID\" as \"SpouseProxyID\", wpn.\"First\" as \"SpouseProxyFirst\", wpn.\"Last\" as \"SpouseProxyLast\"  
                             FROM public.\"Marriage\" m
-                            RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
-                            RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
+                            LEFT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
                             LEFT JOIN public.\"Name\" nas on nas.\"ID\" = h.\"NameUsedID\"
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" wn 
@@ -194,8 +194,8 @@
                                     hp.\"PersonID\" as \"SpouseProxyID\", hpn.\"First\" as \"SpouseProxyFirst\", hpn.\"Last\" as \"SpouseProxyLast\", 
                                     wp.\"PersonID\" as \"ProxyID\", wpn.\"First\" as \"ProxyFirst\", wpn.\"Last\" as \"ProxyLast\" 
                             FROM public.\"Marriage\" m 
-                            RIGHT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
-                            RIGHT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
+                            LEFT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
+                            LEFT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
                             LEFT JOIN public.\"Name\" nas on nas.\"ID\" = w.\"NameUsedID\"
                             LEFT JOIN public.\"Place\" p ON m.\"PlaceID\" = p.\"ID\"
                             LEFT OUTER JOIN public.\"Name\" hn 
