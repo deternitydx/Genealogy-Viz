@@ -18,20 +18,22 @@
         $brown = $brown[0];
     } else
         $brown_id = "UNKNOWN";
-    $bdate = explode("-", $person["information"]["BirthDate"]);
-    if (!isset($bdate[0]) || empty($bdate[0]))
-        $bdate[0] = "";
-    if (!isset($bdate[1]) || empty($bdate[1]))
-        $bdate[1] = "";
-    if (!isset($bdate[2]) || empty($bdate[2]))
-        $bdate[2] = "";
-    $ddate = explode("-", $person["information"]["DeathDate"]);
-    if (!isset($ddate[0]) || empty($ddate[0]))
-        $ddate[0] = "";
-    if (!isset($ddate[1]) || empty($ddate[1]))
-        $ddate[1] = "";
-    if (!isset($ddate[2]) || empty($ddate[2]))
-        $ddate[2] = "";
+
+    function displayDate($datestr, $prefix, $suffix) {
+        $dateSplit = explode("-", $datestr);
+        if (!isset($dateSplit[0]) || empty($dateSplit[0]))
+            $dateSplit[0] = "";
+        if (!isset($dateSplit[1]) || empty($dateSplit[1]))
+            $dateSplit[1] = "";
+        if (!isset($dateSplit[2]) || empty($dateSplit[2]))
+            $dateSplit[2] = "";
+
+        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[1]}\" placeholder=\"MM\" name=\"{$prefix}month{$suffix}\" size=\"2\"> /\n";
+        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[2]}\" placeholder=\"DD\" name=\"{$prefix}day{$suffix}\" size=\"2\"> /\n";
+        echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[0]}\" placeholder=\"YYYY\" name=\"{$prefix}year{$suffix}\" size=\"4\">\n";
+
+    }
+
 ?>
 <html>
     <head>
@@ -257,9 +259,7 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Birth Date:</label>
-                                                    <input type="text" class="form-control" value="<?=$bdate[1]?>" placeholder="MM" name="birthmonth" size="2"> /
-                                                    <input type="text" class="form-control" value="<?=$bdate[2]?>" placeholder="DD" name="birthday" size="2"> /
-                                                    <input type="text" class="form-control" value="<?=$bdate[0]?>" placeholder="YYYY" name="birthyear" size="4">
+                                                    <?php displayDate($person["information"]["BirthDate"], "birth", ""); ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -294,9 +294,7 @@
                                             <div class="col-area">
                                                 <div class="frame">
                                                     <label class="fixed">Death Date:</label>
-                                                    <input type="text" class="form-control" value="<?=$ddate[1]?>" placeholder="MM" name="deathmonth" size="2"> /
-                                                    <input type="text" class="form-control" value="<?=$ddate[2]?>" placeholder="DD" name="deathday" size="2"> /
-                                                    <input type="text" class="form-control" value="<?=$ddate[0]?>" placeholder="YYYY" name="deathyear" size="4">
+                                                    <?php displayDate($person["information"]["DeathDate"], "death", ""); ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -332,14 +330,6 @@
     $r_i = 1;
     foreach ($person["temple_rites"] as $rite) {
         
-        $rdate = explode("-", $rite["Date"]);
-        if (!isset($rdate[0]) || empty($rdate[0]))
-            $rdate[0] = "";
-        if (!isset($rdate[1]) || empty($rdate[1]))
-            $rdate[1] = "";
-        if (!isset($rdate[2]) || empty($rdate[2]))
-            $rdate[2] = "";
-
         if ($rite["ProxyID"] == null)
             $rite["ProxyName"] = "";
         if ($rite["AnnointedToID"] == null)
@@ -365,9 +355,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$rdate[1]?>" placeholder="MM" name="tr_date_month_<?=$r_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$rdate[2]?>" placeholder="DD" name="tr_date_day_<?=$r_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$rdate[0]?>" placeholder="YYYY" name="tr_date_year_<?=$r_i?>" size="4">
+                                                            <?php displayDate($rite["Date"], "tr_date_", "_".$r_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
@@ -457,14 +445,6 @@
 <?php
     $s_i = 1;
     foreach ($person["non_marital_sealings"] as $sealing) {
-        
-        $sdate = explode("-", $sealing["Date"]);
-        if (!isset($sdate[0]) || empty($sdate[0]))
-            $sdate[0] = "";
-        if (!isset($sdate[1]) || empty($sdate[1]))
-            $sdate[1] = "";
-        if (!isset($sdate[2]) || empty($sdate[2]))
-            $sdate[2] = "";
 
         if ($sealing["AdopteeProxyID"] == null)
             $sealing["ProxyName"] = "";
@@ -488,9 +468,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$sdate[1]?>" placeholder="MM" name="nms_date_month_<?=$s_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$sdate[2]?>" placeholder="DD" name="nms_date_day_<?=$s_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$sdate[0]?>" placeholder="YYYY" name="nms_date_year_<?=$s_i?>" size="4">
+                                                            <?php displayDate($sealing["Date"], "nms_date_", "_".$s_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
@@ -581,30 +559,6 @@
 <?php
     $m_i = 1;
     foreach ($person["marriages"] as $marriage) {
-        
-        $mdate = explode("-", $marriage["MarriageDate"]);
-        if (!isset($mdate[0]) || empty($mdate[0]))
-            $mdate[0] = "";
-        if (!isset($mdate[1]) || empty($mdate[1]))
-            $mdate[1] = "";
-        if (!isset($mdate[2]) || empty($mdate[2]))
-            $mdate[2] = "";
-
-        $cdate = explode("-", $marriage["CancelledDate"]);
-        if (!isset($cdate[0]) || empty($cdate[0]))
-            $cdate[0] = "";
-        if (!isset($cdate[1]) || empty($cdate[1]))
-            $cdate[1] = "";
-        if (!isset($cdate[2]) || empty($cdate[2]))
-            $cdate[2] = "";
-
-        $divdate = explode("-", $marriage["DivorceDate"]);
-        if (!isset($divdate[0]) || empty($divdate[0]))
-            $divdate[0] = "";
-        if (!isset($divdate[1]) || empty($divdate[1]))
-            $divdate[1] = "";
-        if (!isset($divdate[2]) || empty($divdate[2]))
-            $divdate[2] = "";
 
 ?>
                                                 <div class="row-area form-area form-block">
@@ -630,25 +584,19 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$mdate[1]?>" placeholder="MM" name="mar_date_month_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$mdate[2]?>" placeholder="DD" name="mar_date_day_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$mdate[0]?>" placeholder="YYYY" name="mar_date_year_<?=$m_i?>" size="4">
+                                                            <?php displayDate($marriage["MarriageDate"], "mar_date_", "_".$m_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Divorce Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$divdate[1]?>" placeholder="MM" name="mar_div_month_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$divdate[2]?>" placeholder="DD" name="mar_div_day_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$divdate[0]?>" placeholder="YYYY" name="mar_div_year_<?=$m_i?>" size="4">
+                                                            <?php displayDate($marriage["DivorceDate"], "mar_div_", "_".$m_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Cancelled Date:</label>
-                                                            <input type="text" class="form-control" value="<?=$cdate[1]?>" placeholder="MM" name="mar_cancel_month_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$cdate[2]?>" placeholder="DD" name="mar_cancel_day_<?=$m_i?>" size="2"> /
-                                                            <input type="text" class="form-control" value="<?=$cdate[0]?>" placeholder="YYYY" name="mar_cancel_year_<?=$m_i?>" size="4">
+                                                            <?php displayDate($marriage["CancelledDate"], "mar_cancel_", "_".$m_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
