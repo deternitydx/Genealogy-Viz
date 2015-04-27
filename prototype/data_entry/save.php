@@ -118,38 +118,30 @@
         if (isset($marriage["name_id"]))
             $vals["NameUsedID"] = $marriage["name_id"];
 
-        if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-            " AND \"Role\" = '" . $vals["Role"] . "'"))
-            insert("PersonMarriage", $vals);
+        updateInsertPM($vals);
         // Spouse
-        if (isset($marriage["spouse_person_id"]) && $marriage["spouse_person_id"] != "") {
+        if (isset($marriage["spouse_person_id"])) {
             $vals = array();
             $vals["MarriageID"] = $marriage["id"];
             $vals["PersonID"] = $marriage["spouse_person_id"];
             $vals["Role"] = $srole;
-            if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = '" . $vals["Role"] . "'"))
-                insert("PersonMarriage", $vals);
+            updateInsertPM($vals);
         }
         // Proxy
-        if (isset($marriage["proxy_person_id"]) && $marriage["proxy_person_id"] != "") {
+        if (isset($marriage["proxy_person_id"])) {
             $vals = array();
             $vals["MarriageID"] = $marriage["id"];
             $vals["PersonID"] = $marriage["proxy_person_id"];
             $vals["Role"] = "Proxy".$mrole;
-            if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = '" . $vals["Role"] . "'"))
-                insert("PersonMarriage", $vals);
+            updateInsertPM($vals);
         }
         // Spouse Proxy
-        if (isset($marriage["spouse_proxy_person_id"]) && $marriage["spouse_proxy_person_id"] != "") {
+        if (isset($marriage["spouse_proxy_person_id"])) {
             $vals = array();
             $vals["MarriageID"] = $marriage["id"];
             $vals["PersonID"] = $marriage["spouse_proxy_person_id"];
             $vals["Role"] = "Proxy".$srole;
-            if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = '" . $vals["Role"] . "'"))
-                insert("PersonMarriage", $vals);
+            updateInsertPM($vals);
         }
         // Officiator
         if (isset($marriage["officiator_person_id"]) && $marriage["officiator_person_id"] != "") {

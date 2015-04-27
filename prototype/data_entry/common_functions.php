@@ -161,4 +161,22 @@ function combine_date($year, $month, $day) {
     
     return $date;
 }
+
+function updateInsertPM($vals) {
+    if (search("PersonMarriage", "\"MarriageID\" = " . $vals["MarriageID"] . 
+        " AND \"Role\" = '" . $vals["Role"] . "'")) {
+        if ($vals["PersonID"] != null && $vals["PersonID"] != "")
+            // Found this participant and they need to be updated to a different person
+            update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
+            " AND \"Role\" = '" . $vals["Role"] . "'");
+        else
+            // Found this participant and they need to be removed from the marriage (personid is empty or null)
+            dbdelete("PersonMarriage", "\"MarriageID\" = " . $vals["MarriageID"] . 
+            " AND \"Role\" = '" . $vals["Role"] . "'");
+    } else {
+        // Not found, but there is a person, so insert them
+        if ($vals["PersonID"] != null && $vals["PersonID"] != "")
+            insert("PersonMarriage", $vals);
+    }
+}
 ?>
