@@ -388,12 +388,14 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <!--
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_officiator_role_<?=$r_i?>">Officiator Role:</label>
                                                             <input type="text" class="form-control" value="<?=$rite["OfficiatorRole"]?>" id="tr_officiator_role_<?=$r_i?>" name="tr_officiator_role_<?=$r_i?>" size="25">
                                                         </div>
                                                     </div>
+                                                    -->
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="tr_proxy_person_id_<?=$r_i?>">Proxy:</label>
@@ -770,12 +772,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <!--
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed" for="tr_officiator_role_ZZ">Officiator Role:</label>
                                     <input type="text" class="form-control" value="" id="tr_officiator_role_ZZ" name="tr_officiator_role_ZZ" size="25">
                                 </div>
                             </div>
+                            -->
                             <div class="row-area">
                                 <div class="frame">
                                     <label class="fixed" for="tr_proxy_person_id_ZZ">Proxy:</label>
