@@ -911,7 +911,7 @@
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_spouse_person_id_ZZ">Spouse:</label>
-                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_ZZ" name="marriages1-spouse">
+                                                            <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_ZZ" name="mar_spouse_person_id_ZZ">
                                                                 <option></option>
                                                             </select>
                                                         </div>
