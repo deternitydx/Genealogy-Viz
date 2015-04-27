@@ -635,7 +635,7 @@
 ?>
                                                 <div class="row-area form-area form-block">
                                                     <div class="delete-area">
-                                                        <button id="button_delete_<?=$marriage["ID"]?>" class="btn btn-warning ie-fix"><span>X</span></button>
+                                                        <button id="button_delete_<?=$m_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('mar', <?=$m_i?>); return false;"><span>X</span></button>
                                                     </div>
                                                     <div class="row-area">
                                                         <input type="hidden" name="mar_id_<?=$m_i?>" id="mar_id_<?=$m_i?>" value="<?=$marriage["ID"]?>">
