@@ -349,3 +349,8 @@ function selectsToSelect2() {
         }
     });
 }
+
+function deleteEntry(type, index) {
+    console.log("Deleting " + type + " at index " + index);
+    return false;
+}
