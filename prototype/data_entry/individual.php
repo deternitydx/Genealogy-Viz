@@ -158,6 +158,31 @@
                                         <h4><?=isset($brown["SA"])?$brown["SA"]:""?></h4>
                                         <p><?=isset($brown["SAFootnotes"])?$brown["SAFootnotes"]:""?></p>
                                     </div>
+                                </div><!-- details-bar -->
+                                <h2 class="visible-md visible-lg">Brown Status</h2>
+                                <div class="box">
+<?php
+    // Set up the checkbox for "DONE" status, if the brown entry exists
+    if (isset($brown["Progress"])) {
+        $status = $brown["Progress"];
+        echo "<p>State: ";
+        echo "<select name='brown_state' id='brown_state' style='width:150px;'>";
+        $s = "";
+        if ($status == "unseen")
+            $s = " selected='selected'";
+        echo "<option value='unseen'$s>Unseen</option>";
+        $s = "";
+        if ($status == "inProgress")
+            $s = " selected='selected'";
+        echo "<option value='inProgress'$s>In Progress</option>";
+        $s = "";
+        if ($status == "done")
+            $s = " selected='selected'";
+        echo "<option value='done'$s>Done</option>";
+        echo "</select>";
+        echo "</p>";
+    }
+?>                                    
                                 </div>
                             </aside><!-- aside -->
                             <section class="tabs">

@@ -380,6 +380,13 @@
         update("Person", $vals, "\"ID\" = " . $personal["ID"]);
     }
 
+    // Handle brown status update, if available
+    if (isset($personal["BrownID"]) && $personal["BrownID"] != "" && is_numeric($personal["BrownID"])
+        && isset($personal["brown_state"]) && $personal["brown_state"] != "") {
+        update("Brown", array("Progress"=>$personal["brown_state"]), "\"id\" = " . $personal["BrownID"]);
+    }
+
+
     // Output the results as a paper trail, just in case something bad happens
 
     fwrite($output, "\n\n");
