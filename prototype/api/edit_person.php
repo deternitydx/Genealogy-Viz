@@ -217,6 +217,20 @@
     }
 
     $person["marriages"] = pg_fetch_all($result);
+
+
+    // Get the list of Brown IDs for this person
+    $result = pg_query($db, "SELECT DISTINCT \"id\" FROM \"Brown\" WHERE \"PersonID\" = $id;");
+
+    if (!$result) {
+        die("Error finding brown ids.");
+        exit;
+    }
+    $person["brown_ids"] = array();
+    foreach (pg_fetch_all($result) as $res)
+        array_push($person["brown_ids"], $res["id"]);
+
+
     // Return the person array as json to be used by the editor:
     echo json_encode($person);
 ?>

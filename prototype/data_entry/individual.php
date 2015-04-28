@@ -111,6 +111,16 @@
                                             <dl>
                                             <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
                                             <dt class="visible-md visible-lg">Brown ID:</dt><dd class="visible-md visible-lg"><?=$brown_id?></dd>
+<?php
+    if (count($person["brown_ids"]) > 1) {
+        echo '<dt class="visible-md visible-lg">Other Brown IDs:</dt>';
+        //=$brown_id
+        foreach ($person["brown_ids"] as $alt_id) {
+            if ($alt_id != $brown_id)
+                echo "<dd class=\"visible-md visible-lg\"><a href=\"?brown=$alt_id&id={$person["information"]["ID"]}\">$alt_id</a></dd>";
+        }
+    }
+?>
                                             <input type="hidden" name="ID" id="ID" value="<?=$person["information"]["ID"]?>">
                                             <input type="hidden" name="BrownID" id="BrownID" value="<?=$brown_id?>">
                                             </dl>
