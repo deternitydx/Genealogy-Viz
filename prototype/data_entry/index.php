@@ -59,7 +59,7 @@ $(document).ready( function () {
 
 <?php
 echo "<table id='datatable' class='display listing'>";
-echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th><abbr title=\"Whether we think the UVA Person attached to this particular Brown ID is an exact match (exact), a probable match but should be double-checked (partial), or didn't have a match so we created a new person (unmatched)\">UVA ID Match</abbr></th><th>Link</th><th>Progress</th></tr></thead>";
+echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th><abbr title=\"Whether we think the UVA Person attached to this particular Brown ID is an exact match (exact), a probable match but should be double-checked (partial), or didn't have a match so we created a new person (unmatched)\">UVA ID Match</abbr></th><th>Progress</th></tr></thead>";
 echo "</table>";
 ?>
 </body>
