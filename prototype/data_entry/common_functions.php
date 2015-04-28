@@ -83,7 +83,7 @@ function get_update_statement($tableName, $arr, $match) {
 
     $insert .= " SET ($cols) = ($vals)";
 
-    $insert .= " WHERE $match;";
+    $insert .= " WHERE $match RETURNING *;";
 
     return $insert;
 }
