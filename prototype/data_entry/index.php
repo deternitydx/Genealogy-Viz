@@ -1,17 +1,21 @@
 <html>
-<head>
-<title>Brown Data</title>
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
+    <head>
+        <title>Nauvoo - Brown Listing</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="css/form.css" rel="stylesheet" media="screen">
+        <link href="css/jquery.fancybox.css" rel="stylesheet" media="screen">
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
+        <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
   
-<!-- jQuery -->
-<script type="text/javascript" charset="utf8" src="../js/jquery-2.1.1.js"></script>
-  
-<!-- DataTables -->
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" charset="utf8" src="../js/jquery-2.1.1.js"></script>
+          
+        <!-- DataTables -->
+        <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
 
-</head>
 <script>
 var QueryString = function () {
   // This function is anonymous, is executed immediately and 
@@ -40,10 +44,21 @@ $(document).ready( function () {
     var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/brown.php", deferRender: true, saveState: true, order: [[ 0, "asc" ]]});
 } );
 </script>
-<body>
-<h1>Data Entry : Brown</h1>
+    </head>
+    <body>
+        <div id="wrapper">
+            <header>
+            <div class="container">
+                <strong class="logo"><a href="/">Nauvoo Database</a></strong>
+            </div><!-- container -->
+            </header><!-- header -->
+            <div class="main-area container">
+                <div class="page-header page-header-01">
+                    <h1>Brown Entries</h1>
+                </div><!-- page-header -->
+
 <?php
-echo "<table id='datatable' class='display'>";
+echo "<table id='datatable' class='display listing'>";
 echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th>UVA ID Match</th><th>Link</th><th>Progress</th></tr></thead>";
 echo "</table>";
 ?>
