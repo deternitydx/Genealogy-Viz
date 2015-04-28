@@ -44,7 +44,7 @@ $(document).ready( function () {
 <h1>Data Entry : Brown</h1>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th>Status</th><th>Options</th></tr></thead>";
+echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th>UVA ID Match</th><th>Link</th><th>Progress</th></tr></thead>";
 echo "</table>";
 ?>
 </body>
