@@ -3,7 +3,7 @@ header('Content-type: application/json');
 
 $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
-$result = pg_query($db, "SELECT \"id\", \"Name\", \"BD\", \"Status\", \"PersonID\" FROM public.\"Brown\" ORDER BY \"Status\", \"Name\" ASC");
+$result = pg_query($db, "SELECT \"id\", \"Name\", \"BD\", \"Status\", \"context\", \"PersonID\", \"Marked\" FROM public.\"Brown\" ORDER BY \"Status\", \"Name\" ASC");
 if (!$result) {
     exit;
 }
@@ -12,7 +12,10 @@ $brown = pg_fetch_all($result);
 echo "{ \"data\": [";
 $print = array();
 foreach ($brown as $k=>$v) {
-    array_push($print, "[ \"{$v["Name"]}\", \"{$v["BD"]}\", \"{$v["Status"]}\", \"<a href='individual.php?brown={$v["id"]}&id={$v["PersonID"]}'>Edit</a>\" ]");
+    $marked = "";
+    if ($v["Marked"] == "t")
+        $marked = " (Done)";
+    array_push($print, "[ \"{$v["Name"]}\", \"{$v["BD"]}\", \"{$v["context"]}\", \"{$v["Status"]}\", \"<a href='individual.php?brown={$v["id"]}&id={$v["PersonID"]}'>Edit</a>".$marked ."\" ]");
     //$brown[$k]["PersonID"] = "<a href='individual.php?id={$brown[$k]["PersonID"]}>Edit</a>";
     
 }

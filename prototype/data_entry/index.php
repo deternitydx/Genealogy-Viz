@@ -37,14 +37,14 @@ var QueryString = function () {
 } ();
 
 $(document).ready( function () {
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/brown.php", deferRender: true, saveState: true, order: [[ 2, "asc" ]]});
+    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/brown.php", deferRender: true, saveState: true, order: [[ 0, "asc" ]]});
 } );
 </script>
 <body>
 <h1>Data Entry : Brown</h1>
 <?php
 echo "<table id='datatable' class='display'>";
-echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Status</th><th>Links</th></tr></thead>";
+echo "<thead><tr><th>Name</th><th>Birth Date</th><th>Brown Context</th><th>Status</th><th>Options</th></tr></thead>";
 echo "</table>";
 ?>
 </body>

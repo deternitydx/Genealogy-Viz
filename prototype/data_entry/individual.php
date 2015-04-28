@@ -19,6 +19,15 @@
     } else
         $brown_id = "UNKNOWN";
 
+    /*
+     * Display Dates
+     *
+     * Takes a YYYY-MM-DD date string and splits it out appropriately.  Then, will print out the
+     * html required to display that date as a data entry element.  The prefix and suffix params
+     * are used around the portion of the date (day, month, or year) to define the name of the 
+     * input box.  Currently, it uses the format:
+     *              YYYY    Month (select)  DD
+     */
     function displayDate($datestr, $prefix, $suffix) {
         $dateSplit = explode("-", $datestr);
         if (!isset($dateSplit[0]) || empty($dateSplit[0]))
