@@ -5,7 +5,7 @@ function logger($str, $comment) {
     global $output;
     $c = "";
     if ($comment) $c = "-- ";
-    fwrite($output, $c . $str . "\n");
+    fwrite($output, $c . str_replace("\n"," ", $str) . "\n");
 }
 
 function setup_db() {
@@ -23,7 +23,7 @@ function query_db($q, $is_select) {
 
     $result = pg_query($db, $q);
     if (!$result) {
-        logger("Error: " . pg_result_error($result), true);
+        logger("Error: " . pg_last_error($db), true);
         return false;
     }
 
