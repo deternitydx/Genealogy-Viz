@@ -41,7 +41,19 @@ var QueryString = function () {
 } ();
 
 $(document).ready( function () {
-    var dt = $('#datatable').DataTable( {paging: true, ajax: "../api/brown.php", deferRender: true, saveState: true, order: [[ 0, "asc" ]]});
+    var dt = $('#datatable').DataTable( {
+        paging: true, 
+        ajax: "../api/brown.php", 
+        deferRender: true, 
+        saveState: true, 
+        order: [[ 0, "asc" ]],
+        "createdRow": function (row, data, index) {
+            if (data[4] == "In Progress")
+                $(row).addClass('inProgress');
+            if (data[4] == "Done")
+                $(row).addClass('done');
+        }
+    });
 } );
 </script>
     </head>
