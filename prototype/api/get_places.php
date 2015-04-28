@@ -1,9 +1,19 @@
 <?php
     header('Content-type: application/json');
 
-    if (!isset($_GET['q'])) {
-        echo "{ 'error': 'no search term given'}";
-        die();
+    /*
+     * If there is no query, then we will return a default list
+     * that is helpful to UVA.
+     */
+    if (!isset($_GET['q']) || strlen($_GET['q']) < 1) {
+        $places = array(
+            array("id"=>18524, "text"=>"Nauvoo, Hancock, Illinois, USA (UVA)"),
+            array("id"=>18525, "text"=>"Nauvoo Temple, Nauvoo, Illinois, USA (UVA)"),
+            array("id"=>18526, "text"=>"Red Brick Store, Nauvoo, Illinois, USA (UVA)")
+        );
+
+        echo json_encode($places);
+        exit();
     }
 
     $query = $_GET['q'];

@@ -217,8 +217,8 @@ function loadPlacesSelect2() {
                     },
                     cache: true
                 },
-                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 4,
+                //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 0,
                 width: '400px',
                 allowClear: true,
                 theme: 'classic'
@@ -250,7 +250,7 @@ function loadMarriagesSelect2() {
                     cache: true
                 },
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 4,
+                minimumInputLength: 2,
                 width: '400px',
                 allowClear: true,
                 theme: 'classic'
@@ -281,8 +281,8 @@ function loadPersonSelect2() {
                     },
                     cache: true
                 },
-                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 4,
+                //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 0,
                 width: '400px',
                 allowClear: true,
                 theme: 'classic'
