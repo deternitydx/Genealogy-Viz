@@ -25,7 +25,7 @@
             array("id"=>19111, "text"=>"WF Winslow Farr (1794-01-12 - 1867-08-25) 19111"),
             array("id"=>282, "text"=>"WH William Huntington (1784-03-28 - 1846-08-19) 282"),
             array("id"=>8744, "text"=>"WmS William Snow (1806-12-14 - 1879-05-19) 8744"),
-            array("id"=>34674, "text"=>"WWP William W. Phelps (1792-02-17 - 1872-03-06) 34674")
+            array("id"=>34674, "text"=>"WWP William W. Phelps (1792-02-17 - 1872-03-06) 34674"),
             array("id"=>12094, "text"=>"ZC Zebedee Coltrin (1804-09-07 - 1887-07-21) 12094")
         );
 
