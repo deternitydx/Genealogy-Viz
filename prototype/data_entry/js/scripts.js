@@ -25,6 +25,7 @@ $(document).ready(function() {
             $.post("save.php", $("#nauvoo_form").serialize(), function (data) {
                 // what to do after the save
                 if (data.retval == "success") {
+                    // If there were any new elements, give them their proper ID from the save return
                     for (var key in data.updates) {
                         if (data.updates.hasOwnProperty(key)) {
                             // If there is an element and it is actually part of this list
@@ -36,6 +37,11 @@ $(document).ready(function() {
                             $(toupdate).val(data.updates[key]);
                         }
                     }
+
+                    // Remove any deleted boxes
+                    $('.deleted-element').remove();
+
+                    // Alert the user that the save was successfull
                     $('.alert-success').slideDown();
                     setTimeout(function(){
                         $('.alert-success').slideUp();
@@ -350,7 +356,21 @@ function selectsToSelect2() {
     });
 }
 
-function deleteEntry(type, index) {
-    console.log("Deleting " + type + " at index " + index);
+function deleteEntry(type, i) {
+    var index = i.toString();
+    var container = "#" + type + "_" + index;
+    var hidden = "#" + type + "_deleted_" + index;
+    var button = "#" + type + "_delete_button_" + index;
+    if ($(hidden).val() == "NO") {
+        $(container).addClass("deleted-element");
+        $(hidden).val("YES");
+        $(button).html("<span><i class=\"fa fa-undo\"></i></span>");
+        console.log("Deleting " + type + " at index " + index);
+    } else {
+        $(container).removeClass("deleted-element");
+        $(hidden).val("NO");
+        $(button).html("<span><i class=\"fa fa-times\"></i></span>");
+        console.log("Un-deleting " + type + " at index " + index);
+    }
     return false;
 }
