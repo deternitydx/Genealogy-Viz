@@ -217,7 +217,7 @@
     foreach ($person["names"] as $name) {
         if ($name["Type"] == 'authoritative') {
             echo "
-                                        <div class=\"row-area\">
+                                            <div class=\"row-area\" id=\"name_$n_i\">
                                             <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"name_id_$n_i\" name=\"name_id_$n_i\">
                                             <input type=\"hidden\" class=\"form-control\" value=\"authoritative\" id=\"name_type_$n_i\" name=\"name_type_$n_i\">
                                             <div class=\"frame\">
@@ -229,7 +229,7 @@
                                                 <label for=\"name_first_$n_i\">First</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"13\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"10\">
                                                 <label for=\"name_middle_$n_i\">Middle</label>
                                             </div>
                                             <div class=\"frame\">
@@ -257,7 +257,11 @@
     foreach ($person["names"] as $name) {
         if ($name["Type"] == 'alternate') {
             echo "
-                                        <div class=\"row-area\">
+                                        <div class=\"row-area\" id=\"name_$n_i\">
+                                                <div class=\"delete-area\">
+                                                    <button id=\"name_delete_button_$n_i\" class=\"btn btn-warning ie-fix\" onClick=\"deleteEntry('name', $n_i); return false;\"><span><i class=\"fa fa-times\"></i></span></button>
+                                                    <input type=\"hidden\" id=\"name_deleted_$n_i\" name=\"name_deleted_$n_i\" value=\"NO\">
+                                                </div>
                                             <input type=\"hidden\" class=\"form-control\" value=\"{$name["ID"]}\" id=\"name_id_$n_i\" name=\"name_id_$n_i\">
                                             <input type=\"hidden\" class=\"form-control\" value=\"alternate\" id=\"name_type_$n_i\" name=\"name_type_$n_i\">
                                             <div class=\"frame\">
@@ -397,7 +401,11 @@
 
 
 ?>
-                                                <div class="row-area form-area form-block">
+                                                <div class="row-area form-area form-block" id="tr_<?=$r_i?>">
+                                                    <div class="delete-area">
+                                                        <button id="tr_delete_button_<?=$r_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('tr', <?=$r_i?>); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="tr_deleted_<?=$r_i?>" name="tr_deleted_<?=$r_i?>" value="NO">
+                                                    </div>
                                                     <div class="row-area">
                                                         <input type="hidden" name="tr_id_<?=$r_i?>" id="tr_id_<?=$r_i?>" value="<?=$rite["ID"]?>">
                                                         <div class="frame">
@@ -520,7 +528,11 @@
 
 
 ?>
-                                                <div class="row-area form-area form-block">
+                                                <div class="row-area form-area form-block" id="nms_<?=$s_i?>">
+                                                    <div class="delete-area">
+                                                        <button id="nms_delete_button_<?=$s_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('nms', <?=$s_i?>); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="nms_deleted_<?=$s_i?>" name="nms_deleted_<?=$s_i?>" value="NO">
+                                                    </div>
                                                     <div class="row-area">
                                                     <input type="hidden" name="nms_id_<?=$s_i?>" id="nms_id_<?=$s_i?>" value="<?=$sealing["ID"]?>">
                                                         <div class="frame">
@@ -635,9 +647,10 @@
     foreach ($person["marriages"] as $marriage) {
 
 ?>
-                                                <div class="row-area form-area form-block">
+                                                <div class="row-area form-area form-block" id="mar_<?=$m_i?>">
                                                     <div class="delete-area">
-                                                        <button id="button_delete_<?=$m_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('mar', <?=$m_i?>); return false;"><span>X</span></button>
+                                                        <button id="mar_delete_button_<?=$m_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('mar', <?=$m_i?>); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="mar_deleted_<?=$m_i?>" name="mar_deleted_<?=$m_i?>" value="NO">
                                                     </div>
                                                     <div class="row-area">
                                                         <input type="hidden" name="mar_id_<?=$m_i?>" id="mar_id_<?=$m_i?>" value="<?=$marriage["ID"]?>">
@@ -763,7 +776,11 @@
 
                 <div style="display:none;">
                     <div id="name-entry-hidden">
-                        <div class="row-area">
+                        <div class="row-area" id="name_ZZ">
+                            <div class="delete-area">
+                                <button id="name_delete_button_ZZ" class="btn btn-warning ie-fix" onClick="deleteEntry('name', 'ZZ'); return false;"><span><i class="fa fa-times"></i></span></button>
+                                <input type="hidden" id="name_deleted_ZZ" name="name_deleted_ZZ" value="NO">
+                            </div>
                             <input type="hidden" class="form-control" value="NEW" id="name_id_ZZ" name="name_id_ZZ">
                             <input type="hidden" class="form-control" value="alternate" id="name_type_ZZ" name="name_type_ZZ">
                             <div class="frame">
@@ -775,7 +792,7 @@
                                 <label for="name_first_ZZ">First</label>
                             </div>
                             <div class="frame">
-                                <input type="text" class="form-control" value="" id="name_middle_ZZ" name="name_middle_ZZ" size="13">
+                                <input type="text" class="form-control" value="" id="name_middle_ZZ" name="name_middle_ZZ" size="10">
                                 <label for="name_middle_ZZ">Middle</label>
                             </div>
                             <div class="frame">
@@ -789,7 +806,11 @@
                         </div><!-- row-area -->
                     </div>
                     <div id="rite-entry-hidden">
-                        <div class="row-area form-area form-block">
+                        <div class="row-area form-area form-block" id="tr_ZZ">
+                            <div class="delete-area">
+                                <button id="tr_delete_button_ZZ" class="btn btn-warning ie-fix" onClick="deleteEntry('tr', 'ZZ'); return false;"><span><i class="fa fa-times"></i></span></button>
+                                <input type="hidden" id="tr_deleted_ZZ" name="tr_deleted_ZZ" value="NO">
+                            </div>
                             <div class="row-area">
                                 <input type="hidden" name="tr_id_ZZ" id="tr_id_ZZ" value="NEW">
                                 <div class="frame">
@@ -867,7 +888,11 @@
                         </div>
                     </div>
                     <div id="nonmarital-entry-hidden">
-                        <div class="row-area form-area form-block">
+                        <div class="row-area form-area form-block" id="nms_ZZ">
+                            <div class="delete-area">
+                                <button id="nms_delete_button_ZZ" class="btn btn-warning ie-fix" onClick="deleteEntry('nms', 'ZZ'); return false;"><span><i class="fa fa-times"></i></span></button>
+                                <input type="hidden" id="nms_deleted_ZZ" name="nms_deleted_ZZ" value="NO">
+                            </div>
                             <div class="row-area">
                                 <input type="hidden" name="nms_id_ZZ" id="nms_id_ZZ" value="NEW">
                                 <div class="frame">
@@ -944,7 +969,11 @@
                         </div>
                     </div>
                     <div id="marriage-entry-hidden">
-                                                <div class="row-area form-area form-block">
+                                                <div class="row-area form-area form-block" id="mar_ZZ">
+                                                    <div class="delete-area">
+                                                        <button id="mar_delete_button_ZZ" class="btn btn-warning ie-fix" onClick="deleteEntry('mar', 'ZZ'); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="mar_deleted_ZZ" name="mar_deleted_ZZ" value="NO">
+                                                    </div>
                                                     <div class="row-area">
                                                         <input type="hidden" name="mar_id_ZZ" id="mar_id_ZZ" value="NEW">
                                                         <div class="frame">
