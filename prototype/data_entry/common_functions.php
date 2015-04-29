@@ -1,5 +1,7 @@
 <?php
 $db = null;
+$testing = true;
+
 
 function logger($str, $comment) {
     global $output;
@@ -14,31 +16,35 @@ function setup_db() {
 }
 
 function query_db($q, $is_select) {
-    global $db;
+    global $db, $testing;
 
     if ($db == null) {
         logger("Database not initialized", true);
         return false;
     }
 
-    $result = pg_query($db, $q);
-    if (!$result) {
-        logger("Error: " . pg_last_error($db), true);
-        return false;
+    if ($testing !== true) {
+        $result = pg_query($db, $q);
+        if (!$result) {
+            logger("Error: " . pg_last_error($db), true);
+            return false;
+        }
+
+        // If selecting only, and nothing is returned, then this is a false
+        if ($is_select && pg_num_rows($result) == 0) {
+            return false;
+        }
+
+        // Get the last insert value (if needed)
+        $res = pg_query($db, "SELECT lastval()");
+        $temprow = pg_fetch_Array($res);
+
+        // Return the new id
+        return $temprow[0];
+    } else {
+        logger("Testing Only, not submitted", true);
+        return 1;
     }
-
-    // If selecting only, and nothing is returned, then this is a false
-    if ($is_select && pg_num_rows($result) == 0) {
-        return false;
-    }
-
-    // Get the last insert value (if needed)
-    $res = pg_query($db, "SELECT lastval()");
-    $temprow = pg_fetch_Array($res);
-
-    // Return the new id
-    return $temprow[0];
-
 }
 
 function close_db() {
