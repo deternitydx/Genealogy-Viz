@@ -72,6 +72,8 @@
         <script type="text/javascript" src="js/scripts.js"></script>
         <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/js/select2.min.js"></script>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
     </head>
     <body>
         <div id="wrapper">
@@ -176,7 +178,7 @@
     if (isset($brown["Progress"])) {
         $status = $brown["Progress"];
         echo "<p>State: ";
-        echo "<select name='brown_state' id='brown_state' style='width:150px;'>";
+        echo "<select name='brown_state' data-placeholder='Select Status' id='brown_state' style='width:150px;'>";
         $s = "";
         if ($status == "unseen")
             $s = " selected='selected'";
