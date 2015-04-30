@@ -16,6 +16,7 @@
             array("id"=>15277, "text"=>"GM George Miller (1794-11-25 - 1856-01-01) 15277"),
             array("id"=>5720, "text"=>"HCK Heber C. Kimball (1801-06-14 - 1868-06-22) 5720"),
             array("id"=>15728, "text"=>"IM Isaac Morley (1786-03-11 - 1864-07-21) 15728"),
+            array("id"=>495, "text"=>"JS Joseph Smith () 495"),
             array("id"=>32267, "text"=>"JT John Taylor (1808-11-01 - 1887-07-25) 32267"),
             array("id"=>31692, "text"=>"OH Orson Hyde (1805-01-08 - 1878-11-28) 31692"),
             array("id"=>425, "text"=>"OP Orson Pratt (1811-09-19 - 1881-10-03) 425"),
