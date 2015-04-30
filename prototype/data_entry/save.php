@@ -90,71 +90,82 @@
                 )
                 **/
 
-        // Marriage table first
-        if (isset($marriage["type"]))
-            $vals["Type"] = $marriage["type"];
-        else
-            $vals["Type"] = "unknown";
-        if (isset($marriage["place_id"]))
-            $vals["PlaceID"] = $marriage["place_id"];
-        if (isset($marriage["date_year"]) && isset($marriage["date_month"]) && isset($marriage["date_day"]))
-            $vals["MarriageDate"] = combine_date($marriage["date_year"] , $marriage["date_month"], $marriage["date_day"]);
-        if (isset($marriage["div_year"]) && isset($marriage["div_month"]) && isset($marriage["div_day"]))
-            $vals["DivorceDate"] = combine_date($marriage["div_year"] , $marriage["div_month"], $marriage["div_day"]);
-        if (isset($marriage["cancel_year"]) && isset($marriage["cancel_month"]) && isset($marriage["cancel_day"]))
-            $vals["CancelledDate"] = combine_date($marriage["cancel_year"] , $marriage["cancel_month"], $marriage["cancel_day"]);
-        if ($marriage["id"] == "NEW") {
-            $marriage["id"] = insert("Marriage", $vals);
-            $updates["mar_id_".$index] = $marriage["id"];
-        } else
-            update("Marriage", $vals, "\"ID\" = " . $marriage["id"]);
+        if (isset($marriage["deleted"]) && $marriage["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($marriage["id"] != "NEW") {
+                // Delete
+                dbdelete("PersonMarriage", "\"MarriageID\" = " . $marriage["id"]);
+                dbdelete("Marriage", "\"ID\" = " . $marriage["id"]);
+            }
+        } else {
+            // Insert or Update
 
-        // Handle each of the Participants
-        // This person
-        $vals = array();
-        $vals["MarriageID"] = $marriage["id"];
-        $vals["PersonID"] = $personal["ID"];
-        $vals["Role"] = $mrole;
-        if (isset($marriage["name_id"]))
-            $vals["NameUsedID"] = $marriage["name_id"];
+            // Marriage table first
+            if (isset($marriage["type"]))
+                $vals["Type"] = $marriage["type"];
+            else
+                $vals["Type"] = "unknown";
+            if (isset($marriage["place_id"]))
+                $vals["PlaceID"] = $marriage["place_id"];
+            if (isset($marriage["date_year"]) && isset($marriage["date_month"]) && isset($marriage["date_day"]))
+                $vals["MarriageDate"] = combine_date($marriage["date_year"] , $marriage["date_month"], $marriage["date_day"]);
+            if (isset($marriage["div_year"]) && isset($marriage["div_month"]) && isset($marriage["div_day"]))
+                $vals["DivorceDate"] = combine_date($marriage["div_year"] , $marriage["div_month"], $marriage["div_day"]);
+            if (isset($marriage["cancel_year"]) && isset($marriage["cancel_month"]) && isset($marriage["cancel_day"]))
+                $vals["CancelledDate"] = combine_date($marriage["cancel_year"] , $marriage["cancel_month"], $marriage["cancel_day"]);
+            if ($marriage["id"] == "NEW") {
+                $marriage["id"] = insert("Marriage", $vals);
+                $updates["mar_id_".$index] = $marriage["id"];
+            } else
+                update("Marriage", $vals, "\"ID\" = " . $marriage["id"]);
 
-        updateInsertPM($vals);
-        // Spouse
-        if (isset($marriage["spouse_person_id"])) {
+            // Handle each of the Participants
+            // This person
             $vals = array();
             $vals["MarriageID"] = $marriage["id"];
-            $vals["PersonID"] = $marriage["spouse_person_id"];
-            $vals["Role"] = $srole;
+            $vals["PersonID"] = $personal["ID"];
+            $vals["Role"] = $mrole;
+            if (isset($marriage["name_id"]))
+                $vals["NameUsedID"] = $marriage["name_id"];
+
             updateInsertPM($vals);
-        }
-        // Proxy
-        if (isset($marriage["proxy_person_id"])) {
-            $vals = array();
-            $vals["MarriageID"] = $marriage["id"];
-            $vals["PersonID"] = $marriage["proxy_person_id"];
-            $vals["Role"] = "Proxy".$mrole;
-            updateInsertPM($vals);
-        }
-        // Spouse Proxy
-        if (isset($marriage["spouse_proxy_person_id"])) {
-            $vals = array();
-            $vals["MarriageID"] = $marriage["id"];
-            $vals["PersonID"] = $marriage["spouse_proxy_person_id"];
-            $vals["Role"] = "Proxy".$srole;
-            updateInsertPM($vals);
-        }
-        // Officiator
-        if (isset($marriage["officiator_person_id"]) && $marriage["officiator_person_id"] != "") {
-            $vals = array();
-            $vals["MarriageID"] = $marriage["id"];
-            $vals["PersonID"] = $marriage["officiator_person_id"];
-            $vals["Role"] = "Officiator";
-            // Temporary: only select or insert for Officiators, to avoid messing up the data!
-            //if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
-            //    " AND \"Role\" = '" . $vals["Role"] . "'"))
-            if (!search("PersonMarriage", "\"MarriageID\" = " . $vals["MarriageID"] . 
-                " AND \"Role\" = '" . $vals["Role"] . "' AND \"PersonID\" = " . $vals["PersonID"]))
-                insert("PersonMarriage", $vals);
+            // Spouse
+            if (isset($marriage["spouse_person_id"])) {
+                $vals = array();
+                $vals["MarriageID"] = $marriage["id"];
+                $vals["PersonID"] = $marriage["spouse_person_id"];
+                $vals["Role"] = $srole;
+                updateInsertPM($vals);
+            }
+            // Proxy
+            if (isset($marriage["proxy_person_id"])) {
+                $vals = array();
+                $vals["MarriageID"] = $marriage["id"];
+                $vals["PersonID"] = $marriage["proxy_person_id"];
+                $vals["Role"] = "Proxy".$mrole;
+                updateInsertPM($vals);
+            }
+            // Spouse Proxy
+            if (isset($marriage["spouse_proxy_person_id"])) {
+                $vals = array();
+                $vals["MarriageID"] = $marriage["id"];
+                $vals["PersonID"] = $marriage["spouse_proxy_person_id"];
+                $vals["Role"] = "Proxy".$srole;
+                updateInsertPM($vals);
+            }
+            // Officiator
+            if (isset($marriage["officiator_person_id"]) && $marriage["officiator_person_id"] != "") {
+                $vals = array();
+                $vals["MarriageID"] = $marriage["id"];
+                $vals["PersonID"] = $marriage["officiator_person_id"];
+                $vals["Role"] = "Officiator";
+                // Temporary: only select or insert for Officiators, to avoid messing up the data!
+                //if (!update("PersonMarriage", $vals, "\"MarriageID\" = " . $vals["MarriageID"] . 
+                //    " AND \"Role\" = '" . $vals["Role"] . "'"))
+                if (!search("PersonMarriage", "\"MarriageID\" = " . $vals["MarriageID"] . 
+                    " AND \"Role\" = '" . $vals["Role"] . "' AND \"PersonID\" = " . $vals["PersonID"]))
+                    insert("PersonMarriage", $vals);
+            }
         }
     }
 
@@ -172,29 +183,38 @@
                     [suffix] => 
                 )
                 **/
-        if (isset($name["type"]))
-            $vals["Type"] = $name["type"];
-        if (isset($name["prefix"]))
-            $vals["Prefix"] = $name["prefix"];
-        if (isset($name["first"]))
-            $vals["First"] = $name["first"];
-        if (isset($name["middle"]))
-            $vals["Middle"] = $name["middle"];
-        if (isset($name["last"]))
-            $vals["Last"] = $name["last"];
-        if (isset($name["suffix"]))
-            $vals["Suffix"] = $name["suffix"];
-
-        // Add the person id from the main page
-        $vals["PersonID"] = $personal["ID"];
-
-        if ($name["id"] == "NEW") {
-            // do insert
-            $nameid = insert("Name", $vals);
-            $updates["name_id_".$index] = $nameid;
+        if (isset($name["deleted"]) && $name["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($name["id"] != "NEW") {
+                // Delete
+                dbdelete("Name", "\"ID\" = " . $name["id"]);
+            }
         } else {
-            // do update
-            update("Name", $vals, "\"ID\" = " . $name["id"]);
+            // Insert or Update
+            if (isset($name["type"]))
+                $vals["Type"] = $name["type"];
+            if (isset($name["prefix"]))
+                $vals["Prefix"] = $name["prefix"];
+            if (isset($name["first"]))
+                $vals["First"] = $name["first"];
+            if (isset($name["middle"]))
+                $vals["Middle"] = $name["middle"];
+            if (isset($name["last"]))
+                $vals["Last"] = $name["last"];
+            if (isset($name["suffix"]))
+                $vals["Suffix"] = $name["suffix"];
+
+            // Add the person id from the main page
+            $vals["PersonID"] = $personal["ID"];
+
+            if ($name["id"] == "NEW") {
+                // do insert
+                $nameid = insert("Name", $vals);
+                $updates["name_id_".$index] = $nameid;
+            } else {
+                // do update
+                update("Name", $vals, "\"ID\" = " . $name["id"]);
+            }
         }
     }
 
@@ -217,53 +237,63 @@
                     [name_id] => 
                 )
                 **/
-        $vals["PersonID"] = $personal["ID"];
-        if (isset($rite["type"]))
-            $vals["Type"] = $rite["type"];
-        if (isset($rite["proxy_person_id"]))
-            $vals["ProxyID"] = $rite["proxy_person_id"];
-        if (isset($rite["annointed_to_person_id"]))
-            $vals["AnnointedToID"] = $rite["annointed_to_person_id"];
-        if (isset($rite["annointed_to_proxy_person_id"]))
-            $vals["AnnointedToProxyID"] = $rite["annointed_to_proxy_person_id"];
-        if (isset($rite["place_id"]))
-            $vals["PlaceID"] = $rite["place_id"];
-        if (isset($rite["name_id"]))
-            $vals["NameUsedID"] = $rite["name_id"];
-        if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
-            $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
-
-        if ($rite["id"] == "NEW") {
-            $rite["id"] = insert("NonMaritalTempleRites", $vals);
-            $updates["tr_id_".$index] = $rite["id"];
+        if (isset($rite["deleted"]) && $rite["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($rite["id"] != "NEW") {
+                // Delete 
+                dbdelete("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $rite["id"]);
+                dbdelete("NonMaritalTempleRites", "\"ID\" = " . $rite["id"]);
+            }
         } else {
-            update("NonMaritalTempleRites", $vals, "\"ID\" = " . $rite["id"]);
-        }
+            // Insert or Update
+            $vals["PersonID"] = $personal["ID"];
+            if (isset($rite["type"]))
+                $vals["Type"] = $rite["type"];
+            if (isset($rite["proxy_person_id"]))
+                $vals["ProxyID"] = $rite["proxy_person_id"];
+            if (isset($rite["annointed_to_person_id"]))
+                $vals["AnnointedToID"] = $rite["annointed_to_person_id"];
+            if (isset($rite["annointed_to_proxy_person_id"]))
+                $vals["AnnointedToProxyID"] = $rite["annointed_to_proxy_person_id"];
+            if (isset($rite["place_id"]))
+                $vals["PlaceID"] = $rite["place_id"];
+            if (isset($rite["name_id"]))
+                $vals["NameUsedID"] = $rite["name_id"];
+            if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
+                $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
 
-        // Add the officiator, if not already set:
-        $vals = array();
-        if (isset($rite["officiator_person_id"]))
-            $vals["PersonID"] = $rite["officiator_person_id"];
-        if (isset($rite["officiator_role"]))
-            $vals["Role"] = $rite["officiator_role"];
-        $vals["NonMaritalTempleRitesID"] = $rite["id"];
-        // Assumption right now: there is only ONE officiator (only one is allowed on the data entry screen right now)
-        if (search("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"])) {
-            // found something
-            if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
-                // Need to overwrite it with the new values
-                update("TempleRiteOfficiators", $vals, "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+            if ($rite["id"] == "NEW") {
+                $rite["id"] = insert("NonMaritalTempleRites", $vals);
+                $updates["tr_id_".$index] = $rite["id"];
             } else {
-                // Either person is null or empty, so delete the record in the db
-                dbdelete("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+                update("NonMaritalTempleRites", $vals, "\"ID\" = " . $rite["id"]);
             }
-        } else {
-            // Didn't find one, so insert if needed
-            if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
-                insert("TempleRiteOfficiators", $vals);
-            }
-        } 
 
+            // Add the officiator, if not already set:
+            $vals = array();
+            if (isset($rite["officiator_person_id"]))
+                $vals["PersonID"] = $rite["officiator_person_id"];
+            if (isset($rite["officiator_role"]))
+                $vals["Role"] = $rite["officiator_role"];
+            $vals["NonMaritalTempleRitesID"] = $rite["id"];
+            // Assumption right now: there is only ONE officiator (only one is allowed on the data entry screen right now)
+            if (search("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"])) {
+                // found something
+                if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
+                    // Need to overwrite it with the new values
+                    update("TempleRiteOfficiators", $vals, "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+                } else {
+                    // Either person is null or empty, so delete the record in the db
+                    dbdelete("TempleRiteOfficiators", "\"NonMaritalTempleRitesID\" = " . $vals["NonMaritalTempleRitesID"]);
+                }
+            } else {
+                // Didn't find one, so insert if needed
+                if ($vals["PersonID"] != null && $vals["PersonID"] != "") {
+                    insert("TempleRiteOfficiators", $vals);
+                }
+            } 
+
+        }
     }
 
     foreach ($sealings as $index => $sealing) {
@@ -284,40 +314,49 @@
                     [name_id] => 
                 )
                 **/
-
-        $vals["AdopteeID"] = $personal["ID"];
-        if (isset($sealing["type"]))
-            $vals["Type"] = $sealing["type"];
-        if (isset($sealing["person_proxy_id"]))
-            $vals["AdopteeProxyID"] = $sealing["proxy_person_id"];
-        if (isset($sealing["marriage_id"]))
-            $vals["MarriageID"] = $sealing["marriage_id"];
-        if (isset($sealing["proxy_father_person_id"]))
-            $vals["FatherProxyID"] = $sealing["proxy_father_person_id"];
-        if (isset($sealing["proxy_mother_person_id"]))
-            $vals["MotherProxyID"] = $sealing["proxy_mother_person_id"];
-        if (isset($sealing["proxy_marriage_id"]))
-            $vals["MarriageProxyID"] = $sealing["proxy_marriage_id"];
-        if (isset($sealing["officiator_person_id"]))
-            $vals["OfficiatorID"] = $sealing["officiator_person_id"];
-        if (isset($sealing["place_id"]))
-            $vals["PlaceID"] = $sealing["place_id"];
-        if (isset($sealing["name_id"]))
-            $vals["NameUsedID"] = $sealing["name_id"];
-
-        // need to add Name as Sealed to the DB
-        // $vals["NameID"] = $sealing["name_id"];
-
-        if (isset($sealing["date_year"]) && isset($sealing["date_month"]) && isset($sealing["date_day"]))
-            $vals["Date"] = combine_date($sealing["date_year"], $sealing["date_month"], $sealing["date_day"]);
-
-        if ($sealing["id"] == "NEW") {
-            // do insert
-            $sealid = insert("NonMaritalSealings", $vals);
-            $updates["nms_id_".$index] = $sealid;
+        if (isset($sealing["deleted"]) && $sealing["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($sealing["id"] != "NEW") {
+                // Delete 
+                dbdelete("NonMaritalSealings", "\"ID\" = " . $sealing["id"]);
+            }
         } else {
-            // do update
-            update("NonMaritalSealings", $vals, "\"ID\" = " . $sealing["id"]);
+            // Insert or Update
+
+            $vals["AdopteeID"] = $personal["ID"];
+            if (isset($sealing["type"]))
+                $vals["Type"] = $sealing["type"];
+            if (isset($sealing["person_proxy_id"]))
+                $vals["AdopteeProxyID"] = $sealing["proxy_person_id"];
+            if (isset($sealing["marriage_id"]))
+                $vals["MarriageID"] = $sealing["marriage_id"];
+            if (isset($sealing["proxy_father_person_id"]))
+                $vals["FatherProxyID"] = $sealing["proxy_father_person_id"];
+            if (isset($sealing["proxy_mother_person_id"]))
+                $vals["MotherProxyID"] = $sealing["proxy_mother_person_id"];
+            if (isset($sealing["proxy_marriage_id"]))
+                $vals["MarriageProxyID"] = $sealing["proxy_marriage_id"];
+            if (isset($sealing["officiator_person_id"]))
+                $vals["OfficiatorID"] = $sealing["officiator_person_id"];
+            if (isset($sealing["place_id"]))
+                $vals["PlaceID"] = $sealing["place_id"];
+            if (isset($sealing["name_id"]))
+                $vals["NameUsedID"] = $sealing["name_id"];
+
+            // need to add Name as Sealed to the DB
+            // $vals["NameID"] = $sealing["name_id"];
+
+            if (isset($sealing["date_year"]) && isset($sealing["date_month"]) && isset($sealing["date_day"]))
+                $vals["Date"] = combine_date($sealing["date_year"], $sealing["date_month"], $sealing["date_day"]);
+
+            if ($sealing["id"] == "NEW") {
+                // do insert
+                $sealid = insert("NonMaritalSealings", $vals);
+                $updates["nms_id_".$index] = $sealid;
+            } else {
+                // do update
+                update("NonMaritalSealings", $vals, "\"ID\" = " . $sealing["id"]);
+            }
         }
     }
 
