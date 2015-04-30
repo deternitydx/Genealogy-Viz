@@ -1,6 +1,6 @@
 <?php
 $db = null;
-$testing = true;
+$testing = false;
 
 
 function logger($str, $comment) {
