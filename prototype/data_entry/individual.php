@@ -415,6 +415,7 @@
                                                                 <option value="baptism" <?php if ($rite["Type"] == "baptism") echo "selected";?>>Baptism</option>
                                                                 <option value="endowment" <?php if ($rite["Type"] == "endowment") echo "selected";?>>Endowment</option>
                                                                 <option value="secondAnnointing" <?php if ($rite["Type"] == "secondAnnointing") echo "selected";?>>Second Anointing</option>
+                                                                <option value="secondAnnointingTime" <?php if ($rite["Type"] == "secondAnnointingTime") echo "selected";?>>Second Anointing (for time)</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -838,6 +839,7 @@
                                         <option value="baptism">Baptism</option>
                                         <option value="endowment">Endowment</option>
                                         <option value="secondAnnointing">Second Anointing</option>
+                                        <option value="secondAnnointingTime">Second Anointing (for time)</option>
                                     </select>
                                 </div>
                             </div>
