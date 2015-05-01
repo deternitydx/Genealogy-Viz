@@ -273,7 +273,7 @@
                                                 <label for=\"name_first_$n_i\">First</label>
                                             </div>
                                             <div class=\"frame\">
-                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"13\">
+                                                <input type=\"text\" class=\"form-control\" value=\"{$name["Middle"]}\" id=\"name_middle_$n_i\" name=\"name_middle_$n_i\" size=\"10\">
                                                 <label for=\"name_middle_$n_i\">Middle</label>
                                             </div>
                                             <div class=\"frame\">
