@@ -87,6 +87,7 @@
                     [proxy_person_id] => 
                     [spouse_proxy_person_id] => 
                     [name_id] => 
+                    [notes] => 
                 )
                 **/
 
@@ -113,6 +114,9 @@
                 $vals["DivorceDate"] = combine_date($marriage["div_year"] , $marriage["div_month"], $marriage["div_day"]);
             if (isset($marriage["cancel_year"]) && isset($marriage["cancel_month"]) && isset($marriage["cancel_day"]))
                 $vals["CancelledDate"] = combine_date($marriage["cancel_year"] , $marriage["cancel_month"], $marriage["cancel_day"]);
+            if (isset($marriage["notes"]))
+                $vals["PrivateNotes"] = $marriage["notes"];
+        
             if ($marriage["id"] == "NEW") {
                 $marriage["id"] = insert("Marriage", $vals);
                 $updates["mar_id_".$index] = $marriage["id"];
@@ -235,6 +239,7 @@
                     [annointed_to_person_id] => 9422
                     [annointed_to_proxy_person_id] => 4194
                     [name_id] => 
+                    [notes] => 
                 )
                 **/
         if (isset($rite["deleted"]) && $rite["deleted"] == "YES") {
@@ -261,6 +266,8 @@
                 $vals["NameUsedID"] = $rite["name_id"];
             if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
                 $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
+            if (isset($rite["notes"]))
+                $vals["PrivateNotes"] = $rite["notes"];
 
             if ($rite["id"] == "NEW") {
                 $rite["id"] = insert("NonMaritalTempleRites", $vals);
@@ -312,6 +319,7 @@
                     [marriage_id] => 13016
                     [proxy_marriage_id] => 914
                     [name_id] => 
+                    [notes] => 
                 )
                 **/
         if (isset($sealing["deleted"]) && $sealing["deleted"] == "YES") {
@@ -342,6 +350,8 @@
                 $vals["PlaceID"] = $sealing["place_id"];
             if (isset($sealing["name_id"]))
                 $vals["NameUsedID"] = $sealing["name_id"];
+            if (isset($sealing["notes"]))
+                $vals["PrivateNotes"] = $sealing["notes"];
 
             // need to add Name as Sealed to the DB
             // $vals["NameID"] = $sealing["name_id"];

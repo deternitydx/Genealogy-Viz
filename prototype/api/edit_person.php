@@ -159,7 +159,7 @@
     if ($person["information"]["Gender"] == "Male") 
         $result = pg_query($db, "
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
-                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"SpouseID\", 
+                                    m.\"CancelledDate\", m.\"Type\", m.\"PrivateNotes\", w.\"PersonID\" as \"SpouseID\", 
                                     wn.\"First\", wn.\"Middle\", wn.\"Last\",
                                     h.\"PersonID\" as \"HusbandID\", h.\"NameUsedID\", m.\"Root\",
                                     CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
@@ -186,7 +186,7 @@
     else
         $result = pg_query($db, "
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
-                                    m.\"CancelledDate\", m.\"Type\", w.\"PersonID\" as \"WifeID\", w.\"NameUsedID\",
+                                    m.\"CancelledDate\", m.\"Type\", m.\"PrivateNotes\",  w.\"PersonID\" as \"WifeID\", w.\"NameUsedID\",
                                     hn.\"First\", hn.\"Middle\", hn.\"Last\",
                                     h.\"PersonID\" as \"SpouseID\", m.\"Root\",
                                     CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",

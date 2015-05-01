@@ -486,6 +486,12 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="tr_notes_<?=$r_i?>">Notes:</label>
+                                                            <textarea class="notes-field" id="tr_notes_<?=$r_i?>" name="tr_notes_<?=$r_i?>"><?=$rite["PrivateNotes"]?></textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
 <?php
     $r_i++;
@@ -613,6 +619,12 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="nms_notes_<?=$s_i?>">Notes:</label>
+                                                            <textarea class="notes-field" id="nms_notes_<?=$s_i?>" name="nms_notes_<?=$s_i?>"><?=$sealing["PrivateNotes"]?></textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
 <?php
     $s_i++;
@@ -734,6 +746,12 @@
                                                                 <option value=""></option>
                                                                 <option value="<?=$marriage["NameUsedID"]?>" selected="selected"><?=trim($marriage["NameUsed"])?></option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_notes_<?=$m_i?>">Notes:</label>
+                                                            <textarea class="notes-field" id="mar_notes_<?=$m_i?>" name="mar_notes_<?=$m_i?>"><?=$marriage["PrivateNotes"]?></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -885,6 +903,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row-area">
+                                <div class="frame">
+                                    <label class="fixed" for="tr_notes_ZZ">Notes:</label>
+                                    <textarea class="notes-field" id="tr_notes_ZZ" name="tr_notes_ZZ"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="nonmarital-entry-hidden">
@@ -964,6 +988,12 @@
                                     <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_ZZ" name="nms_name_id_ZZ">
                                         <option value=""></option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row-area">
+                                <div class="frame">
+                                    <label class="fixed" for="nms_notes_ZZ">Notes:</label>
+                                    <textarea class="notes-field" id="nms_notes_ZZ" name="nms_notes_ZZ"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1050,6 +1080,12 @@
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_ZZ" name="mar_name_id_ZZ">
                                                                 <option value=""></option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_notes_ZZ">Notes:</label>
+                                                            <textarea class="notes-field" id="mar_notes_ZZ" name="mar_notes_ZZ"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -4833,6 +4833,7 @@ select.form-control {
     width: 400px;
 }
 
+
 select.form-selector {
     text-align: left;
     width: 400px;
@@ -4840,6 +4841,10 @@ select.form-selector {
 select.form-date {
     text-align: left;
     width: 200px;
+}
+
+textarea.notes-field {
+    width: 400px;
 }
 
 table.listing thead, table.listing thead th {
