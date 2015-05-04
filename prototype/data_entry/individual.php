@@ -489,6 +489,27 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
+                                                            <label class="fixed" for="tr_office_<?=$r_i?>">Office when Performed:</label>
+                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="tr_office_<?=$r_i?>" name="tr_office_<?=$r_i?>">
+                                                                <option value=""></option>
+                                                                <option value="FirstPresidency" <?php if ($rite["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
+                                                                <option value="Apostle" <?php if ($rite["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
+                                                                <option value="Seventy" <?php if ($rite["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
+                                                                <option value="HighPriest" <?php if ($rite["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
+                                                                <option value="Elder" <?php if ($rite["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
+                                                                <option value="Teacher" <?php if ($rite["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
+                                                                <option value="Priest" <?php if ($rite["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
+                                                                <option value="Deacon" <?php if ($rite["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
+                                                                <option value="Bishop" <?php if ($rite["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
+                                                                <option value="Patriarch" <?php if ($rite["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
+                                                                <option value="ReliefSociety" <?php if ($rite["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
+                                                                <option value="TempleWorker" <?php if ($rite["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
+                                                                <option value="Midwife" <?php if ($rite["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
                                                             <label class="fixed" for="tr_notes_<?=$r_i?>">Notes:</label>
                                                             <textarea class="notes-field" id="tr_notes_<?=$r_i?>" name="tr_notes_<?=$r_i?>"><?=$rite["PrivateNotes"]?></textarea>
                                                         </div>
@@ -622,6 +643,27 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
+                                                            <label class="fixed" for="nms_office_<?=$s_i?>">Office when Performed:</label>
+                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="nms_office_<?=$s_i?>" name="nms_office_<?=$s_i?>">
+                                                                <option value=""></option>
+                                                                <option value="FirstPresidency" <?php if ($sealing["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
+                                                                <option value="Apostle" <?php if ($sealing["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
+                                                                <option value="Seventy" <?php if ($sealing["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
+                                                                <option value="HighPriest" <?php if ($sealing["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
+                                                                <option value="Elder" <?php if ($sealing["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
+                                                                <option value="Teacher" <?php if ($sealing["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
+                                                                <option value="Priest" <?php if ($sealing["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
+                                                                <option value="Deacon" <?php if ($sealing["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
+                                                                <option value="Bishop" <?php if ($sealing["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
+                                                                <option value="Patriarch" <?php if ($sealing["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
+                                                                <option value="ReliefSociety" <?php if ($sealing["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
+                                                                <option value="TempleWorker" <?php if ($sealing["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
+                                                                <option value="Midwife" <?php if ($sealing["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
                                                             <label class="fixed" for="nms_notes_<?=$s_i?>">Notes:</label>
                                                             <textarea class="notes-field" id="nms_notes_<?=$s_i?>" name="nms_notes_<?=$s_i?>"><?=$sealing["PrivateNotes"]?></textarea>
                                                         </div>
@@ -746,6 +788,48 @@
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_<?=$m_i?>" name="mar_name_id_<?=$m_i?>">
                                                                 <option value=""></option>
                                                                 <option value="<?=$marriage["NameUsedID"]?>" selected="selected"><?=trim($marriage["NameUsed"])?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_office_<?=$m_i?>">Office when Performed:</label>
+                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="mar_office_<?=$m_i?>" name="mar_office_<?=$m_i?>">
+                                                                <option value=""></option>
+                                                                <option value="FirstPresidency" <?php if ($marriage["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
+                                                                <option value="Apostle" <?php if ($marriage["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
+                                                                <option value="Seventy" <?php if ($marriage["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
+                                                                <option value="HighPriest" <?php if ($marriage["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
+                                                                <option value="Elder" <?php if ($marriage["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
+                                                                <option value="Teacher" <?php if ($marriage["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
+                                                                <option value="Priest" <?php if ($marriage["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
+                                                                <option value="Deacon" <?php if ($marriage["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
+                                                                <option value="Bishop" <?php if ($marriage["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
+                                                                <option value="Patriarch" <?php if ($marriage["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
+                                                                <option value="ReliefSociety" <?php if ($marriage["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
+                                                                <option value="TempleWorker" <?php if ($marriage["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
+                                                                <option value="Midwife" <?php if ($marriage["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_spouse_office_<?=$m_i?>">Spouse's Office:</label>
+                                                            <select data-placeholder="Select Spouse's Office when Performed" class="form-selector" id="mar_spouse_office_<?=$m_i?>" name="mar_spouse_office_<?=$m_i?>">
+                                                                <option value=""></option>
+                                                                <option value="FirstPresidency" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
+                                                                <option value="Apostle" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
+                                                                <option value="Seventy" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
+                                                                <option value="HighPriest" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
+                                                                <option value="Elder" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
+                                                                <option value="Teacher" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
+                                                                <option value="Priest" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
+                                                                <option value="Deacon" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
+                                                                <option value="Bishop" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
+                                                                <option value="Patriarch" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
+                                                                <option value="ReliefSociety" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
+                                                                <option value="TempleWorker" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
+                                                                <option value="Midwife" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -907,6 +991,27 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
+                                    <label class="fixed" for="tr_office_ZZ">Office when Performed:</label>
+                                    <select data-placeholder="Select Office when Performed" class="form-selector" id="tr_office_ZZ" name="tr_office_ZZ">
+                                        <option value=""></option>
+                                        <option value='FirstPresidency'>First Presidency</option>
+                                        <option value='Apostle'>Apostle</option>
+                                        <option value='Seventy'>Seventy</option>
+                                        <option value='HighPriest'>High Priest</option>
+                                        <option value='Elder'>Elder</option>
+                                        <option value='Teacher'>Teacher</option>
+                                        <option value='Priest'>Priest</option>
+                                        <option value='Deacon'>Deacon</option>
+                                        <option value='Bishop'>Bishop</option>
+                                        <option value='Patriarch'>Patriarch</option>
+                                        <option value='ReliefSociety'>Relief Society</option>
+                                        <option value='TempleWorker'>Temple Worker</option>
+                                        <option value='Midwife'>Midwife</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row-area">
+                                <div class="frame">
                                     <label class="fixed" for="tr_notes_ZZ">Notes:</label>
                                     <textarea class="notes-field" id="tr_notes_ZZ" name="tr_notes_ZZ"></textarea>
                                 </div>
@@ -989,6 +1094,27 @@
                                     <label class="fixed" for="nms_name_id_ZZ">Name as Sealed:</label>
                                     <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_ZZ" name="nms_name_id_ZZ">
                                         <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row-area">
+                                <div class="frame">
+                                    <label class="fixed" for="nms_office_ZZ">Office when Performed:</label>
+                                    <select data-placeholder="Select Office when Performed" class="form-selector" id="nms_office_ZZ" name="nms_office_ZZ">
+                                        <option value=""></option>
+                                        <option value='FirstPresidency'>First Presidency</option>
+                                        <option value='Apostle'>Apostle</option>
+                                        <option value='Seventy'>Seventy</option>
+                                        <option value='HighPriest'>High Priest</option>
+                                        <option value='Elder'>Elder</option>
+                                        <option value='Teacher'>Teacher</option>
+                                        <option value='Priest'>Priest</option>
+                                        <option value='Deacon'>Deacon</option>
+                                        <option value='Bishop'>Bishop</option>
+                                        <option value='Patriarch'>Patriarch</option>
+                                        <option value='ReliefSociety'>Relief Society</option>
+                                        <option value='TempleWorker'>Temple Worker</option>
+                                        <option value='Midwife'>Midwife</option>
                                     </select>
                                 </div>
                             </div>
@@ -1081,6 +1207,48 @@
                                                             <label class="fixed" for="mar_name_id_ZZ">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_ZZ" name="mar_name_id_ZZ">
                                                                 <option value=""></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_office_ZZ">Office when Performed:</label>
+                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="mar_office_ZZ" name="mar_office_ZZ">
+                                                                <option value=""></option>
+                                                                <option value='FirstPresidency'>First Presidency</option>
+                                                                <option value='Apostle'>Apostle</option>
+                                                                <option value='Seventy'>Seventy</option>
+                                                                <option value='HighPriest'>High Priest</option>
+                                                                <option value='Elder'>Elder</option>
+                                                                <option value='Teacher'>Teacher</option>
+                                                                <option value='Priest'>Priest</option>
+                                                                <option value='Deacon'>Deacon</option>
+                                                                <option value='Bishop'>Bishop</option>
+                                                                <option value='Patriarch'>Patriarch</option>
+                                                                <option value='ReliefSociety'>Relief Society</option>
+                                                                <option value='TempleWorker'>Temple Worker</option>
+                                                                <option value='Midwife'>Midwife</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="mar_spouse_office_ZZ">Spouse's Office:</label>
+                                                            <select data-placeholder="Select Spouse's Office when Performed" class="form-selector" id="mar_spouse_office_ZZ" name="mar_spouse_office_ZZ">
+                                                                <option value=""></option>
+                                                                <option value='FirstPresidency'>First Presidency</option>
+                                                                <option value='Apostle'>Apostle</option>
+                                                                <option value='Seventy'>Seventy</option>
+                                                                <option value='HighPriest'>High Priest</option>
+                                                                <option value='Elder'>Elder</option>
+                                                                <option value='Teacher'>Teacher</option>
+                                                                <option value='Priest'>Priest</option>
+                                                                <option value='Deacon'>Deacon</option>
+                                                                <option value='Bishop'>Bishop</option>
+                                                                <option value='Patriarch'>Patriarch</option>
+                                                                <option value='ReliefSociety'>Relief Society</option>
+                                                                <option value='TempleWorker'>Temple Worker</option>
+                                                                <option value='Midwife'>Midwife</option>
                                                             </select>
                                                         </div>
                                                     </div>

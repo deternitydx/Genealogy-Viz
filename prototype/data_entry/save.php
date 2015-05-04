@@ -131,6 +131,8 @@
             $vals["Role"] = $mrole;
             if (isset($marriage["name_id"]))
                 $vals["NameUsedID"] = $marriage["name_id"];
+            if (isset($marriage["office"]))
+                $vals["OfficeWhenPerformed"] = $marriage["office"];
 
             updateInsertPM($vals);
             // Spouse
@@ -139,6 +141,8 @@
                 $vals["MarriageID"] = $marriage["id"];
                 $vals["PersonID"] = $marriage["spouse_person_id"];
                 $vals["Role"] = $srole;
+                if (isset($marriage["spouse_office"]))
+                    $vals["OfficeWhenPerformed"] = $marriage["spouse_office"];
                 updateInsertPM($vals);
             }
             // Proxy
@@ -264,6 +268,8 @@
                 $vals["PlaceID"] = $rite["place_id"];
             if (isset($rite["name_id"]))
                 $vals["NameUsedID"] = $rite["name_id"];
+            if (isset($rite["office"]))
+                $vals["OfficeWhenPerformed"] = $rite["office"];
             if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
                 $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
             if (isset($rite["notes"]))
@@ -350,6 +356,8 @@
                 $vals["PlaceID"] = $sealing["place_id"];
             if (isset($sealing["name_id"]))
                 $vals["NameUsedID"] = $sealing["name_id"];
+            if (isset($sealing["office"]))
+                $vals["OfficeWhenPerformed"] = $sealing["office"];
             if (isset($sealing["notes"]))
                 $vals["PrivateNotes"] = $sealing["notes"];
 
