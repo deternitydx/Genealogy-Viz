@@ -38,14 +38,15 @@
     $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
     $query = "
-        SELECT DISTINCT p.*, n.\"First\", n.\"Last\", n.\"Type\"
+        SELECT DISTINCT p.*, n.\"First\", n.\"Middle\", n.\"Last\", n.\"Prefix\", n.\"Suffix\",  n.\"Type\"
 
         FROM public.\"Name\" n
 
         LEFT JOIN public.\"Person\" p ON p.\"ID\" = n.\"PersonID\" 
         
         WHERE 
-        n.\"First\" || ' ' || n.\"Last\" ilike '%$q%'
+        n.\"First\" || ' ' || n.\"Last\" || ' ' || p.\"ID\" ilike '%$q%' OR
+        n.\"Last\" || ', ' || n.\"First\" || ' ' || p.\"ID\" ilike '%$q%' 
 
         ORDER BY n.\"Last\", n.\"First\" ASC";
     $result = pg_query($db, $query);
@@ -57,7 +58,18 @@
     $people = array();
 
     foreach($results as $res) {
-        array_push($people, array("id"=>$res["ID"], "text"=> $res["Last"] . ", " . $res["First"] . " (" . $res["BirthDate"] . " -- " . $res["DeathDate"] . ")"));
+        $n = array();
+        if (isset($res["Prefix"]) && !empty($res["Prefix"]))
+            array_push($n, $res["Prefix"]);
+        if (isset($res["First"]) && !empty($res["First"]))
+            array_push($n, $res["First"]);
+        if (isset($res["Middle"]) && !empty($res["Middle"]))
+            array_push($n, $res["Middle"]);
+        if (isset($res["Last"]) && !empty($res["Last"]))
+            array_push($n, $res["Last"]);
+        if (isset($res["Suffix"]) && !empty($res["Suffix"]))
+            array_push($n, $res["Suffix"]);
+        array_push($people, array("id"=>$res["ID"], "text"=> implode(" ", $n) . " (" . $res["BirthDate"] . " -- " . $res["DeathDate"] . ") " . $res["ID"]));
     }
     echo json_encode($people);
 ?>
