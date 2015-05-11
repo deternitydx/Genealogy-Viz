@@ -724,7 +724,7 @@
                                                             <label class="fixed" for="mar_spouse_person_id_<?=$m_i?>">Spouse:</label>
                                                             <select data-placeholder="Select Spouse" class="form-control" id="mar_spouse_person_id_<?=$m_i?>" name="mar_spouse_person_id_<?=$m_i?>">
                                                                 <option></option>
-                                                                <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["Last"] . ", " . $marriage["First"] . " " . $marriage["Middle"];?></option>
+                                                                <option value="<?=$marriage["SpouseID"]?>" selected="selected"><?php echo $marriage["SpouseName"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -760,7 +760,7 @@
                                                             <label class="fixed" for="mar_officiator_person_id_<?=$m_i?>">Officiator:</label>
                                                             <select data-placeholder="Select Officiator" class="form-control" id="mar_officiator_person_id_<?=$m_i?>" name="mar_officiator_person_id_<?=$m_i?>">
                                                                 <option></option>
-                                                                <option value="<?=$marriage["OfficiatorID"]?>" selected="selected"><?php echo $marriage["OfficiatorLast"] . ", " . $marriage["OfficiatorFirst"];?></option>
+                                                                <option value="<?=$marriage["OfficiatorID"]?>" selected="selected"><?php echo $marriage["OfficiatorName"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -769,7 +769,7 @@
                                                             <label class="fixed" for="mar_proxy_person_id_<?=$m_i?>">Proxy:</label>
                                                             <select data-placeholder="Select Proxy" class="form-control" id="mar_proxy_person_id_<?=$m_i?>" name="mar_proxy_person_id_<?=$m_i?>">
                                                                 <option></option>
-                                                                <option value="<?=$marriage["ProxyID"]?>" selected="selected"><?php echo $marriage["ProxyLast"] . ", " . $marriage["ProxyFirst"];?></option>
+                                                                <option value="<?=$marriage["ProxyID"]?>" selected="selected"><?php echo $marriage["ProxyName"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -778,7 +778,7 @@
                                                             <label class="fixed" for="mar_spouse_proxy_person_id_<?=$m_i?>">Spouse Proxy:</label>
                                                             <select data-placeholder="Select Spouse Proxy" class="form-control" id="mar_spouse_proxy_person_id_<?=$m_i?>" name="mar_spouse_proxy_person_id_<?=$m_i?>">
                                                                 <option></option>
-                                                                <option value="<?=$marriage["SpouseProxyID"]?>" selected="selected"><?php echo $marriage["SpouseProxyLast"] . ", " . $marriage["SpouseProxyFirst"];?></option>
+                                                                <option value="<?=$marriage["SpouseProxyID"]?>" selected="selected"><?php echo $marriage["SpouseProxyName"];?></option>
                                                             </select>
                                                         </div>
                                                     </div>

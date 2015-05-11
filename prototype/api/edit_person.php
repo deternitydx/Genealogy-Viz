@@ -87,7 +87,7 @@
         $results = pg_fetch_all($result);
         foreach($results as $res) {
             if (!isset($person["information"])) $person["information"] = array();
-            $person["information"]["ParentMarriageString"] = $res["HusbandLast"] . ", " . $res["HusbandFirst"] . " to " . $res["WifeLast"] . ", " . $res["WifeFirst"] . " (" . $res["MarriageDate"] . " : " . $res["Type"] . ")";
+            $person["information"]["ParentMarriageString"] = $res["HusbandLast"] . ", " . $res["HusbandFirst"] . " to " . $res["WifeLast"] . ", " . $res["WifeFirst"] . " (" . $res["MarriageDate"] . " : " . $res["Type"] . ") " . $res["ID"];
         }
     }
 
@@ -103,11 +103,11 @@
 
         SELECT DISTINCT n.*, p.\"OfficialName\" as \"PlaceName\", 
                 CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
-                CONCAT(pn.\"Last\",', ', pn.\"First\") as \"ProxyName\",
-                CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
+                CONCAT(pn.\"Prefix\", ' ', pn.\"First\", ' ', pn.\"Middle\" , ' ', pn.\"Last\", ' ', pn.\"Suffix\", ' ', pn.\"PersonID\") as \"ProxyName\",
+                CONCAT(offn.\"Prefix\", ' ', offn.\"First\", ' ', offn.\"Middle\" , ' ', offn.\"Last\", ' ', offn.\"Suffix\", ' ', offn.\"PersonID\") as \"OfficiatorName\",
                 CONCAT(m.\"HusbandName\", ' to ',  m.\"WifeName\", ' (',m.\"MarriageDate\",' : ',m.\"Type\", ')') as \"MarriageString\",
-                CONCAT(pfn.\"Last\",', ', pfn.\"First\") as \"ProxyFatherName\",
-                CONCAT(pmn.\"Last\",', ', pmn.\"First\") as \"ProxyMotherName\"
+                CONCAT(pfn.\"Prefix\", ' ', pfn.\"First\", ' ', pfn.\"Middle\" , ' ', pfn.\"Last\", ' ', pfn.\"Suffix\", ' ', pfn.\"PersonID\") as \"ProxyFatherName\",
+                CONCAT(pmn.\"Prefix\", ' ', pmn.\"First\", ' ', pmn.\"Middle\" , ' ', pmn.\"Last\", ' ', pmn.\"Suffix\", ' ', pmn.\"PersonID\") as \"ProxyMotherName\"
         FROM public.\"NonMaritalSealings\" n
         LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
         LEFT JOIN public.\"Name\" nas on nas.\"ID\" = n.\"NameUsedID\"
@@ -116,8 +116,8 @@
         LEFT JOIN (
                 SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\", m.\"Type\",
                         m.\"PublicNotes\", m.\"PrivateNotes\",
-                        CONCAT(hn.\"Last\",', ',hn.\"First\",' ',hn.\"Middle\") as \"HusbandName\", 
-                        CONCAT(wn.\"Last\",', ',wn.\"First\",' ',wn.\"Middle\") as \"WifeName\"
+                        CONCAT(hn.\"Prefix\", ' ', hn.\"First\", ' ', hn.\"Middle\" , ' ', hn.\"Last\", ' ', hn.\"Suffix\") as \"HusbandName\",
+                        CONCAT(wn.\"Prefix\", ' ', wn.\"First\", ' ', wn.\"Middle\" , ' ', wn.\"Last\", ' ', wn.\"Suffix\") as \"WifeName\"
                         FROM public.\"Marriage\" m
                         LEFT JOIN public.\"PersonMarriage\" hpm ON hpm.\"Role\" = 'Husband' AND hpm.\"MarriageID\" = m.\"ID\"
                         LEFT JOIN public.\"Name\" hn ON hn.\"PersonID\" = hpm.\"PersonID\" AND hn.\"Type\" = 'authoritative'
@@ -136,10 +136,10 @@
     $result = pg_query($db, "
         SELECT n.*, off.\"PersonID\" as \"OfficiatorID\", off.\"Role\" as \"OfficiatorRole\", p.\"OfficialName\" as \"PlaceName\",
                 CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
-                CONCAT(offn.\"Last\",', ',offn.\"First\") as \"OfficiatorName\",
-                CONCAT(pn.\"Last\",', ',pn.\"First\") as \"ProxyName\",
-                CONCAT(atn.\"Last\",', ',atn.\"First\") as \"AnnointedToName\",
-                CONCAT(atpn.\"Last\",', ',atpn.\"First\") as \"AnnointedToProxyName\"
+                CONCAT(offn.\"Prefix\", ' ', offn.\"First\", ' ', offn.\"Middle\" , ' ', offn.\"Last\", ' ', offn.\"Suffix\", ' ', offn.\"PersonID\") as \"OfficiatorName\",
+                CONCAT(pn.\"Prefix\", ' ', pn.\"First\", ' ', pn.\"Middle\" , ' ', pn.\"Last\", ' ', pn.\"Suffix\", ' ', pn.\"PersonID\") as \"ProxyName\",
+                CONCAT(atn.\"Prefix\", ' ', atn.\"First\", ' ', atn.\"Middle\" , ' ', atn.\"Last\", ' ', atn.\"Suffix\", ' ', atn.\"PersonID\") as \"AnnointedToName\",
+                CONCAT(atpn.\"Prefix\", ' ', atpn.\"First\", ' ', atpn.\"Middle\" , ' ', atpn.\"Last\", ' ', atpn.\"Suffix\", ' ', atpn.\"PersonID\") as \"AnnointedToProxyName\"
         FROM public.\"NonMaritalTempleRites\" n 
         LEFT JOIN public.\"Place\" p on p.\"ID\" = n.\"PlaceID\"
         LEFT JOIN public.\"Name\" nas on nas.\"ID\" = n.\"NameUsedID\"
@@ -161,12 +161,13 @@
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", m.\"PrivateNotes\", w.\"PersonID\" as \"SpouseID\", 
                                     wn.\"First\", wn.\"Middle\", wn.\"Last\",
+                                    CONCAT(wn.\"Prefix\", ' ', wn.\"First\", ' ', wn.\"Middle\" , ' ', wn.\"Last\", ' ', wn.\"Suffix\", ' ', wn.\"PersonID\") as \"SpouseName\",
                                     h.\"PersonID\" as \"HusbandID\", h.\"NameUsedID\", m.\"Root\",
                                     h.\"OfficeWhenPerformed\", w.\"OfficeWhenPerformed\" as \"SpouseOfficeWhenPerformed\",
                                     CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
-                                    off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
-                                    hp.\"PersonID\" as \"ProxyID\", hpn.\"First\" as \"ProxyFirst\", hpn.\"Last\" as \"ProxyLast\", 
-                                    wp.\"PersonID\" as \"SpouseProxyID\", wpn.\"First\" as \"SpouseProxyFirst\", wpn.\"Last\" as \"SpouseProxyLast\"  
+                                    off.\"PersonID\" as \"OfficiatorID\", CONCAT(offn.\"Prefix\", ' ', offn.\"First\", ' ', offn.\"Middle\" , ' ', offn.\"Last\", ' ', offn.\"Suffix\", ' ', offn.\"PersonID\") as \"OfficiatorName\",
+                                    wp.\"PersonID\" as \"SpouseProxyID\", CONCAT(wpn.\"Prefix\", ' ', wpn.\"First\", ' ', wpn.\"Middle\" , ' ', wpn.\"Last\", ' ', wpn.\"Suffix\", ' ', wpn.\"PersonID\") as \"SpouseProxyName\",
+                                    hp.\"PersonID\" as \"ProxyID\", CONCAT(hpn.\"Prefix\", ' ', hpn.\"First\", ' ', hpn.\"Middle\" , ' ', hpn.\"Last\", ' ', hpn.\"Suffix\", ' ', hpn.\"PersonID\") as \"ProxyName\"
                             FROM public.\"Marriage\" m
                             LEFT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             LEFT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
@@ -189,12 +190,14 @@
                         SELECT DISTINCT m.\"ID\", m.\"PlaceID\", p.\"OfficialName\" as \"PlaceName\", m.\"MarriageDate\", m.\"DivorceDate\",
                                     m.\"CancelledDate\", m.\"Type\", m.\"PrivateNotes\",  w.\"PersonID\" as \"WifeID\", w.\"NameUsedID\",
                                     hn.\"First\", hn.\"Middle\", hn.\"Last\",
+                                    CONCAT(hn.\"Prefix\", ' ', hn.\"First\", ' ', hn.\"Middle\" , ' ', hn.\"Last\", ' ', hn.\"Suffix\", ' ', hn.\"PersonID\") as \"SpouseName\",
+
                                     h.\"PersonID\" as \"SpouseID\", m.\"Root\",
                                     w.\"OfficeWhenPerformed\", h.\"OfficeWhenPerformed\" as \"SpouseOfficeWhenPerformed\",
                                     CONCAT(nas.\"Prefix\", ' ', nas.\"First\", ' ', nas.\"Middle\" , ' ', nas.\"Last\", ' ', nas.\"Suffix\") as \"NameUsed\",
-                                    off.\"PersonID\" as \"OfficiatorID\", offn.\"First\" as \"OfficiatorFirst\", offn.\"Last\" as \"OfficiatorLast\", 
-                                    hp.\"PersonID\" as \"SpouseProxyID\", hpn.\"First\" as \"SpouseProxyFirst\", hpn.\"Last\" as \"SpouseProxyLast\", 
-                                    wp.\"PersonID\" as \"ProxyID\", wpn.\"First\" as \"ProxyFirst\", wpn.\"Last\" as \"ProxyLast\" 
+                                    off.\"PersonID\" as \"OfficiatorID\", CONCAT(offn.\"Prefix\", ' ', offn.\"First\", ' ', offn.\"Middle\" , ' ', offn.\"Last\", ' ', offn.\"Suffix\", ' ', offn.\"PersonID\") as \"OfficiatorName\",
+                                    hp.\"PersonID\" as \"SpouseProxyID\", CONCAT(hpn.\"Prefix\", ' ', hpn.\"First\", ' ', hpn.\"Middle\" , ' ', hpn.\"Last\", ' ', hpn.\"Suffix\", ' ', hpn.\"PersonID\") as \"SpouseProxyName\",
+                                    wp.\"PersonID\" as \"ProxyID\", CONCAT(wpn.\"Prefix\", ' ', wpn.\"First\", ' ', wpn.\"Middle\" , ' ', wpn.\"Last\", ' ', wpn.\"Suffix\", ' ', wpn.\"PersonID\") as \"ProxyName\"
                             FROM public.\"Marriage\" m 
                             LEFT JOIN public.\"PersonMarriage\" h ON h.\"MarriageID\" = m.\"ID\" AND h.\"Role\" = 'Husband'
                             LEFT JOIN public.\"PersonMarriage\" w ON w.\"MarriageID\" = m.\"ID\" AND w.\"Role\" = 'Wife'
