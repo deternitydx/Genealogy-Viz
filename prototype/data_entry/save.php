@@ -340,7 +340,7 @@
             $vals["AdopteeID"] = $personal["ID"];
             if (isset($sealing["type"]))
                 $vals["Type"] = $sealing["type"];
-            if (isset($sealing["person_proxy_id"]))
+            if (isset($sealing["proxy_person_id"]))
                 $vals["AdopteeProxyID"] = $sealing["proxy_person_id"];
             if (isset($sealing["marriage_id"]))
                 $vals["MarriageID"] = $sealing["marriage_id"];
