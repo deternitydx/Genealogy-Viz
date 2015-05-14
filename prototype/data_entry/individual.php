@@ -728,6 +728,16 @@
                                                             </select>
                                                         </div>
                                                     </div>
+<?php
+        if (is_numeric($marriage["children"]) && $marriage["children"] > 0)
+            echo '        
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">&nbsp;</label>
+                                                            <p style="width:600px; margin:0px; padding:0px;">This marriage has '.$marriage["children"]. ' child(ren) in the database</p>
+                                                        </div>
+                                                    </div>';
+?>
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed">Date:</label>
@@ -833,6 +843,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
                                                     <div class="row-area">
                                                         <div class="frame">
                                                             <label class="fixed" for="mar_notes_<?=$m_i?>">Notes:</label>

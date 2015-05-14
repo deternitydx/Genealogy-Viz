@@ -223,6 +223,14 @@
 
     $person["marriages"] = pg_fetch_all($result);
 
+    // Get the number of children for each marriage
+    foreach ($person["marriages"] as $i => $marriage) {
+        $result = pg_query("SELECT count(*) from public.\"Person\" where \"BiologicalChildOfMarriage\"={$marriage["ID"]};");
+
+        $arr = pg_fetch_array($result);
+        if ($arr != null && !empty($arr))
+            $person["marriages"][$i]["children"] = $arr["count"];
+    }
 
     // Get the list of Brown IDs for this person
     $result = pg_query($db, "SELECT DISTINCT \"id\" FROM \"Brown\" WHERE \"PersonID\" = $id;");
