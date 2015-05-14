@@ -4863,4 +4863,6 @@ table.listing .inProgress {
     color: #92231B;
 }
 
-
+.select2-container .select2-selection--single .select2-selection__rendered {
+    white-space: normal;
+}

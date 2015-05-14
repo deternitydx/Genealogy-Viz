@@ -60,7 +60,6 @@
         <link href="css/bootstrap.css" rel="stylesheet" media="screen">
         <link href="css/form.css" rel="stylesheet" media="screen">
         <link href="css/jquery.fancybox.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
         <script type="text/javascript" src="js/jquery-1-10-2-min.js"></script>
         <script type="text/javascript" src="js/chosen.jquery.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -73,6 +72,7 @@
         <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/js/select2.min.js"></script>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
 
     </head>
     <body>
