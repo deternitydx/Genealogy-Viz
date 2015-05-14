@@ -37,7 +37,13 @@ $enum_lookup = array (
     "MarriageType" => "e_marriage_type",
     "NonMaritalTempleRitesType" => "e_templerite_type",
     "NonMaritalSealingsType" => "e_sealing_type",
-    "PersonGender" => "e_gender"
+    "PersonGender" => "e_gender",
+    "BrownProgress" => "e_brown_progress",
+    "BrownStatus" => "e_brown_status",
+    "byu_brown_joinStatus" => "e_brown_status",
+    "NonMaritalTempleRitesOfficeWhenPerformed" => "e_office",
+    "NonMaritalSealingsOfficeWhenPerformed" => "e_office",
+    "PersonMarriageOfficeWhenPerformed" => "e_office"
 );
 
 // Display
