@@ -26,10 +26,10 @@
 <h2>REST API Service</h2>
 <p>There is an api service available for accessing the data needed for visualizations.  It always creates a JSON response.</p>
 <ul>
-	<li><a href="api/marriages_by_man.php">Marriages by Man</a>: Takes a husband's id and returns a JSON object containing all his wives, their children, and relationships between wives and children.</li>
-	<li><a href="api/marriages_by_woman.php">Marriages by Woman</a>: Takes a wife's id and returns a JSON object containing all her husbands, their children, and relationships between husbands and children.</li>
-	<li><a href="api/marriages.php">Marriages</a>: Returns all marriages in the database as a JSON data object.</li>
-	<li><a href="api/people.php">People</a>: Returns all people in the database as a JSON data object.</li>
+	<li><a href="../api/marriages_by_man.php">Marriages by Man</a>: Takes a husband's id and returns a JSON object containing all his wives, their children, and relationships between wives and children.</li>
+	<li><a href="../api/marriages_by_woman.php">Marriages by Woman</a>: Takes a wife's id and returns a JSON object containing all her husbands, their children, and relationships between husbands and children.</li>
+	<li><a href="../api/marriages.php">Marriages</a>: Returns all marriages in the database as a JSON data object.</li>
+	<li><a href="../api/people.php">People</a>: Returns all people in the database as a JSON data object.</li>
 </ul>
 
 
