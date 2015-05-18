@@ -1,4 +1,5 @@
 <?php
+include("../database.php");
 header('Content-type: application/json');
 
 $where = "";
@@ -6,7 +7,7 @@ if (isset($_GET["parentsID"])) {
     $where = "AND p.\"BiologicalChildOfMarriage\"=" . $_GET["parentsID"];
 }
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", p.\"BiologicalChildOfMarriage\" as \"ChildOf\" FROM public.\"Person\" p, public.\"Name\" n

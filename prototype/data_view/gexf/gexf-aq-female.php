@@ -55,7 +55,8 @@ if (isset($_GET["level"]))
 else if (isset($argv[1]))
     $maxIter = $argv[1];
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+include("../../database.php");
+$db = pg_connect($db_conn_string);
 
 // Query for all the main gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",

@@ -64,7 +64,8 @@ $(document).ready( function () {
 <h1>Members of the Annointed Quorum with Birth and Death Places</h1>
 <?php
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+include("../database.php");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT DISTINCT ON (n.\"Last\",p.\"ID\") p.\"ID\",n.\"First\", n.\"Middle\", n.\"Last\",p.\"BirthDate\",bp.\"OfficialName\" as \"BirthPlace\", p.\"DeathDate\", dp.\"OfficialName\" as \"DeathPlace\" FROM \"Person\" p LEFT JOIN \"Name\" n ON (p.\"ID\" = n.\"PersonID\" AND n.\"Type\" = 'authoritative') LEFT JOIN \"Place\" bp ON (bp.\"ID\" = p.\"BirthPlaceID\") LEFT JOIN \"Place\" dp ON (dp.\"ID\" = p.\"DeathPlaceID\") LEFT JOIN \"ChurchOrgMembership\" m ON (m.\"PersonID\" = p.\"ID\") LEFT JOIN \"ChurchOrganization\" c ON (m.\"ChurchOrgID\" = c.\"ID\") WHERE c.\"Name\" = 'Annointed Quorum' ORDER BY n.\"Last\", p.\"ID\" ASC");
 if (!$result) {

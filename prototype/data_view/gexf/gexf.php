@@ -56,7 +56,8 @@ echo "<graph mode=\"static\" defaultedgetype=\"directed\">\n";
 $nodes = array();
 $edges = array();
 $dummyCounter = 100000000;
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+include("../../database.php");
+$db = pg_connect($db_conn_string);
 
 
 // Query for all the main gender in the AQ

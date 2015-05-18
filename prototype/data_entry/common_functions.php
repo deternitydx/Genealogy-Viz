@@ -1,4 +1,5 @@
 <?php
+include("../database.php");
 $db = null;
 $testing = false;
 
@@ -11,8 +12,8 @@ function logger($str, $comment) {
 }
 
 function setup_db() {
-    global $db;
-    $db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
+    global $db, $db_conn_string;
+    $db = pg_connect($db_conn_string);
 }
 
 function query_db($q, $is_select) {

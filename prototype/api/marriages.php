@@ -1,4 +1,5 @@
 <?php
+include("../database.php");
 
 header('Content-type: application/json');
 
@@ -8,7 +9,7 @@ if (isset($_GET["id"])) {
 }
 
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT DISTINCT m.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\",m.\"CancelledDate\", m.\"Type\", 
     h.\"PersonID\" as \"HusbandID\", 

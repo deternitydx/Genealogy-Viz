@@ -1,4 +1,5 @@
 <?php
+include("../database.php");
 
 /****
  * We must generate a JSON file following the structure below
@@ -78,7 +79,7 @@ $marriageUnits = array();
 $people = array();
 $currentLevel = 0;
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect($db_conn_string);
 
 // Insert this person with either source or target (direction) pointing to this id
 function insertPerson($person, $direction, $id) {

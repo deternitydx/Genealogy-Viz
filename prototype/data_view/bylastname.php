@@ -32,7 +32,8 @@ if (isset($_GET["q"]))
 	$query = $_GET["q"];
 	
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+include("../database.php");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.* FROM public.\"Person\" p, public.\"Name\" n WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND n.\"Last\"='$query' ORDER BY n.\"Last\", n.\"First\",n.\"Middle\" asc");
 if (!$result) {

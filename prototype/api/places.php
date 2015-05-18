@@ -2,7 +2,8 @@
 
 header('Content-type: application/json');
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+include("../database.php");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT p.\"ID\",p.\"DisplayName\",p.\"OfficialName\" FROM public.\"Place\" p ORDER BY p.\"OfficialName\", p.\"ID\" asc");
 if (!$result) {

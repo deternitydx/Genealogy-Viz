@@ -1,7 +1,8 @@
 <?php
+include("../database.php");
 header('Content-type: application/json');
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
+$db = pg_connect($db_conn_string);
 
 $result = pg_query($db, "SELECT \"id\", \"Name\", \"BD\", \"Status\", \"context\", \"PersonID\", \"Progress\" FROM public.\"Brown\" ORDER BY \"Status\", \"Name\" ASC");
 if (!$result) {

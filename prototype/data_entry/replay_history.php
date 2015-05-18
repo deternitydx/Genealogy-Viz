@@ -19,7 +19,8 @@ if ($argc < 2) {
 }
 $statements = file($argv[1], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
+include("../database.php");
+$db = pg_connect($db_conn_string);
 
 foreach ($statements as $statement) {
 
