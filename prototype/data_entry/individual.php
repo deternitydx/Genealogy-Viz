@@ -505,6 +505,7 @@
                                                                 <option value="ReliefSociety" <?php if ($rite["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
                                                                 <option value="TempleWorker" <?php if ($rite["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
                                                                 <option value="Midwife" <?php if ($rite["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($rite["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -659,6 +660,7 @@
                                                                 <option value="ReliefSociety" <?php if ($sealing["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
                                                                 <option value="TempleWorker" <?php if ($sealing["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
                                                                 <option value="Midwife" <?php if ($sealing["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($sealing["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -819,6 +821,7 @@
                                                                 <option value="ReliefSociety" <?php if ($marriage["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
                                                                 <option value="TempleWorker" <?php if ($marriage["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
                                                                 <option value="Midwife" <?php if ($marriage["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($marriage["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -840,6 +843,7 @@
                                                                 <option value="ReliefSociety" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
                                                                 <option value="TempleWorker" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
                                                                 <option value="Midwife" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
+                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1018,6 +1022,7 @@
                                         <option value='ReliefSociety'>Relief Society</option>
                                         <option value='TempleWorker'>Temple Worker</option>
                                         <option value='Midwife'>Midwife</option>
+                                        <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
                                     </select>
                                 </div>
                             </div>
@@ -1126,6 +1131,7 @@
                                         <option value='ReliefSociety'>Relief Society</option>
                                         <option value='TempleWorker'>Temple Worker</option>
                                         <option value='Midwife'>Midwife</option>
+                                        <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
                                     </select>
                                 </div>
                             </div>
@@ -1239,6 +1245,7 @@
                                                                 <option value='ReliefSociety'>Relief Society</option>
                                                                 <option value='TempleWorker'>Temple Worker</option>
                                                                 <option value='Midwife'>Midwife</option>
+                                                                <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1260,6 +1267,7 @@
                                                                 <option value='ReliefSociety'>Relief Society</option>
                                                                 <option value='TempleWorker'>Temple Worker</option>
                                                                 <option value='Midwife'>Midwife</option>
+                                                                <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
                                                             </select>
                                                         </div>
                                                     </div>
