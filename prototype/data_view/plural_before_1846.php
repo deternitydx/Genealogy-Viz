@@ -1,14 +1,7 @@
-
 <?php
 
-//header('Content-type: application/json');
 
-$id = 14;
-if (isset($_GET["id"]))
-	$id = $_GET["id"];
-	
-
-$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data user=nauvoo password=p7qNpqygYU");
+$db = pg_connect("host=nauvoo.iath.virginia.edu dbname=nauvoo_data_test user=nauvoo password=p7qNpqygYU");
 
 $result = pg_query($db, "SELECT DISTINCT  
     h.\"PersonID\" as \"HusbandID\", 
@@ -79,10 +72,12 @@ foreach ($arr as $i => $mar) {
 
 }
 
+echo "<html><head><title>Polygamists</title></head><body>";
 echo "<h1>Men with multiple marriages before Dec 10, 1845</h1>";
 echo "<p><b>Total: </b>".count($names)."</p>";
+echo "<p><a href='#list'>List View</a> -  <a href='#table'>Table View</a> - <a href='#men'>Men Only</a></p>";
 
-echo "<h2>List View</h2>";
+echo "<a name=\"list\"></a><h2>List View</h2>";
 echo "<dl>";
 echo "<dt><i>Husband Name</i></dt><dd><i>Marriage Date (Type): Wife Name (Death Date)</i></dd>";
 foreach ($data as $i => $d) {
@@ -92,15 +87,16 @@ foreach ($data as $i => $d) {
 }
 echo "</dl>";
 
-echo "<h2>Table View</h2>";
+echo "<a name='table'></a><h2>Table View</h2>";
 echo "<table border='1'>";
 echo implode("", $json);
 echo "</table>";
 
-echo "<h2>Men Only, Alphabetically</h2>";
+echo "<a name='men'></a><h2>Men Only, Alphabetically</h2>";
 sort($names);
 foreach ($names as $name)
 	echo "<br>$name";
 ?>
-
+</body>
+</html>
 
