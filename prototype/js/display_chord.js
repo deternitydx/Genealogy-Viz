@@ -240,8 +240,8 @@ function ChordDisplay(element) {
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder", "biological.adoption",  "civil.eternity"])
-                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff", "url(#biological-adoption)", "url(#civil-eternity)"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder", "biological.adoption",  "civil.eternity", "civil.time", "civil.eternity.time"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff", "url(#biological-adoption)", "url(#civil-eternity)", "url(#civil-time)", "url(#civil-eternity-time)"]);
 
 
             _this.chord = d3.layout.chord()
@@ -291,6 +291,20 @@ function ChordDisplay(element) {
             tmpdef.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
             tmpdef.append("stop").attr("offset", "60%").attr("stop-color", "#AD85FF");
             tmpdef.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "100%").attr("stop-color", "#AD85FF");
+            tmpdef = _this.defs.append("linearGradient").attr("id","civil-time");
+            tmpdef.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "20%").attr("stop-color", "#f7fcb9");
+            tmpdef.append("stop").attr("offset", "40%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "60%").attr("stop-color", "#f7fcb9");
+            tmpdef.append("stop").attr("offset", "80%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "100%").attr("stop-color", "#f7fcb9");
+            tmpdef = _this.defs.append("linearGradient").attr("id","civil-eternity-time");
+            tmpdef.append("stop").attr("offset", "0%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "20%").attr("stop-color", "#f7fcb9");
+            tmpdef.append("stop").attr("offset", "40%").attr("stop-color", "#AD85FF");
+            tmpdef.append("stop").attr("offset", "60%").attr("stop-color", "#FFB2E6");
+            tmpdef.append("stop").attr("offset", "80%").attr("stop-color", "#f7fcb9");
             tmpdef.append("stop").attr("offset", "100%").attr("stop-color", "#AD85FF");
             tmpdef = _this.defs.append("linearGradient").attr("id","biological-adoption");
             tmpdef.append("stop").attr("offset", "0%").attr("stop-color", "#FFCD81");
@@ -344,8 +358,9 @@ function ChordDisplay(element) {
                 var ret = "none";
                 _this.relationships.forEach(function (rel) {
                     if ( (rel.fromId === d.source.index && rel.toId === d.target.index) ||
-                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) ) {
-                            types.push(rel.type); //ret = _this.fillType(rel.type);
+                        (rel.fromId === d.source.subindex && rel.toId === d.target.subindex) 
+                        && types.indexOf(rel.type) == -1) { // don't double up types
+                                types.push(rel.type); //ret = _this.fillType(rel.type);
                         }
                 });
                 if (types.length > 0)
