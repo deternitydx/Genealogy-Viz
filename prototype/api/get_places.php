@@ -10,7 +10,8 @@ include("../database.php");
         $places = array(
             array("id"=>18524, "text"=>"Nauvoo, Hancock, Illinois, USA (UVA)"),
             array("id"=>18525, "text"=>"Nauvoo Temple, Nauvoo, Illinois, USA (UVA)"),
-            array("id"=>18526, "text"=>"Red Brick Store, Nauvoo, Illinois, USA (UVA)")
+            array("id"=>18526, "text"=>"Red Brick Store, Nauvoo, Illinois, USA (UVA)"),
+            array("id"=>18527, "text"=>"Salt Lake City, Utah, USA (UVA)")
         );
 
         echo json_encode($places);
