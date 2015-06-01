@@ -67,6 +67,7 @@ include("../database.php");
     }
 
     // Get the biological birth parent marriage, if it exists
+    $person["information"]["ParentMarriageString"] = "";
     if (isset($person["information"]) && 
         isset($person["information"]["BiologicalChildOfMarriage"]) && 
         is_numeric($person["information"]["BiologicalChildOfMarriage"])) {

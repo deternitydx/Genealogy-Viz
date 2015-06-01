@@ -339,7 +339,7 @@
                                                     <label class="fixed" for="bpmarriage">Birth Parent Marriage:</label>
                                                     <select data-placeholder="Select Parent Marriage" class="form-control" id="b_marriage_id" name="b_marriage_id">
                                                         <option></option>
-                                                        <option value="<?=$person["information"]["BiologicalChildOfMarriage"]?>"><?=$person["information"]["ParentMarriageString"]?></option>
+                                                        <option value="<?=$person["information"]["BiologicalChildOfMarriage"]?>" selected><?=$person["information"]["ParentMarriageString"]?></option>
                                                     </select>
                                                 </div>
                                             </div>
