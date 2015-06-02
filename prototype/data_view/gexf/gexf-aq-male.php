@@ -58,6 +58,10 @@ else if (isset($argv[1]))
 include("../../database.php");
 $db = pg_connect($db_conn_string);
 
+$creator = "Command Line";
+if (isset($_SERVER['REQUEST_URI']))
+    $creator = $_SERVER['REQUEST_URI'];
+
 // Query for all the main gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
@@ -275,7 +279,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 echo "<gexf xmlns=\"http://www.gexf.net/1.2draft\" version=\"1.2\">\n";
 echo "<meta lastmodifieddate=\"" . date("Y-m-d") . "\">\n";
 echo "\t<creator>Robbie Hott</creator>\n";
-echo "\t<description>Nauvoo Graph.  Created by " . $_SERVER['REQUEST_URI']. ".</description>\n";
+echo "\t<description>Nauvoo Graph.  Created by " . $creator . ".</description>\n";
 echo "</meta>\n";
 echo "<graph mode=\"static\" defaultedgetype=\"directed\">\n";
 
