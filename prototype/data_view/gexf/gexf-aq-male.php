@@ -55,6 +55,13 @@ if (isset($_GET["level"]))
 else if (isset($argv[1]))
     $maxIter = $argv[1];
 
+$date = null;
+if (isset($_GET["date"]))
+    $date = $_GET["date"];
+else if (isset($argv[2]))
+    $date = $argv[2];
+
+
 include("../../database.php");
 $db = pg_connect($db_conn_string);
 
@@ -76,6 +83,9 @@ if (!$result) {
 
 process_results($result);
 
+$datestr = "";
+if ($date != null)
+    $datestr = "AND m.\"MarriageDate\" <= '$date'";
 // Query for all the secondary gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
@@ -85,7 +95,8 @@ $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"L
     LEFT OUTER JOIN
         (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" as \"Type\"
             FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m1.\"MarriageID\" = m.\"ID\"
+            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' 
+                    AND m1.\"MarriageID\" = m.\"ID\" $datestr
             GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
         ON (m.\"PersonID\" = p.\"ID\")
     WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
@@ -105,11 +116,15 @@ $males = $newmales;
 $allmales = "(" . implode(",", array_keys($males)) . ")";
 while (!empty($newmales) && $iterations++ < $maxIter) {
     $newmales = array();
-    // Get all males who are their children
+
+    // Get all males who are their children (born before date)
+    $datestr = "";
+    if ($date != null)
+        $datestr = "AND p.\"BirthDate\" <= '$date'";
     $result = pg_query($db, "SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"Marriage\" m
-        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
+        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' $datestr
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
             AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Male' AND m.\"ID\" = pm.\"MarriageID\"
         ORDER BY p.\"ID\" asc");
@@ -119,16 +134,24 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 
     process_results($result);
 
-    // Get all the females who are their children
+    // Get all the females who are their children and had marriages before that date
+    $datestr1 = "";
+    $datestr2 = "";
+    if ($date != null) {
+        $datestr1 = "AND p.\"BirthDate\" <= '$date'";
+        $datestr2 = "AND m.\"MarriageDate\" <= '$date'";
+    }
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm,
             (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\"
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' 
+                    AND m.\"ID\" = m1.\"MarriageID\" $datestr2
+                GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-            AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $allmales
+            AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $allmales $datestr1
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -137,8 +160,10 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     process_results($result);
 
     // Get all the people who are their wives
+    $datestr = "";
+    if ($date != null)
+        $datestr = "AND m.\"MarriageDate\" <= '$date'";
     $result = pg_query($db, "
-
     SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
@@ -146,7 +171,9 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         INNER JOIN
             (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" 
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' 
+                    AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" $datestr 
+                GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
             ON (m.\"PersonID\" = p.\"ID\")
         WHERE p.\"Gender\" = 'Female' 
             AND m.\"SpouseID\" in $allmales
