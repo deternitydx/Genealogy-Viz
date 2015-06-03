@@ -256,7 +256,7 @@ function loadMarriagesSelect2() {
                     cache: true
                 },
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 2,
+                minimumInputLength: 0,
                 width: '400px',
                 allowClear: true,
                 theme: 'classic'
