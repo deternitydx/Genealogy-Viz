@@ -72,7 +72,7 @@ $originals = array();
 
 $originals[$merge] = query_db("select * from \"Person\" where \"ID\"=$merge;");
 foreach ($dups as $dup) {
-    $originals[$dup] = query_db("select * from \"Person\" where \"ID\"=$merge;");
+    $originals[$dup] = query_db("select * from \"Person\" where \"ID\"=$dup;");
 }
 
 // Do the merging
@@ -86,6 +86,7 @@ foreach ($dups as $dup) {
 
     // Repoint all rites to the main person
     query_db("update \"NonMaritalTempleRites\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+    query_db("update \"NonMaritalTempleRites\" set \"AnnointedToID\"=$merge where \"AnnointedToID\"=$dup;");
     
     // Repoint all brown entries to the main person
     query_db("update \"Brown\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
@@ -114,8 +115,15 @@ foreach ($originals as $original) {
     $prnotes .= $original["PrivateNotes"];
     $punotes .= $original["PublicNotes"];
 }
-query_db("update \"Person\" set \"PrivateNotes\"='$prnotes' where \"ID\"=$merge;");
-query_db("update \"Person\" set \"PublicNotes\"='$punotes' where \"ID\"=$merge;");
+query_db("update \"Person\" set \"PrivateNotes\"='".pg_escape_string($prnotes)."' where \"ID\"=$merge;");
+query_db("update \"Person\" set \"PublicNotes\"='".pg_escape_string($punotes)."' where \"ID\"=$merge;");
+
+// Insert the merged records into the merged table
+foreach ($originals as $key => $original) {
+    if ($key !== $merge ) {
+        query_db("insert into \"Merge\" (\"PersonID\", \"MergedID\", \"BYUID\", \"LostData\") values ($merge, $key, {$original["BYUID"]}, '".pg_escape_string(json_encode($original))."');");
+    }
+}
 
 // Delete the old person entries that should not be around anymore
 foreach ($dups as $dup) {
