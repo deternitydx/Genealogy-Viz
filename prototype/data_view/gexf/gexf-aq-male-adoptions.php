@@ -297,7 +297,7 @@ if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 function process_results($result) {
     global $newmales, $nodes, $edges, $dummyCounter;
     while ($person = pg_fetch_array($result)) {
-        // if they don't have a to-marriage, then add one for their ID.
+        // if they don't have a to-marriage, then add one for their ID (if they're not adopted).
         if ($person["Gender"] == "Male" && (!isset($person["Type"]) || ($person["Type"] != 'adoption' && $person["Type"] != 'natural'))) {
             $newmales[$person["ID"]] = true;
             $nodes[$person["ID"]] = array(
