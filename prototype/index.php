@@ -13,14 +13,14 @@
 <ul>
 	<li><a href="chord.html?id=615">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
     real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.
-    <ul><li><a href="chord.html?id=615">Sample Male-Oriented Chord Diagram</a>: Chord diagram of Brigham Young and his wives and children</li>
+    <ul><li><a href="chord.html?id=428">Sample Male-Oriented Chord Diagram</a>: Chord diagram of Parley Parker Pratt and his wives and children</li>
     <li><a href="chord.html?id=1907">Sample Female-Oriented Chord Diagram</a>: Chord diagram of Zina Huntington and her husbands and children</li>
     </ul></li>
 	<li><a href="chord.html?id=615&temporal=1">Chord Diagram over Time</a>: Displays a chord diagram of the marriage, allowing the user to choose a time within
 	the marriage to view or use a slider to step through the marriage.  Given a husband's id (by argument "id") from the real database, it shows 
 	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
 	status to show  Links are created from women to their children in the marriage
-    <ul><li><a href="chord.html?id=615&temporal=1">Sample Male-Oriented Temporal Chord Diagram</a>: Chord diagram of Brigham Young and his wives and children</li>
+    <ul><li><a href="chord.html?id=428&temporal=1">Sample Male-Oriented Temporal Chord Diagram</a>: Chord diagram of Parley Parker Pratt and his wives and children</li>
     <li><a href="chord.html?id=1907&temporal=1">Sample Female-Oriented Temporal Chord Diagram</a>: Chord diagram of Zina Huntington and her husbands and children</li>
     </ul></li>
 	<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>
