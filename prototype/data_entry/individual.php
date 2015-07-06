@@ -112,14 +112,16 @@
                                         <div class="info-box">
                                             <dl>
                                             <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
-                                            <dt class="visible-md visible-lg">Brown ID:</dt><dd class="visible-md visible-lg"><?=$brown_id?></dd>
 <?php
-    if (count($person["brown_ids"]) > 1) {
-        echo '<dt class="visible-md visible-lg">Other Brown IDs:</dt>';
-        //=$brown_id
-        foreach ($person["brown_ids"] as $alt_id) {
-            if ($alt_id != $brown_id)
-                echo "<dd class=\"visible-md visible-lg\"><a href=\"?brown=$alt_id&id={$person["information"]["ID"]}\">$alt_id</a></dd>";
+    if ($brown_id != "UNKNOWN") {
+        echo "<dt class=\"visible-md visible-lg\">Brown ID:</dt><dd class=\"visible-md visible-lg\">$brown_id</dd>";
+        if (count($person["brown_ids"]) > 1) {
+            echo '<dt class="visible-md visible-lg">Other Brown IDs:</dt>';
+            //=$brown_id
+            foreach ($person["brown_ids"] as $alt_id) {
+                if ($alt_id != $brown_id)
+                    echo "<dd class=\"visible-md visible-lg\"><a href=\"?brown=$alt_id&id={$person["information"]["ID"]}\">$alt_id</a></dd>";
+            }
         }
     }
 ?>
@@ -129,6 +131,12 @@
                                         </div><!-- info-box -->
                                     </div>
                                 </div><!-- details-bar -->
+<?php
+    // SHOW THE FOLLOWING ONLY IF THE BROWN ID IS ACTUALLY SET
+    // This will hopefully remove some confusion when looking at the page without
+    // a Brown entry linked.
+    if ($brown_id != "UNKNOWN") {
+?>
                                 <h2 class="visible-md visible-lg">Brown Information</h2>
                                 <div class="box">
                                     <h3>Context</h3>
@@ -174,28 +182,31 @@
                                 <h2 class="visible-md visible-lg">Brown Status</h2>
                                 <div class="box">
 <?php
-    // Set up the checkbox for "DONE" status, if the brown entry exists
-    if (isset($brown["Progress"])) {
-        $status = $brown["Progress"];
-        echo "<p>State: ";
-        echo "<select name='brown_state' data-placeholder='Select Status' id='brown_state' style='width:150px;'>";
-        $s = "";
-        if ($status == "unseen")
-            $s = " selected='selected'";
-        echo "<option value='unseen'$s>Unseen</option>";
-        $s = "";
-        if ($status == "inProgress")
-            $s = " selected='selected'";
-        echo "<option value='inProgress'$s>In Progress</option>";
-        $s = "";
-        if ($status == "done")
-            $s = " selected='selected'";
-        echo "<option value='done'$s>Done</option>";
-        echo "</select>";
-        echo "</p>";
-    }
+        // Set up the checkbox for "DONE" status, if the brown entry exists
+        if (isset($brown["Progress"])) {
+            $status = $brown["Progress"];
+            echo "<p>State: ";
+            echo "<select name='brown_state' data-placeholder='Select Status' id='brown_state' style='width:150px;'>";
+            $s = "";
+            if ($status == "unseen")
+                $s = " selected='selected'";
+            echo "<option value='unseen'$s>Unseen</option>";
+            $s = "";
+            if ($status == "inProgress")
+                $s = " selected='selected'";
+            echo "<option value='inProgress'$s>In Progress</option>";
+            $s = "";
+            if ($status == "done")
+                $s = " selected='selected'";
+            echo "<option value='done'$s>Done</option>";
+            echo "</select>";
+            echo "</p>";
+        }
 ?>                                    
                                 </div>
+<?php
+    } // end of $brown_id != "UNKNOWN" if statement
+?>
                             </aside><!-- aside -->
                             <section class="tabs">
                             <ul class="nav nav-tabs">
