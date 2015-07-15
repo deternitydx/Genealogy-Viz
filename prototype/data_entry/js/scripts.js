@@ -47,7 +47,34 @@ $(document).ready(function() {
                         $('.alert-success').slideUp();
                     }, 3000);
                     unsaved = false;
+                } else if (data.retval == "failure") {
+                    // Something went wrong, but there were still updates that might have happened
+
+                    // If there were any new elements, give them their proper ID from the save return
+                    for (var key in data.updates) {
+                        if (data.updates.hasOwnProperty(key)) {
+                            // If there is an element and it is actually part of this list
+                            // and not in the prototype, then set the id values throughout
+                            // the document
+                            var toupdate = "#" + key;
+                            console.log(toupdate);
+                            console.log(data.updates[key]);
+                            $(toupdate).val(data.updates[key]);
+                        }
+                    }
+
+                    // Coallesce the messages
+                    var message = "";
+                    data.messages.forEach(function(msg) {
+                        message += msg + "<br>";
+                    });
+                    $('.alert-failure').html("<p>"+message+"</p>");
+                    $('.alert-failure').slideDown();
+                    setTimeout(function(){
+                        $('.alert-failure').slideUp();
+                    }, 8000);
                 } else {
+                    $('.alert-failure').html("<p>An unknown error occurred while saving.</p>");
                     $('.alert-failure').slideDown();
                     setTimeout(function(){
                         $('.alert-failure').slideUp();

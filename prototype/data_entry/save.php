@@ -11,6 +11,8 @@
 
     $updates = array();
 
+    $errors = array();
+
     // Break apart the POST values into their respective parts
     foreach ($_POST as $key => $val) {
         $pieces = explode("_", $key);
@@ -176,56 +178,6 @@
             }
         }
     }
-
-    foreach ($names as $index => $name) {
-        $vals = array();
-        /**
-            [1] => Array
-                (
-                    [id] => 52338
-                    [type] => authoritative
-                    [prefix] => 
-                    [first] => Zina
-                    [middle] => Diantha
-                    [last] => Huntington
-                    [suffix] => 
-                )
-                **/
-        if (isset($name["deleted"]) && $name["deleted"] == "YES") {
-            // Do the delete if it's not NEW
-            if ($name["id"] != "NEW") {
-                // Delete
-                dbdelete("Name", "\"ID\" = " . $name["id"]);
-            }
-        } else {
-            // Insert or Update
-            if (isset($name["type"]))
-                $vals["Type"] = $name["type"];
-            if (isset($name["prefix"]))
-                $vals["Prefix"] = $name["prefix"];
-            if (isset($name["first"]))
-                $vals["First"] = $name["first"];
-            if (isset($name["middle"]))
-                $vals["Middle"] = $name["middle"];
-            if (isset($name["last"]))
-                $vals["Last"] = $name["last"];
-            if (isset($name["suffix"]))
-                $vals["Suffix"] = $name["suffix"];
-
-            // Add the person id from the main page
-            $vals["PersonID"] = $personal["ID"];
-
-            if ($name["id"] == "NEW") {
-                // do insert
-                $nameid = insert("Name", $vals);
-                $updates["name_id_".$index] = $nameid;
-            } else {
-                // do update
-                update("Name", $vals, "\"ID\" = " . $name["id"]);
-            }
-        }
-    }
-
     foreach ($rites as $index => $rite) {
         $vals = array();
         /**
@@ -378,6 +330,56 @@
         }
     }
 
+    foreach ($names as $index => $name) {
+        $vals = array();
+        /**
+            [1] => Array
+                (
+                    [id] => 52338
+                    [type] => authoritative
+                    [prefix] => 
+                    [first] => Zina
+                    [middle] => Diantha
+                    [last] => Huntington
+                    [suffix] => 
+                )
+                **/
+        if (isset($name["deleted"]) && $name["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($name["id"] != "NEW") {
+                // Delete
+                if(!dbdelete("Name", "\"ID\" = " . $name["id"]))
+                    array_push($errors, "Unable to delete name \"" . implode(" ", array($name["prefix"], $name["first"], $name["middle"], $name["last"], $name["suffix"])) . ",\" likely used elsewhere");
+            }
+        } else {
+            // Insert or Update
+            if (isset($name["type"]))
+                $vals["Type"] = $name["type"];
+            if (isset($name["prefix"]))
+                $vals["Prefix"] = $name["prefix"];
+            if (isset($name["first"]))
+                $vals["First"] = $name["first"];
+            if (isset($name["middle"]))
+                $vals["Middle"] = $name["middle"];
+            if (isset($name["last"]))
+                $vals["Last"] = $name["last"];
+            if (isset($name["suffix"]))
+                $vals["Suffix"] = $name["suffix"];
+
+            // Add the person id from the main page
+            $vals["PersonID"] = $personal["ID"];
+
+            if ($name["id"] == "NEW") {
+                // do insert
+                $nameid = insert("Name", $vals);
+                $updates["name_id_".$index] = $nameid;
+            } else {
+                // do update
+                update("Name", $vals, "\"ID\" = " . $name["id"]);
+            }
+        }
+    }
+
     // Insert all the personal data back in
 
     /**
@@ -451,7 +453,12 @@
     close_db();
 
     $returnval = array();
-    $returnval["retval"] = "success";
+    if (empty($errors))
+        $returnval["retval"] = "success";
+    else {
+        $returnval["retval"] = "failure";
+        $returnval["messages"] = $errors;
+    }
     $returnval["updates"] = $updates;
 
     header('Content-type: application/json');

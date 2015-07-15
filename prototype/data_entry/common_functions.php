@@ -104,7 +104,7 @@ function get_search_statement($tableName, $match) {
 
 function get_delete_statement($tableName, $match) {
     $insert = "DELETE FROM public.\"$tableName\" ";
-    $insert .= " WHERE $match;";
+    $insert .= " WHERE $match RETURNING *;";
 
     return $insert;
 }
@@ -145,7 +145,7 @@ function dbdelete($tableName, $match) {
     
     // Logging output just in case
     logger($update, false);
-    return query_db($update, true) === false ? false : true;
+    return query_db($update, false) === false ? false : true;
 }
 
 function combine_date($year, $month, $day) {
