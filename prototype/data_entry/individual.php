@@ -86,7 +86,15 @@
                 <div class="page-header page-header-01">
                     <div class="frame">
                         <div class="clearfix">
-                            <a href="index.php" class="back-link">Back to List</a>
+<?php
+        if ($brown_id != "UNKNOWN") {
+            echo '                <a href="index.php" class="back-link">Back to Brown List</a> 
+                            <a href="../data_view/people.php" class="back-link">UVA People List</a>';
+        } else {
+            echo '
+                            <a href="../data_view/people.php" class="back-link">Back to UVA People List</a>';
+        }
+?>
                         </div>
                     </div><!-- frame -->
                     <h1>Edit Person</h1>
@@ -122,6 +130,11 @@
                 if ($alt_id != $brown_id)
                     echo "<dd class=\"visible-md visible-lg\"><a href=\"?brown=$alt_id&id={$person["information"]["ID"]}\">$alt_id</a></dd>";
             }
+        }
+    } else if (!empty($person["brown_ids"])) {
+        echo '<dt class="visible-md visible-lg">Available Brown IDs:</dt>';
+        foreach ($person["brown_ids"] as $alt_id) {
+            echo "<dd class=\"visible-md visible-lg\"><a href=\"?brown=$alt_id&id={$person["information"]["ID"]}\">$alt_id</a></dd>";
         }
     }
 ?>
