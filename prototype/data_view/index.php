@@ -10,6 +10,12 @@
 <h4>Robbie Hott, <a href="http://www.cs.virginia.edu/~jh2jf/">www.cs.virginia.edu/~jh2jf</a></h4>
 <h4>Notes <a href="http://www.cs.virginia.edu/~jh2jf/notes/">www.cs.virginia.edu/~jh2jf/notes/</a></h4>
 
+<h2>Data Entry Points for UVA's Database</h2>
+<ul>
+    <li><a href="people.php">All People</a>: Searchable list of all people currently in our database with links to edit.</li>
+    <li><a href="../data_entry/individual.php?id=NEW">New Person</a>: Create a new person in the UVA database.</li>
+</ul>
+
 <h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
 <p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  The links below allow access to some parts of that data.</p>
 <ul>
