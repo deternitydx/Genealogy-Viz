@@ -55,20 +55,24 @@ function close_db() {
 
 function get_insert_statement($tableName, $arr) {
     $insert = "INSERT INTO public.\"$tableName\" ";
-    $cols = "";
-    $vals = "";
-    foreach ($arr as $k => $v) {
-        $cols .= pg_escape_identifier($k) . ",";
-        if ($v == "") $v = "NULL";
-        if (is_numeric($v) || $v == "NULL")
-            $vals .= "$v,";
-        else
-            $vals .= pg_escape_literal($v) . ",";
-    }
-    $cols = substr($cols, 0, -1);
-    $vals = substr($vals, 0, -1);
+    
+    if (!empty($arr)) {
+        $cols = "";
+        $vals = "";
+        foreach ($arr as $k => $v) {
+            $cols .= pg_escape_identifier($k) . ",";
+            if ($v == "") $v = "NULL";
+            if (is_numeric($v) || $v == "NULL")
+                $vals .= "$v,";
+            else
+                $vals .= pg_escape_literal($v) . ",";
+        }
+        $cols = substr($cols, 0, -1);
+        $vals = substr($vals, 0, -1);
 
-    $insert .= "($cols) VALUES ($vals);";
+        $insert .= "($cols) VALUES ($vals)";
+    }
+    $insert .= ";";
 
     return $insert;
 }

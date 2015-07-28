@@ -8,6 +8,10 @@
     $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $split = explode("data_entry", $url);
     $base_url = $split[0];
+    if (!isset($_GET["id"])) {
+        // creating a new person
+        die("Missing UVA Person ID.  Cannot continue.");
+    }
     // load the person
     $person = json_decode(file_get_contents($base_url . "api/edit_person.php?id=".$_GET["id"]), true);
     // load the brown data
@@ -119,7 +123,7 @@
                                     <div class="drop dropdown-menu" role="menu">
                                         <div class="info-box">
                                             <dl>
-                                            <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg"><?=$person["information"]["ID"]?></dd>
+                                            <dt class="visible-md visible-lg">UVA Person ID:</dt><dd class="visible-md visible-lg" id="UVAPersonID"><?=$person["information"]["ID"]?></dd>
 <?php
     if ($brown_id != "UNKNOWN") {
         echo "<dt class=\"visible-md visible-lg\">Brown ID:</dt><dd class=\"visible-md visible-lg\">$brown_id</dd>";

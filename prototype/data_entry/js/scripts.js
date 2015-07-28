@@ -31,10 +31,20 @@ $(document).ready(function() {
                             // If there is an element and it is actually part of this list
                             // and not in the prototype, then set the id values throughout
                             // the document
-                            var toupdate = "#" + key;
-                            console.log(toupdate);
-                            console.log(data.updates[key]);
-                            $(toupdate).val(data.updates[key]);
+                            if (key == "UVAPersonID") {
+                                // We created a new person, so update appropriately
+
+                                // Update the displayed UVA Person ID
+                                $("#UVAPersonID").text(data.updates[key]);
+
+                                // Set the hidden ID element on the page appropriately
+                                $("#ID").val(data.updates[key]);
+                            } else {
+                                var toupdate = "#" + key;
+                                console.log(toupdate);
+                                console.log(data.updates[key]);
+                                $(toupdate).val(data.updates[key]);
+                            }
                         }
                     }
 

@@ -4,8 +4,10 @@ include("../database.php");
     // Get the person ID
     if (isset($_GET["id"]) && is_numeric($_GET["id"]))
         $id = $_GET["id"];
+    else if (isset($_GET["id"]) && $_GET["id"] == "NEW")
+        $id = "NEW"; // creating a new person
     else
-        die("Please provide a numeric id");
+        die("Please provide a numeric UVA Person ID");
     
     header('Content-type: application/json');
     
@@ -13,6 +15,36 @@ include("../database.php");
     
     // Array to hold all information about the person
     $person = array();
+
+    if ($id == "NEW") {
+        $person["information"] = array("ID" => "NEW",
+                                       "BirthDate" => "",
+                                       "DeathDate" => "",
+                                       "BirthPlaceName" => "",
+                                       "BirthPlaceID" => "",
+                                       "DeathPlaceName" => "",
+                                       "DeathPlaceID" => "",
+                                       "Gender" => "",
+                                       "ParentMarriageString" => "",
+                                       "BiologicalChildOfMarriage" => "");
+        $person["notes"] = array(
+            "personal" => "",
+            "marriage" => "",
+            "nms" => "",
+            "rites" => "");
+        $person["names"] = array( 0=>array("Type"=>"authoritative",
+                                           "Prefix" => "",
+                                           "First" => "",
+                                           "Middle" => "",
+                                           "Last" => "",
+                                           "Suffix" => "",
+                                           "ID" => "NEW"));
+        $person["temple_rites"] = array();
+        $person["non_marital_sealings"] = array();
+        $person["marriages"] = array();
+        echo json_encode($person);
+        exit();
+    }
 
     // Get Personal Information
     $result = pg_query($db, "SELECT p.*, bp.\"OfficialName\" as \"BirthPlaceName\", dp.\"OfficialName\" as \"DeathPlaceName\" FROM public.\"Person\" p

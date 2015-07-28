@@ -66,6 +66,14 @@
         $srole = "Wife";
     }
 
+
+    // Handle creating a new person, if needed
+    if ($personal["ID"] == "NEW") {
+        $personal["ID"] = insert("Person", array("PrivateNotes" => "Created by Edit Page"));
+        $updates["UVAPersonID"] = $personal["ID"];
+    }
+
+
     // Handle each part of the submit to insert into the database
     foreach ($marriages as $index => $marriage) {
         $vals = array();
