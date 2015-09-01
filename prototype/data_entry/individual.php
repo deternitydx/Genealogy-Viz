@@ -849,14 +849,14 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed">From Date:</label>
+                                                            <label class="fixed">Start Date:</label>
                                                             <?php displayDate($office["From"], "office_from_", "_".$o_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="office_from_status_<?=$o_i?>">From Date Status:</label>
-                                                            <select data-placeholder="Select From Date Status" class="form-control" id="office_from_status_<?=$o_i?>" name="office_from_status_<?=$o_i?>">
+                                                            <label class="fixed" for="office_from_status_<?=$o_i?>">Start Date Status:</label>
+                                                            <select data-placeholder="Select Start Date Status" class="form-control" id="office_from_status_<?=$o_i?>" name="office_from_status_<?=$o_i?>">
                                                                 <option value="exact" <?php if ($office["FromStatus"] == "exact") echo "selected";?>>Specific Known Date</option>
                                                                 <option value="notBefore" <?php if ($office["FromStatus"] == "notBefore") echo "selected";?>>Not Before This Date</option>
                                                                 <option value="atLeastBy" <?php if ($office["FromStatus"] == "atLeastBy") echo "selected";?>>At Least By This Date</option>
@@ -866,14 +866,14 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed">To Date:</label>
+                                                            <label class="fixed">End Date:</label>
                                                             <?php displayDate($office["To"], "office_to_", "_".$o_i); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="office_to_status_<?=$o_i?>">To Date Status:</label>
-                                                            <select data-placeholder="Select To Date Status" class="form-control" id="office_to_status_<?=$o_i?>" name="office_to_status_<?=$o_i?>">
+                                                            <label class="fixed" for="office_to_status_<?=$o_i?>">End Date Status:</label>
+                                                            <select data-placeholder="Select End Date Status" class="form-control" id="office_to_status_<?=$o_i?>" name="office_to_status_<?=$o_i?>">
                                                                 <option value="exact" <?php if ($office["ToStatus"] == "exact") echo "selected";?>>Specific Known Date</option>
                                                                 <option value="notAfter" <?php if ($office["ToStatus"] == "notAfter") echo "selected";?>>Not After This Date</option>
                                                                 <option value="atLeastUntil" <?php if ($office["ToStatus"] == "atLeastUntil") echo "selected";?>>At Least Until This Date</option>
@@ -1143,14 +1143,14 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed">From Date:</label>
+                                                            <label class="fixed">Start Date:</label>
                                                             <?php displayDate("", "office_from_", "_ZZ"); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="office_from_status_ZZ">From Date Status:</label>
-                                                            <select data-placeholder="Select From Date Status" class="form-control" id="office_from_status_ZZ" name="office_from_status_ZZ">
+                                                            <label class="fixed" for="office_from_status_ZZ">Start Date Status:</label>
+                                                            <select data-placeholder="Select Start Date Status" class="form-control" id="office_from_status_ZZ" name="office_from_status_ZZ">
                                                                 <option value="exact" >Specific Known Date</option>
                                                                 <option value="notBefore" >Not Before This Date</option>
                                                                 <option value="atLeastBy" >At Least By This Date</option>
@@ -1160,14 +1160,14 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed">To Date:</label>
+                                                            <label class="fixed">End Date:</label>
                                                             <?php displayDate("", "office_to_", "_ZZ"); ?>
                                                         </div>
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="office_to_status_ZZ">To Date Status:</label>
-                                                            <select data-placeholder="Select To Date Status" class="form-control" id="office_to_status_ZZ" name="office_to_status_ZZ">
+                                                            <label class="fixed" for="office_to_status_ZZ">End Date Status:</label>
+                                                            <select data-placeholder="Select End Date Status" class="form-control" id="office_to_status_ZZ" name="office_to_status_ZZ">
                                                                 <option value="exact" >Specific Known Date</option>
                                                                 <option value="notAfter" >Not After This Date</option>
                                                                 <option value="atLeastUntil" >At Least Until This Date</option>
