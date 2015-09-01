@@ -231,6 +231,7 @@
                                 <li><a href="#tab-02" data-toggle="tab">Non-Sealing Ordinances (NSO)</a></li>
                                 <li><a href="#tab-03" data-toggle="tab">Sealed Child (SC)</a></li>
                                 <li><a href="#tab-04" data-toggle="tab">Marriages (M)</a></li>
+                                <li><a href="#tab-05" data-toggle="tab">Offices (O)</a></li>
                             </ul><!-- nav-tabs -->
                             <div class="tab-content">
                                 <!-- Personal Information -->
@@ -518,28 +519,6 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
-                                                            <label class="fixed" for="tr_office_<?=$r_i?>">Office when Performed:</label>
-                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="tr_office_<?=$r_i?>" name="tr_office_<?=$r_i?>">
-                                                                <option value=""></option>
-                                                                <option value="FirstPresidency" <?php if ($rite["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
-                                                                <option value="Apostle" <?php if ($rite["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
-                                                                <option value="Seventy" <?php if ($rite["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
-                                                                <option value="HighPriest" <?php if ($rite["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
-                                                                <option value="Elder" <?php if ($rite["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
-                                                                <option value="Teacher" <?php if ($rite["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
-                                                                <option value="Priest" <?php if ($rite["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
-                                                                <option value="Deacon" <?php if ($rite["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
-                                                                <option value="Bishop" <?php if ($rite["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
-                                                                <option value="Patriarch" <?php if ($rite["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
-                                                                <option value="ReliefSociety" <?php if ($rite["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
-                                                                <option value="TempleWorker" <?php if ($rite["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
-                                                                <option value="Midwife" <?php if ($rite["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
-                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($rite["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
                                                             <label class="fixed" for="tr_notes_<?=$r_i?>">Notes:</label>
                                                             <textarea class="notes-field" id="tr_notes_<?=$r_i?>" name="tr_notes_<?=$r_i?>"><?=$rite["PrivateNotes"]?></textarea>
                                                         </div>
@@ -668,28 +647,6 @@
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="nms_name_id_<?=$s_i?>" name="nms_name_id_<?=$s_i?>">
                                                                 <option value=""></option>
                                                                 <option value="<?=$sealing["NameUsedID"]?>" selected="selected"><?=trim($sealing["NameUsed"])?></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
-                                                            <label class="fixed" for="nms_office_<?=$s_i?>">Office when Performed:</label>
-                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="nms_office_<?=$s_i?>" name="nms_office_<?=$s_i?>">
-                                                                <option value=""></option>
-                                                                <option value="FirstPresidency" <?php if ($sealing["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
-                                                                <option value="Apostle" <?php if ($sealing["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
-                                                                <option value="Seventy" <?php if ($sealing["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
-                                                                <option value="HighPriest" <?php if ($sealing["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
-                                                                <option value="Elder" <?php if ($sealing["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
-                                                                <option value="Teacher" <?php if ($sealing["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
-                                                                <option value="Priest" <?php if ($sealing["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
-                                                                <option value="Deacon" <?php if ($sealing["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
-                                                                <option value="Bishop" <?php if ($sealing["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
-                                                                <option value="Patriarch" <?php if ($sealing["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
-                                                                <option value="ReliefSociety" <?php if ($sealing["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
-                                                                <option value="TempleWorker" <?php if ($sealing["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
-                                                                <option value="Midwife" <?php if ($sealing["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
-                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($sealing["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -832,50 +789,6 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
-                                                            <label class="fixed" for="mar_office_<?=$m_i?>">Office when Performed:</label>
-                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="mar_office_<?=$m_i?>" name="mar_office_<?=$m_i?>">
-                                                                <option value=""></option>
-                                                                <option value="FirstPresidency" <?php if ($marriage["OfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
-                                                                <option value="Apostle" <?php if ($marriage["OfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
-                                                                <option value="Seventy" <?php if ($marriage["OfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
-                                                                <option value="HighPriest" <?php if ($marriage["OfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
-                                                                <option value="Elder" <?php if ($marriage["OfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
-                                                                <option value="Teacher" <?php if ($marriage["OfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
-                                                                <option value="Priest" <?php if ($marriage["OfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
-                                                                <option value="Deacon" <?php if ($marriage["OfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
-                                                                <option value="Bishop" <?php if ($marriage["OfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
-                                                                <option value="Patriarch" <?php if ($marriage["OfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
-                                                                <option value="ReliefSociety" <?php if ($marriage["OfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
-                                                                <option value="TempleWorker" <?php if ($marriage["OfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
-                                                                <option value="Midwife" <?php if ($marriage["OfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
-                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($marriage["OfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
-                                                            <label class="fixed" for="mar_spouse_office_<?=$m_i?>">Spouse's Office:</label>
-                                                            <select data-placeholder="Select Spouse's Office when Performed" class="form-selector" id="mar_spouse_office_<?=$m_i?>" name="mar_spouse_office_<?=$m_i?>">
-                                                                <option value=""></option>
-                                                                <option value="FirstPresidency" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "FirstPresidency") echo "selected";?>>FP [First Presidency]</option>
-                                                                <option value="Apostle" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Apostle") echo "selected";?>>AP [Apostle]</option>
-                                                                <option value="Seventy" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Seventy") echo "selected";?>>SEV [Seventy]</option>
-                                                                <option value="HighPriest" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "HighPriest") echo "selected";?>>HP [High Priest]</option>
-                                                                <option value="Elder" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Elder") echo "selected";?>>ELD [Elder]</option>
-                                                                <option value="Teacher" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Teacher") echo "selected";?>>TCHR [Teacher]</option>
-                                                                <option value="Priest" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Priest") echo "selected";?>>PR [Priest]</option>
-                                                                <option value="Deacon" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Deacon") echo "selected";?>>DCN [Deacon]</option>
-                                                                <option value="Bishop" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Bishop") echo "selected";?>>BSHP [Bishop]</option>
-                                                                <option value="Patriarch" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Patriarch") echo "selected";?>>PTRCH [Patriarch]</option>
-                                                                <option value="ReliefSociety" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "ReliefSociety") echo "selected";?>>RS [Relief Society]</option>
-                                                                <option value="TempleWorker" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "TempleWorker") echo "selected";?>>TMPL WRKR [Temple Worker]</option>
-                                                                <option value="Midwife" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "Midwife") echo "selected";?>>MDWF [Midwife]</option>
-                                                                <option value="FemaleReliefSocietyNauvoo" <?php if ($marriage["SpouseOfficeWhenPerformed"] == "FemaleReliefSocietyNauvoo") echo "selected";?>>FRSN [Female Relief Society of Nauvoo]</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
 
                                                     <div class="row-area">
                                                         <div class="frame">
@@ -905,6 +818,89 @@
                                         </div>
                                         </section><!-- section -->
                                     </div>
+                                    <!-- Offices Held -->
+                                    <div class="tab-pane" id="tab-05">
+                                        <section class="section">
+                                        <div class="heading">
+                                            <h2>Offices Held Information</h2>
+                                        </div>
+                                        <div>
+                                            <div id="offices-formarea">
+<?php
+    $o_i = 1;
+    foreach ($person["offices"] as $office) {
+        
+
+?>
+                                                <div class="row-area form-area form-block" id="office_<?=$o_i?>">
+                                                    <div class="delete-area">
+                                                        <button id="office_delete_button_<?=$o_i?>" class="btn btn-warning ie-fix" onClick="deleteEntry('office', <?=$o_i?>); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="office_deleted_<?=$o_i?>" name="office_deleted_<?=$o_i?>" value="NO">
+                                                    </div>
+                                                    <input type="hidden" name="office_id_<?=$o_i?>" id="office_id_<?=$o_i?>" value="<?=$office["ID"]?>">
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_office_id_<?=$o_i?>">Office Name:</label>
+                                                            <select data-placeholder="Select Office" class="form-control" id="office_office_id_<?=$o_i?>" name="office_office_id_<?=$o_i?>">
+                                                                <option></option>
+                                                                <option value="<?=$office["OfficeID"]?>" selected="selected"><?=$office["OfficeName"]?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">From Date:</label>
+                                                            <?php displayDate($office["From"], "office_from_", "_".$o_i); ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_from_status_<?=$o_i?>">From Date Status:</label>
+                                                            <select data-placeholder="Select From Date Status" class="form-control" id="office_from_status_<?=$o_i?>" name="office_from_status_<?=$o_i?>">
+                                                                <option value="exact" <?php if ($office["FromStatus"] == "exact") echo "selected";?>>Specific Known Date</option>
+                                                                <option value="notBefore" <?php if ($office["FromStatus"] == "notBefore") echo "selected";?>>Not Before This Date</option>
+                                                                <option value="atLeastBy" <?php if ($office["FromStatus"] == "atLeastBy") echo "selected";?>>At Least By This Date</option>
+                                                                <option value="other" <?php if ($office["FromStatus"] == "other") echo "selected";?>>Other (Unusual)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">To Date:</label>
+                                                            <?php displayDate($office["To"], "office_to_", "_".$o_i); ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_to_status_<?=$o_i?>">To Date Status:</label>
+                                                            <select data-placeholder="Select To Date Status" class="form-control" id="office_to_status_<?=$o_i?>" name="office_to_status_<?=$o_i?>">
+                                                                <option value="exact" <?php if ($office["ToStatus"] == "exact") echo "selected";?>>Specific Known Date</option>
+                                                                <option value="notAfter" <?php if ($office["ToStatus"] == "notAfter") echo "selected";?>>Not After This Date</option>
+                                                                <option value="atLeastUntil" <?php if ($office["ToStatus"] == "atLeastUntil") echo "selected";?>>At Least Until This Date</option>
+                                                                <option value="other" <?php if ($office["ToStatus"] == "other") echo "selected";?>>Other (Unusual)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_notes_<?=$o_i?>">Notes:</label>
+                                                            <textarea class="notes-field" id="office_notes_<?=$o_i?>" name="office_notes_<?=$o_i?>"><?=$office["PrivateNotes"]?></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+<?php
+    $o_i++;
+    } // Offices for loop
+?>
+                                            </div>
+                                        </div><!-- info-form -->
+                                        <div class="form-area">
+                                            <div class="row-area">
+                                                <button id="button-add-office" class="btn btn-success btn-save ie-fix"><span>Add New Office</span></button>
+                                            </div><!-- row-area -->
+                                        </div><!-- form-area -->
+                                        </section><!-- section -->
+                                    </div><!-- tab-02 -->
                                     </section><!-- tabs -->
                                 </fieldset>
 <?php
@@ -912,6 +908,7 @@
     echo "<input type=\"hidden\" name=\"r_i\" id=\"r_i\" value=\"$r_i\">";
     echo "<input type=\"hidden\" name=\"s_i\" id=\"s_i\" value=\"$s_i\">";
     echo "<input type=\"hidden\" name=\"m_i\" id=\"m_i\" value=\"$m_i\">";
+    echo "<input type=\"hidden\" name=\"o_i\" id=\"o_i\" value=\"$o_i\">";
 ?>
                             </form>
                         </div>
@@ -1036,28 +1033,6 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="tr_office_ZZ">Office when Performed:</label>
-                                    <select data-placeholder="Select Office when Performed" class="form-selector" id="tr_office_ZZ" name="tr_office_ZZ">
-                                        <option value=""></option>
-                                        <option value='FirstPresidency'>First Presidency</option>
-                                        <option value='Apostle'>Apostle</option>
-                                        <option value='Seventy'>Seventy</option>
-                                        <option value='HighPriest'>High Priest</option>
-                                        <option value='Elder'>Elder</option>
-                                        <option value='Teacher'>Teacher</option>
-                                        <option value='Priest'>Priest</option>
-                                        <option value='Deacon'>Deacon</option>
-                                        <option value='Bishop'>Bishop</option>
-                                        <option value='Patriarch'>Patriarch</option>
-                                        <option value='ReliefSociety'>Relief Society</option>
-                                        <option value='TempleWorker'>Temple Worker</option>
-                                        <option value='Midwife'>Midwife</option>
-                                        <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
                                     <label class="fixed" for="tr_notes_ZZ">Notes:</label>
                                     <textarea class="notes-field" id="tr_notes_ZZ" name="tr_notes_ZZ"></textarea>
                                 </div>
@@ -1145,33 +1120,68 @@
                             </div>
                             <div class="row-area">
                                 <div class="frame">
-                                    <label class="fixed" for="nms_office_ZZ">Office when Performed:</label>
-                                    <select data-placeholder="Select Office when Performed" class="form-selector" id="nms_office_ZZ" name="nms_office_ZZ">
-                                        <option value=""></option>
-                                        <option value='FirstPresidency'>First Presidency</option>
-                                        <option value='Apostle'>Apostle</option>
-                                        <option value='Seventy'>Seventy</option>
-                                        <option value='HighPriest'>High Priest</option>
-                                        <option value='Elder'>Elder</option>
-                                        <option value='Teacher'>Teacher</option>
-                                        <option value='Priest'>Priest</option>
-                                        <option value='Deacon'>Deacon</option>
-                                        <option value='Bishop'>Bishop</option>
-                                        <option value='Patriarch'>Patriarch</option>
-                                        <option value='ReliefSociety'>Relief Society</option>
-                                        <option value='TempleWorker'>Temple Worker</option>
-                                        <option value='Midwife'>Midwife</option>
-                                        <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row-area">
-                                <div class="frame">
                                     <label class="fixed" for="nms_notes_ZZ">Notes:</label>
                                     <textarea class="notes-field" id="nms_notes_ZZ" name="nms_notes_ZZ"></textarea>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div id="office-entry-hidden">
+                                                <div class="row-area form-area form-block" id="office_ZZ">
+                                                    <div class="delete-area">
+                                                        <button id="office_delete_button_ZZ" class="btn btn-warning ie-fix" onClick="deleteEntry('office', ZZ); return false;"><span><i class="fa fa-times"></i></span></button>
+                                                        <input type="hidden" id="office_deleted_ZZ" name="office_deleted_ZZ" value="NO">
+                                                    </div>
+                                                    <input type="hidden" name="office_id_ZZ" id="office_id_ZZ" value="NEW">
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_office_id_ZZ">Office Name:</label>
+                                                            <select data-placeholder="Select Office" class="form-control" id="office_office_id_ZZ" name="office_office_id_ZZ">
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">From Date:</label>
+                                                            <?php displayDate("", "office_from_", "_ZZ"); ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_from_status_ZZ">From Date Status:</label>
+                                                            <select data-placeholder="Select From Date Status" class="form-control" id="office_from_status_ZZ" name="office_from_status_ZZ">
+                                                                <option value="exact" >Specific Known Date</option>
+                                                                <option value="notBefore" >Not Before This Date</option>
+                                                                <option value="atLeastBy" >At Least By This Date</option>
+                                                                <option value="other" >Other (Unusual)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">To Date:</label>
+                                                            <?php displayDate("", "office_to_", "_ZZ"); ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_to_status_ZZ">To Date Status:</label>
+                                                            <select data-placeholder="Select To Date Status" class="form-control" id="office_to_status_ZZ" name="office_to_status_ZZ">
+                                                                <option value="exact" >Specific Known Date</option>
+                                                                <option value="notAfter" >Not After This Date</option>
+                                                                <option value="atLeastUntil" >At Least Until This Date</option>
+                                                                <option value="other" >Other (Unusual)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_notes_ZZ">Notes:</label>
+                                                            <textarea class="notes-field" id="office_notes_ZZ" name="office_notes_ZZ"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
                     </div>
                     <div id="marriage-entry-hidden">
                                                 <div class="row-area form-area form-block" id="mar_ZZ">
@@ -1254,50 +1264,6 @@
                                                             <label class="fixed" for="mar_name_id_ZZ">Name as Sealed:</label>
                                                             <select data-placeholder="Select Name as Sealed" class="form-control" id="mar_name_id_ZZ" name="mar_name_id_ZZ">
                                                                 <option value=""></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
-                                                            <label class="fixed" for="mar_office_ZZ">Office when Performed:</label>
-                                                            <select data-placeholder="Select Office when Performed" class="form-selector" id="mar_office_ZZ" name="mar_office_ZZ">
-                                                                <option value=""></option>
-                                                                <option value='FirstPresidency'>First Presidency</option>
-                                                                <option value='Apostle'>Apostle</option>
-                                                                <option value='Seventy'>Seventy</option>
-                                                                <option value='HighPriest'>High Priest</option>
-                                                                <option value='Elder'>Elder</option>
-                                                                <option value='Teacher'>Teacher</option>
-                                                                <option value='Priest'>Priest</option>
-                                                                <option value='Deacon'>Deacon</option>
-                                                                <option value='Bishop'>Bishop</option>
-                                                                <option value='Patriarch'>Patriarch</option>
-                                                                <option value='ReliefSociety'>Relief Society</option>
-                                                                <option value='TempleWorker'>Temple Worker</option>
-                                                                <option value='Midwife'>Midwife</option>
-                                                                <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-area">
-                                                        <div class="frame">
-                                                            <label class="fixed" for="mar_spouse_office_ZZ">Spouse's Office:</label>
-                                                            <select data-placeholder="Select Spouse's Office when Performed" class="form-selector" id="mar_spouse_office_ZZ" name="mar_spouse_office_ZZ">
-                                                                <option value=""></option>
-                                                                <option value='FirstPresidency'>First Presidency</option>
-                                                                <option value='Apostle'>Apostle</option>
-                                                                <option value='Seventy'>Seventy</option>
-                                                                <option value='HighPriest'>High Priest</option>
-                                                                <option value='Elder'>Elder</option>
-                                                                <option value='Teacher'>Teacher</option>
-                                                                <option value='Priest'>Priest</option>
-                                                                <option value='Deacon'>Deacon</option>
-                                                                <option value='Bishop'>Bishop</option>
-                                                                <option value='Patriarch'>Patriarch</option>
-                                                                <option value='ReliefSociety'>Relief Society</option>
-                                                                <option value='TempleWorker'>Temple Worker</option>
-                                                                <option value='Midwife'>Midwife</option>
-                                                                <option value="FemaleReliefSocietyNauvoo">Female Relief Society of Nauvoo</option>
                                                             </select>
                                                         </div>
                                                     </div>

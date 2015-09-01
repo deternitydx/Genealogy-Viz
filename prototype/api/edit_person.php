@@ -42,6 +42,7 @@ include("../database.php");
         $person["temple_rites"] = array();
         $person["non_marital_sealings"] = array();
         $person["marriages"] = array();
+        $person["offices"] = array();
         echo json_encode($person);
         exit();
     }
@@ -265,6 +266,18 @@ include("../database.php");
         if ($arr != null && !empty($arr))
             $person["marriages"][$i]["children"] = $arr["count"];
     }
+
+    // Get the Offices for this person
+    $result = pg_query("SELECT DISTINCT po.\"ID\", po.\"OfficeID\", o.\"Name\" as \"OfficeName\", po.\"From\", po.\"FromStatus\", po.\"To\", po.\"ToStatus\", po.\"PrivateNotes\"
+                            FROM public.\"PersonOffice\" po, public.\"Office\" o
+                            WHERE po.\"OfficeID\" = o.\"ID\" AND po.\"PersonID\" = $id;");
+
+    if (!$result) {
+        die("Error finding offices.");
+        exit;
+    }
+
+    $person["offices"] = pg_fetch_all($result);
 
     // Get the list of Brown IDs for this person
     $result = pg_query($db, "SELECT DISTINCT \"id\" FROM \"Brown\" WHERE \"PersonID\" = $id;");

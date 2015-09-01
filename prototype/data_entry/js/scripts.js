@@ -189,6 +189,23 @@ $(document).ready(function() {
             return false;
 		});
 	}
+    
+    // Code to handle adding new offices to the page
+    var officeid = 1;
+    if ($('#o_i').exists()) {
+        officeid = parseInt($('#o_i').val());
+    }
+    console.log("Next Office ID: " + officeid);
+    if ($('#button-add-office').exists()){
+		$('#button-add-office').click(function(){
+			var text = $('#office-entry-hidden').clone();
+            var html = text.html().replace(/ZZ/g, officeid);
+            $('#offices-formarea').append(html);
+            officeid = officeid + 1;
+            selectsToSelect2();
+            return false;
+		});
+	}
 
     // Code to handle adding new names to the page
     var nameid = 3;
@@ -334,6 +351,38 @@ function loadPersonSelect2() {
     });
 }
 
+// Helper Function: load offices into the select boxes
+function loadOfficeSelect2() {
+    $("select").each(function() {
+        // Only modify the offices
+        if($(this).attr('id').indexOf("office_id") != -1
+                && $(this).attr('id').indexOf("ZZ") == -1) {
+            $(this).select2({
+                ajax: {
+                    url: "../api/get_office.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 0,
+                width: '400px',
+                allowClear: false,
+                theme: 'classic'
+            });
+        }
+    });
+}
+
 // Helper Function: load namess into the select boxes
 function loadNameSelect2() {
     $("select").each(function() {
@@ -373,6 +422,8 @@ function selectsToSelect2() {
     loadMarriagesSelect2();
     // Load in marriages
     loadPersonSelect2();
+    // Load in offices
+    loadOfficeSelect2();
     // Load in names
     loadNameSelect2();
     // Do everything else
@@ -382,6 +433,7 @@ function selectsToSelect2() {
                 && $(this).attr('id').indexOf("marriage_id") == -1
                 && $(this).attr('id').indexOf("person_id") == -1
                 && $(this).attr('id').indexOf("name_id") == -1
+                && $(this).attr('id').indexOf("office_id") == -1
                 && $(this).attr('id').indexOf("ZZ") == -1) {
             $(this).select2({
                 width: 'resolve',

@@ -8,7 +8,7 @@
     $rites = array();
     $personal = array();
     $names = array();
-
+    $offices = array();
     $updates = array();
 
     $errors = array();
@@ -38,6 +38,13 @@
                 unset($pieces[0]);
                 unset($pieces[count($pieces)]);
                 $rites[$i][implode("_", $pieces)] = $val;
+                break;
+            case "office":
+                if (!isset($offices[$i]))
+                    $offices[$i] = array();
+                unset($pieces[0]);
+                unset($pieces[count($pieces)]);
+                $offices[$i][implode("_", $pieces)] = $val;
                 break;
             case "nms":
                 if (!isset($sealings[$i]))
@@ -141,8 +148,6 @@
             $vals["Role"] = $mrole;
             if (isset($marriage["name_id"]))
                 $vals["NameUsedID"] = $marriage["name_id"];
-            if (isset($marriage["office"]))
-                $vals["OfficeWhenPerformed"] = $marriage["office"];
 
             updateInsertPM($vals);
             // Spouse
@@ -151,8 +156,6 @@
                 $vals["MarriageID"] = $marriage["id"];
                 $vals["PersonID"] = $marriage["spouse_person_id"];
                 $vals["Role"] = $srole;
-                if (isset($marriage["spouse_office"]))
-                    $vals["OfficeWhenPerformed"] = $marriage["spouse_office"];
                 updateInsertPM($vals);
             }
             // Proxy
@@ -228,8 +231,6 @@
                 $vals["PlaceID"] = $rite["place_id"];
             if (isset($rite["name_id"]))
                 $vals["NameUsedID"] = $rite["name_id"];
-            if (isset($rite["office"]))
-                $vals["OfficeWhenPerformed"] = $rite["office"];
             if (isset($rite["date_year"]) && isset($rite["date_month"]) && isset($rite["date_day"]))
                 $vals["Date"] = combine_date($rite["date_year"], $rite["date_month"], $rite["date_day"]);
             if (isset($rite["notes"]))
@@ -316,8 +317,6 @@
                 $vals["PlaceID"] = $sealing["place_id"];
             if (isset($sealing["name_id"]))
                 $vals["NameUsedID"] = $sealing["name_id"];
-            if (isset($sealing["office"]))
-                $vals["OfficeWhenPerformed"] = $sealing["office"];
             if (isset($sealing["notes"]))
                 $vals["PrivateNotes"] = $sealing["notes"];
 
@@ -334,6 +333,62 @@
             } else {
                 // do update
                 update("NonMaritalSealings", $vals, "\"ID\" = " . $sealing["id"]);
+            }
+        }
+    }
+
+    foreach ($offices as $index => $office) {
+        $vals = array();
+        /**
+            Array
+            (
+                [deleted] => NO
+                [id] => 1
+                [office_id] => 1
+                [from_day] => 
+                [from_month] => 
+                [from_year] => 
+                [from_status] => exact
+                [to_day] => 
+                [to_month] => 
+                [to_year] => 
+                [to_status] => exact
+                [notes] => 
+            )
+        **/
+
+        if (isset($office["deleted"]) && $office["deleted"] == "YES") {
+            // Do the delete if it's not NEW
+            if ($office["id"] != "NEW") {
+                // Delete 
+                dbdelete("PersonOffice", "\"ID\" = " . $office["id"]);
+            }
+        } else {
+            // Insert or Update
+
+            $vals["PersonID"] = $personal["ID"];
+            if (isset($office["office_id"]))
+                $vals["OfficeID"] = $office["office_id"];
+            if (isset($office["notes"]))
+                $vals["PrivateNotes"] = $office["notes"];
+
+            if (isset($office["from_year"]) && isset($office["from_month"]) && isset($office["from_day"]))
+                $vals["From"] = combine_date($office["from_year"], $office["from_month"], $office["from_day"]);
+            if (isset($office["from_status"]))
+                $vals["FromStatus"] = $office["from_status"];
+            
+            if (isset($office["to_year"]) && isset($office["to_month"]) && isset($office["to_day"]))
+                $vals["To"] = combine_date($office["to_year"], $office["to_month"], $office["to_day"]);
+            if (isset($office["to_status"]))
+                $vals["ToStatus"] = $office["to_status"];
+
+            if ($office["id"] == "NEW") {
+                // do insert
+                $offid = insert("PersonOffice", $vals);
+                $updates["office_id_".$index] = $offid;
+            } else {
+                // do update
+                update("PersonOffice", $vals, "\"ID\" = " . $office["id"]);
             }
         }
     }
