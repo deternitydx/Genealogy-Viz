@@ -136,9 +136,6 @@ $(document).ready(function() {
 	}
    
 
-    // turn select fields into select2 fields
-    selectsToSelect2();
-
     // Code to handle adding new marriages to the page
     var marriageid = 1;
     if ($('#m_i').exists()) {
@@ -224,9 +221,6 @@ $(document).ready(function() {
 	}
 
 
-});
-
-$(document).ready(function(){
     // Fade effect
     var _parentFade = '.fade-block';
     var _linkFade = '.open-close';
@@ -251,6 +245,9 @@ $(document).ready(function(){
 		}
 		return false;
     });
+
+    // turn select fields into select2 fields
+    selectsToSelect2();
     
 });
 
@@ -435,8 +432,12 @@ function selectsToSelect2() {
                 && $(this).attr('id').indexOf("name_id") == -1
                 && $(this).attr('id').indexOf("office_id") == -1
                 && $(this).attr('id').indexOf("ZZ") == -1) {
+
+            var width_var = '400px';
+            if ($(this).attr('id').indexOf("month") != -1)
+                width_var = '250px';        
             $(this).select2({
-                width: 'resolve',
+                width: width_var,
                 minimumResultsForSearch: Infinity,
                 allowClear: true,
                 theme: 'classic'
