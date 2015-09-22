@@ -353,6 +353,9 @@
                 [to_month] => 
                 [to_year] => 
                 [to_status] => exact
+                [officiator1_person_id] => 
+                [officiator2_person_id] => 
+                [officiator3_person_id] => 
                 [notes] => 
             )
         **/
@@ -369,6 +372,12 @@
             $vals["PersonID"] = $personal["ID"];
             if (isset($office["office_id"]))
                 $vals["OfficeID"] = $office["office_id"];
+            if (isset($office["officiator1_person_id"]))
+                $vals["OfficiatorID1"] = $office["officiator1_person_id"];
+            if (isset($office["officiator2_person_id"]))
+                $vals["OfficiatorID2"] = $office["officiator2_person_id"];
+            if (isset($office["officiator3_person_id"]))
+                $vals["OfficiatorID3"] = $office["officiator3_person_id"];
             if (isset($office["notes"]))
                 $vals["PrivateNotes"] = $office["notes"];
 

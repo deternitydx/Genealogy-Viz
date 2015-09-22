@@ -268,9 +268,21 @@ include("../database.php");
     }
 
     // Get the Offices for this person
-    $result = pg_query("SELECT DISTINCT po.\"ID\", po.\"OfficeID\", o.\"Name\" as \"OfficeName\", po.\"From\", po.\"FromStatus\", po.\"To\", po.\"ToStatus\", po.\"PrivateNotes\"
-                            FROM public.\"PersonOffice\" po, public.\"Office\" o
-                            WHERE po.\"OfficeID\" = o.\"ID\" AND po.\"PersonID\" = $id;");
+    $result = pg_query("SELECT DISTINCT po.\"ID\", po.\"OfficeID\", o.\"Name\" as \"OfficeName\", po.\"From\", po.\"FromStatus\", po.\"To\", 
+                            po.\"ToStatus\", po.\"PrivateNotes\", po.\"OfficiatorID1\", po.\"OfficiatorID2\", po.\"OfficiatorID3\",
+                            CONCAT(on1.\"Prefix\", ' ', on1.\"First\", ' ', on1.\"Middle\" , ' ', on1.\"Last\", ' ', on1.\"Suffix\", ' ', on1.\"PersonID\") as \"OfficiatorName1\",
+                            CONCAT(on2.\"Prefix\", ' ', on2.\"First\", ' ', on2.\"Middle\" , ' ', on2.\"Last\", ' ', on2.\"Suffix\", ' ', on2.\"PersonID\") as \"OfficiatorName2\",
+                            CONCAT(on3.\"Prefix\", ' ', on3.\"First\", ' ', on3.\"Middle\" , ' ', on3.\"Last\", ' ', on3.\"Suffix\", ' ', on3.\"PersonID\") as \"OfficiatorName3\"
+                            FROM public.\"PersonOffice\" po
+                            LEFT OUTER JOIN public.\"Name\" on1 
+                                        ON po.\"OfficiatorID1\" = on1.\"PersonID\" AND on1.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"Name\" on2 
+                                        ON po.\"OfficiatorID2\" = on2.\"PersonID\" AND on2.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"Name\" on3 
+                                        ON po.\"OfficiatorID3\" = on3.\"PersonID\" AND on3.\"Type\" = 'authoritative'
+                            LEFT OUTER JOIN public.\"Office\" o 
+                                        ON po.\"OfficeID\" = o.\"ID\"
+                            WHERE po.\"PersonID\" = $id;");
 
     if (!$result) {
         die("Error finding offices.");

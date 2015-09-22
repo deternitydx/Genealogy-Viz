@@ -883,6 +883,33 @@
                                                     </div>
                                                     <div class="row-area">
                                                         <div class="frame">
+                                                            <label class="fixed" for="office_officiator1_person_id_<?=$o_i?>">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator1_person_id_<?=$o_i?>" name="office_officiator1_person_id_<?=$o_i?>">
+                                                                <option></option>
+                                                                <option value="<?=$office["OfficiatorID1"]?>" selected="selected"><?php echo $office["OfficiatorName1"];?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_officiator2_person_id_<?=$o_i?>">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator2_person_id_<?=$o_i?>" name="office_officiator2_person_id_<?=$o_i?>">
+                                                                <option></option>
+                                                                <option value="<?=$office["OfficiatorID2"]?>" selected="selected"><?php echo $office["OfficiatorName2"];?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_officiator3_person_id_<?=$o_i?>">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator3_person_id_<?=$o_i?>" name="office_officiator3_person_id_<?=$o_i?>">
+                                                                <option></option>
+                                                                <option value="<?=$office["OfficiatorID3"]?>" selected="selected"><?php echo $office["OfficiatorName3"];?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
                                                             <label class="fixed" for="office_notes_<?=$o_i?>">Notes:</label>
                                                             <textarea class="notes-field" id="office_notes_<?=$o_i?>" name="office_notes_<?=$o_i?>"><?=$office["PrivateNotes"]?></textarea>
                                                         </div>
@@ -1172,6 +1199,30 @@
                                                                 <option value="notAfter" >Not After This Date</option>
                                                                 <option value="atLeastUntil" >At Least Until This Date</option>
                                                                 <option value="other" >Other (Unusual)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_officiator1_person_id_ZZ">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator1_person_id_ZZ" name="office_officiator1_person_id_ZZ">
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_officiator2_person_id_ZZ">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator2_person_id_ZZ" name="office_officiator2_person_id_ZZ">
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed" for="office_officiator3_person_id_ZZ">Officiator:</label>
+                                                            <select data-placeholder="Select Officiator" class="form-control" id="office_officiator3_person_id_ZZ" name="office_officiator3_person_id_ZZ">
+                                                                <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
