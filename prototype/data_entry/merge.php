@@ -96,6 +96,29 @@ foreach ($dups as $dup) {
 
     // Repoint all memberships to the main person
     query_db("update \"ChurchOrgMembership\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+
+    /* << DOUG*/ 
+    // Repoint all offices and office officiators to the main person
+    query_db("update \"PersonOffice\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+    query_db("update \"PersonOffice\" set \"OfficiatorID1\"=$merge where \"OfficiatorID1\"=$dup;");
+    query_db("update \"PersonOffice\" set \"OfficiatorID2\"=$merge where \"OfficiatorID2\"=$dup;");
+    query_db("update \"PersonOffice\" set \"OfficiatorID3\"=$merge where \"OfficiatorID3\"=$dup;");
+
+    // Repoint all temple rite officiators to the main person
+    query_db("update \"TempleRiteOfficiators\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+
+    // Repoint all company roster entries to the main person (not used as of 9/2015)
+    query_db("update \"CompanyRoster\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+
+    // Repoint all image entries to the main person (not used as of 9/2015)
+    query_db("update \"Images\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+
+    // Repoint all land plot entries to the main person (not used as of 9/2015)
+    query_db("update \"LandPlots\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+
+    // Repoint all occupations to the main person (not used as of 9/2015)
+    query_db("update \"PersonOccupation\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
+    /* DOUG >>*/
 }
 
 
