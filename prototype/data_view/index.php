@@ -16,6 +16,17 @@
     <li><a href="../data_entry/individual.php?id=NEW">New Person</a>: Create a new person in the UVA database.</li>
 </ul>
 
+<h2>Special Queries of UVA's Database</h2>
+<p>The following are special queries generated to give specific views of our database.</p>
+<ul>
+	<li><a href="sealings_pre1844.php">Sealings Before 1844</a>: List of all time and eternity sealings before 7/1/1844.</li>
+	<li><a href="sealings_pre1845.php">Sealings Before 1845</a>: List of all time and eternity sealings before 12/10/1845.</li>
+	<li><a href="sealings_pre1846.php">Sealings Before 1846</a>: List of all time and eternity sealings before 3/1/1846.</li>
+	<li><a href="sealings_44-45.php">Sealings Between 1844-1845</a>: List of all time and eternity sealings after 7/1/1844 but before 12/10/1845.</li>
+	<li><a href="sealings_45-46.php">Sealings Between 1845-1846</a>: List of all time and eternity sealings after 12/10/1845 but before 3/1/1846.</li>
+	<li><a href="sealings_46-52.php">Sealings Between 1846-1852</a>: List of all time and eternity sealings after 3/1/1846 but before 8/31/1852.</li>
+</ul>
+
 <h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
 <p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  The links below allow access to some parts of that data.</p>
 <ul>

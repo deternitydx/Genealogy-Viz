@@ -19,7 +19,7 @@ $(document).ready( function () {
 } );
 </script>
 
-<h1>Sealings Before December 10, 1845</h1>
+<h1>Sealings December 10, 1845 - March 1, 1846</h1>
 <?php
 
 //header('Content-type: application/json');
@@ -27,7 +27,7 @@ $(document).ready( function () {
 include("../database.php");
 $db = pg_connect($db_conn_string);
 
-$result = pg_query($db, "SELECT DISTINCT h.\"PersonID\" as \"HusbandID\", h.\"First\" as \"HusbandFirst\", h.\"Last\" as \"HusbandLast\", w.\"PersonID\" as \"WifeID\", w.\"First\" as \"WifeFirst\", w.\"Last\" as \"WifeLast\",m.\"Type\",m.\"MarriageDate\" as \"Date\", p.\"OfficialName\" as \"Place\", m.\"PrivateNotes\" as \"Notes\" from \"Marriage\" m LEFT JOIN \"Place\" p ON p.\"ID\"=m.\"PlaceID\",\"PersonMarriage\" pm, \"PersonMarriage\" pmw, \"Name\" h, \"Name\" w WHERE  m.\"ID\" = pm.\"MarriageID\" AND m.\"ID\" = pmw.\"MarriageID\" AND h.\"PersonID\"=pm.\"PersonID\" AND pm.\"Role\"='Husband' AND h.\"Type\" = 'authoritative' AND w.\"PersonID\"=pmw.\"PersonID\" AND pmw.\"Role\"='Wife' AND w.\"Type\" = 'authoritative' AND \"MarriageDate\" < '1845-12-10' AND m.\"Type\" IN ('eternity', 'time') ORDER BY m.\"MarriageDate\"");
+$result = pg_query($db, "SELECT DISTINCT h.\"PersonID\" as \"HusbandID\", h.\"First\" as \"HusbandFirst\", h.\"Last\" as \"HusbandLast\", w.\"PersonID\" as \"WifeID\", w.\"First\" as \"WifeFirst\", w.\"Last\" as \"WifeLast\",m.\"Type\",m.\"MarriageDate\" as \"Date\", p.\"OfficialName\" as \"Place\", m.\"PrivateNotes\" as \"Notes\" from \"Marriage\" m LEFT JOIN \"Place\" p ON p.\"ID\"=m.\"PlaceID\",\"PersonMarriage\" pm, \"PersonMarriage\" pmw, \"Name\" h, \"Name\" w WHERE  m.\"ID\" = pm.\"MarriageID\" AND m.\"ID\" = pmw.\"MarriageID\" AND h.\"PersonID\"=pm.\"PersonID\" AND pm.\"Role\"='Husband' AND h.\"Type\" = 'authoritative' AND w.\"PersonID\"=pmw.\"PersonID\" AND pmw.\"Role\"='Wife' AND w.\"Type\" = 'authoritative' AND \"MarriageDate\" >= '1845-12-10' AND \"MarriageDate\" <= '1846-03-01' AND m.\"Type\" IN ('eternity', 'time') ORDER BY m.\"MarriageDate\"");
 if (!$result) {
     echo "An error occurred.\n";
     exit;
