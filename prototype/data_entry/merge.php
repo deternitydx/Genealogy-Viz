@@ -92,12 +92,12 @@ foreach ($dups as $dup) {
     query_db("update \"Brown\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
 
     // Repoint all name entries to the main person
+    query_db("update \"Name\" set \"Type\"='alternate' where \"PersonID\"=$dup;");
     query_db("update \"Name\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
 
     // Repoint all memberships to the main person
     query_db("update \"ChurchOrgMembership\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
 
-    /* << DOUG*/ 
     // Repoint all offices and office officiators to the main person
     query_db("update \"PersonOffice\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
     query_db("update \"PersonOffice\" set \"OfficiatorID1\"=$merge where \"OfficiatorID1\"=$dup;");
@@ -118,7 +118,6 @@ foreach ($dups as $dup) {
 
     // Repoint all occupations to the main person (not used as of 9/2015)
     query_db("update \"PersonOccupation\" set \"PersonID\"=$merge where \"PersonID\"=$dup;");
-    /* DOUG >>*/
 }
 
 
