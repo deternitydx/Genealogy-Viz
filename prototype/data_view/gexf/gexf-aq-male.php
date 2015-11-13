@@ -203,6 +203,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     if (!$result) {
         exit;
     }
+    process_results($result);
     // have a person, need that the people who are biological children of their marriages are in the list of known people
 
     // Look up all the new males we've just added and put them in
