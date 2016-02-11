@@ -38,7 +38,7 @@
             </li>
             <li>Matriarchal Samples
                 <ul>
-                    <li><a href="marriageflow.html?id=1907&wife=1&levels=2">Zina Huntington and 2 levels of separation</a></li>
+                    <li><a href="marriageflow.html?id=1907&wife=1&levels=1">Zina Huntington and 1 level of separation</a></li>
                 </ul>
             </li>
         </ul>
