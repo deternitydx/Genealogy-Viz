@@ -113,8 +113,8 @@ process_results($result);
 
 // CREATE SQL ARRAY of all primary gender
 $males = $newmales;
-$allmales = "(" . implode(",", array_keys($males)) . ")";
 while (!empty($newmales) && $iterations++ < $maxIter) {
+    $prevmales = "(" . implode(",", array_keys($newmales)) . ")";
     $newmales = array();
 
     // Get all males who are their children (born before date)
@@ -126,7 +126,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"Marriage\" m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' $datestr
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-            AND pm.\"PersonID\" in $allmales AND p.\"Gender\" = 'Male' AND m.\"ID\" = pm.\"MarriageID\"
+            AND pm.\"PersonID\" in $prevmales AND p.\"Gender\" = 'Male' AND m.\"ID\" = pm.\"MarriageID\"
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -151,7 +151,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
                 GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
-            AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $allmales $datestr1
+            AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $prevmales $datestr1
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -176,7 +176,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
                 GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\") m
             ON (m.\"PersonID\" = p.\"ID\")
         WHERE p.\"Gender\" = 'Female' 
-            AND m.\"SpouseID\" in $allmales
+            AND m.\"SpouseID\" in $prevmales
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -197,7 +197,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
             AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
         ORDER BY p.\"ID\" asc) ch ON (ch.\"ChildOf\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
 
-        WHERE ch.\"ID\" in $allmales
+        WHERE ch.\"ID\" in $prevmales
         ORDER BY p.\"ID\" asc");
 
     if (!$result) {
