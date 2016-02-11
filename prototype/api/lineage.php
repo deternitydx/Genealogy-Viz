@@ -328,10 +328,15 @@ foreach ($marriageUnits as $unit) {
 
 echo "], \"people\": [";
 
+$fixed = array();
+foreach ($people as $k => $person) {
+    if (!empty($person["id"]) && $person["id"] != "")
+        $fixed[$k] = $person;
+}
 $i = 0;
-foreach ($people as $person) {
-        echo "{ \"id\":" . $person["id"] . ", \"name\":\"" . $person["name"] . "\", \"source\": [" . implode(",",$person["source"]). "], \"target\": [" .implode(",",$person["target"]) ."], \"gender\":\"".$person["gender"] ."\", \"childOf\":\"".$person["childOf"]."\"}";
-        if ($i++ < count($people) -1) echo ",";
+foreach ($fixed as $person) {
+            echo "\n{ \n\"id\":" . $person["id"] . ", \n\"name\":\"" . $person["name"] . "\", \n\"source\": [" . implode(",",$person["source"]). "], \n\"target\": [" .implode(",",$person["target"]) ."], \n\"gender\":\"".$person["gender"] ."\", \n\"childOf\":\"".$person["childOf"]."\"\n}";
+            if ($i++ < count($fixed) -1) echo ",\n";
 }
 
 echo "]}";
