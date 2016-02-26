@@ -27,6 +27,7 @@
 	<li><a href="sealings_46-52.php">Sealings Between 1846-1852</a>: List of all time and eternity sealings after 3/1/1846 but before 8/31/1852.</li>
 	<li><a href="plural_before_1846.php">Plural (Male) Marriages Before Dec 10, 1845</a>: List of all men and their plural wives before Dec 10, 1845.</li>
 	<li><a href="plural_before_1852.php">Plural (Male) Marriages Before 1852</a>: List of all men and their plural wives before 1852.</li>
+	<li><a href="plural_women_before_1852.php">Plural (Female) Marriages Before 1852</a>: List of all women and their plural husbands before 1852.</li>
 </ul>
 
 <h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
