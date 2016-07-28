@@ -240,8 +240,8 @@ function ChordDisplay(element) {
             .range(_this.colorList);
 
             _this.fillType = d3.scale.ordinal()
-                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder", "biological.adoption",  "civil.eternity", "civil.time", "civil.eternity.time"])
-                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff", "url(#biological-adoption)", "url(#civil-eternity)", "url(#civil-time)", "url(#civil-eternity-time)"]);
+                 .domain(["adoption", "biological", "byu", "eternity", "time", "civil", "placeholder", "biological.adoption",  "civil.eternity", "civil.time", "civil.eternity.time", "civil.eternity.eternity"])
+                 .range(["#FFCD81", "#A1CB87", "#C9BCD6", "#AD85FF", "#f7fcb9", "#FFB2E6", "#ffffff", "url(#biological-adoption)", "url(#civil-eternity)", "url(#civil-time)", "url(#civil-eternity-time)", "url(#civil-eternity)"]);
 
 
             _this.chord = d3.layout.chord()
