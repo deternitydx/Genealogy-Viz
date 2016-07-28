@@ -19,6 +19,7 @@
 <h2>Special Queries of UVA's Database</h2>
 <p>The following are special queries generated to give specific views of our database.</p>
 <ul>
+	<li><a href="query1.php">First Long Query</a>: "Display list of (A, C, set of B)s for which (Marriage between A and B for time or eternity) and (Marriage between A and C, civil) and not (Marriage between A and C for time or eternity) and C's death after A+B's sealing"</li>
 	<li><a href="sealings_pre1844.php">Sealings Before 1844</a>: List of all time and eternity sealings before 7/1/1844.</li>
 	<li><a href="sealings_pre1845.php">Sealings Before 1845</a>: List of all time and eternity sealings before 12/10/1845.</li>
 	<li><a href="sealings_pre1846.php">Sealings Before 1846</a>: List of all time and eternity sealings before 3/1/1846.</li>
@@ -27,7 +28,17 @@
 	<li><a href="sealings_46-52.php">Sealings Between 1846-1852</a>: List of all time and eternity sealings after 3/1/1846 but before 8/31/1852.</li>
 	<li><a href="plural_before_1846.php">Plural (Male) Marriages Before Dec 10, 1845</a>: List of all men and their plural wives before Dec 10, 1845.</li>
 	<li><a href="plural_before_1852.php">Plural (Male) Marriages Before 1852</a>: List of all men and their plural wives before 1852.</li>
+	<li><a href="plural_1852.php">Plural (Male) Marriages Before 1852 (No Duplicates)</a>: List of all men and their plural wives before 1852. <em>All duplicate sealings and marriages to the same wife have been removed.</em></li>
 	<li><a href="plural_women_before_1852.php">Plural (Female) Marriages Before 1852</a>: List of all women and their plural husbands before 1852.</li>
+	<li><a href="plural_women_1852.php">Plural (Female) Marriages Before 1852 (No Duplicates)</a>: List of all women and their plural husbands before 1852. <em>All duplicate sealings and marriages to the same wife have been removed.</em></li>
+</ul>
+
+<h2>Static Views of Marriage Graphs</h2>
+<p>These PDFs show the state of the Nauvoo marriage/lineage graph at a specific point in time.</p>
+<ul>
+	<li><a href="pdf/1844-1-19-pat.pdf">Patriarchal, before July 1844</a>: Patriarchal marriages before July 1844.  This graph as one degree of separation from the AQ, and has 19 connected components.</li>
+	<li><a href="pdf/1845-1-15-pat.pdf">Patriarchal, before Dec 10, 1845</a>: Patriarchal marriages before December 10, 1845.  This graph as one degree of separation from the AQ, and has 15 connected components.</li>
+	<li><a href="pdf/1846-1-13-pat.pdf">Patriarchal, before March 1846</a>: Patriarchal marriages before March 1846.  This graph as one degree of separation from the AQ, and has 13 connected components.</li>
 </ul>
 
 <h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
