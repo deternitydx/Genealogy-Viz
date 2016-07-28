@@ -79,29 +79,53 @@ foreach ($arr as $i => $mar) {
 
 }
 
+// Now $data should have the right marriages!
+//
+$husbands = array();
+foreach ($data as $mar) {
+    if (!isset($husbands[$mar["HusbandID"]]))
+        $husbands[$mar["HusbandID"]] = array();
+
+    // Since they are in order by wife, this will be in order and keep the latest
+    $husbands[$mar["HusbandID"]][$mar["WifeID"]] = $mar;
+}
+
+$final = array();
+$finalw = array();
+$names = array();
+foreach ($husbands as $i=>$h) {
+    if (count($h) > 1) {
+        $final[$i] = $h;
+		$name = current($h)["HusbandLast"] . ", ". current($h)["HusbandFirst"];
+        $names[$i]= $name;
+    }
+    foreach ($h as $k => $w) 
+        $finalw[$k] = true;
+}
+
+$husbands = $final;
+$wives = $finalw;
+
+asort($names);
 echo "<html><head><title>Polygamists</title></head><body>";
 echo "<h1>Men with multiple marriages before Sep 1, 1852</h1>";
-echo "<p><b>Total: </b>".count($names)."</p>";
+echo "<p><b>Total: </b>".count($husbands)."</p>";
 echo "<p><b>Total Women: </b>".count($wives)."</p>";
-echo "<p><a href='#list'>List View</a> -  <a href='#table'>Table View</a> - <a href='#men'>Men Only</a></p>";
+echo "<p><a href='#list'>List View</a> - <a href='#men'>Men Only</a></p>";
 
 echo "<a name=\"list\"></a><h2>List View</h2>";
 echo "<dl>";
 echo "<dt><i>Husband Name</i></dt><dd><i>Marriage Date (Type): Wife Name (Death Date)</i></dd>";
-foreach ($data as $i => $d) {
-    if ($i == 0 || $d["HusbandID"] != $data[$i-1]["HusbandID"])
-        echo "<dt>" . $d["HusbandLast"]. ", " . $d["HusbandFirst"] . " [".$d["HusbandID"]."]</dt>";
-    echo "<dd>" . $d["MarriageDate"] . " <i>(".$d["Type"].")</i>: " .$d["WifeLast"] . ", " .$d["WifeFirst"] ." [".$d["WifeID"]."] <i>(died " . $d["WifeDeath"].")</i></dd>";
+foreach ($names as $i => $name) {
+    $d = $husbands[$i];
+    echo "<dt>" . current($d)["HusbandLast"]. ", " . current($d)["HusbandFirst"] . " [".current($d)["HusbandID"]."]</dt>";
+    foreach ($d as $mar) {
+        echo "<dd>" . $mar["MarriageDate"] . " <i>(".$mar["Type"].")</i>: " .$mar["WifeLast"] . ", " .$mar["WifeFirst"] ." [".$mar["WifeID"]."] <i>(died " . $mar["WifeDeath"].")</i></dd>";
+    }
 }
 echo "</dl>";
 
-echo "<a name='table'></a><h2>Table View</h2>";
-echo "<table border='1'>";
-echo implode("", $json);
-echo "</table>";
-
 echo "<a name='men'></a><h2>Men Only, Alphabetically</h2>";
-sort($names);
 foreach ($names as $name)
 	echo "<br>$name";
 ?>
