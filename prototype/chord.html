@@ -54,6 +54,7 @@ d3.json("api/gender.php?id="+QueryString.id, function(data) {
     chordDiagram.originalTime = QueryString.time ? QueryString.time : null; 
     chordDiagram.nameAsTitle = true;
     chordDiagram.drawNumSigOthers = true;
+    chordDiagram.useHoverOver = QueryString.hover ? true : false;
     chordDiagram.drawChord(QueryString.id ? QueryString.id : 615);
     chordDiagram.drawLegend("#legend");
 

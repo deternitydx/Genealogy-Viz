@@ -52,6 +52,14 @@ function ChordDisplay(element) {
     this.drawTitle = function(element, title) {
         var titleE = d3.select(element).append("div");
         titleE.append("h1").text(title);
+        
+	var time = "All Time";
+        if (_this.originalTime != null) {
+            time = _this.originalTime;
+        }
+        
+	titleE.append("h2").attr("id", "timeText").text(time);
+        
         _this.sigOtherElement = titleE.append("h4");
     }
 
@@ -86,7 +94,7 @@ function ChordDisplay(element) {
         table.append("tr").append("td").style("background", "#AD85FF").style("color", "#000000").text("Sealed (Eternity)");
         table.append("tr").append("td").style("background", "#f7fcb9").style("color", "#000000").text("Sealed (Time)");
         table.append("tr").append("td").style("background", "#FFB2E6").style("color", "#000000").text("Married (Civil)");
-        
+        /**
         var time = "All Time";
         if (_this.originalTime != null) {
             time = _this.originalTime;
@@ -94,6 +102,7 @@ function ChordDisplay(element) {
         cont.append("h4").text("Time Slice");
         var table = cont.append("table");
         table.append("tr").append("td").style("background", "#d8d8d8").style("color", "#000000").attr("id", "timeText").text(time);
+    	**/
     };
 
     this.setMatrix = function(timepoint) {
@@ -446,18 +455,19 @@ function ChordDisplay(element) {
 
     this.drawTimeSlider = function(element) {
 
+            //stepperdiv.append("span").attr("id","timeText").html("All Time");
+            
+            // Add the time slider
+            var min = 1840, max = 1890;
+                var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
+            var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
+            _this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
+            d3.select(element).append("div").style("margin-top", "30px").attr("id", "sliderDiv").call(_this.slider);
+            
             var stepperdiv = d3.select(element).append("div").style("margin-top", "30px");
             stepperdiv.append("button").text("Prev").on("click", _this.goPrevious);
             stepperdiv.append("button").text("All Time").on("click", _this.allTime);
             stepperdiv.append("button").text("Next").on("click", _this.goNext);
-            //stepperdiv.append("span").attr("id","timeText").html("All Time");
-            
-            // Add the time slider
-            var min = 1830, max = 1870;
-                var time_slider_scale = d3.scale.linear().domain([min, max]).range([min, max]);
-            var time_slider_axis = d3.svg.axis().orient("bottom").ticks(10).scale(time_slider_scale).tickFormat(d3.format(".0f"));
-            _this.slider = d3.slider().axis(time_slider_axis).min(min).max(max).on("slide", _this.redraw);
-            d3.select(element).append("div").attr("id", "sliderDiv").call(_this.slider);
 
     }
 
