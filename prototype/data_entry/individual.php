@@ -5,6 +5,10 @@
 -->
 
 <?php
+
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
     $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $split = explode("data_entry", $url);
     $base_url = $split[0];
@@ -46,7 +50,7 @@
             $attr = "";
             if ($i == $dateSplit[1])
                 $attr = " selected";
-            $month_name = date( 'F', mktime( 0, 0, 0, $i + 1, 0, 0, 0 ) );
+            $month_name = date( 'F', mktime( 0, 0, 0, $i + 1, 0, 0 ) );
             $month_options .= "<option value=\"$i\"$attr>$month_name</option>";
         }
         echo "<input type=\"text\" class=\"form-control\" value=\"{$dateSplit[2]}\" placeholder=\"DD\" name=\"{$prefix}day{$suffix}\" size=\"2\"> \n";
@@ -419,6 +423,7 @@
                                             <div id="temple-rites-formarea">
 <?php
     $r_i = 1;
+if ($person["temple_rites"] != null && $person["temple_rites"] != false) {
     foreach ($person["temple_rites"] as $rite) {
         
         if ($rite["ProxyID"] == null)
@@ -527,6 +532,7 @@
 <?php
     $r_i++;
     } // Temple Rites for loop
+}
 ?>
                                             </div>
                                         </div><!-- info-form -->
@@ -555,6 +561,7 @@
                                             <div id="nonmarital-sealings-formarea">
 <?php
     $s_i = 1;
+if ($person["non_marital_sealings"] != null && $person["non_marital_sealings"] != false) {
     foreach ($person["non_marital_sealings"] as $sealing) {
 
         if ($sealing["AdopteeProxyID"] == null)
@@ -660,6 +667,7 @@
 <?php
     $s_i++;
     } // Non marital Sealing for loop
+}
 ?>
                                             </div>
                                         </div><!-- info-form -->
@@ -687,6 +695,7 @@
                                             <div id="marital-sealings-formarea">
 <?php
     $m_i = 1;
+if ($person["marriages"] != null && $person["marriages"] != false) {
     foreach ($person["marriages"] as $marriage) {
 
 ?>
@@ -800,6 +809,7 @@
 <?php
         $m_i++;
     } // foreach marriage
+}
 ?>
                                             </div>
                                         </div><!-- info-form -->
@@ -828,6 +838,7 @@
                                             <div id="offices-formarea">
 <?php
     $o_i = 1;
+if ($person["offices"] != null && $person["offices"] != false) {
     foreach ($person["offices"] as $office) {
         
 
@@ -918,6 +929,7 @@
 <?php
     $o_i++;
     } // Offices for loop
+}
 ?>
                                             </div>
                                         </div><!-- info-form -->
