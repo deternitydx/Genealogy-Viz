@@ -74,14 +74,14 @@ $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"L
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
     LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
-    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
+    INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\") LEFT OUTER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
     WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
 }
 
-process_results($result);
+process_results($result, true);
 
 $datestr = "";
 if ($date != null)
@@ -106,7 +106,7 @@ if (!$result) {
 }
 
 // For each (secondary level) person
-process_results($result);
+process_results($result, true);
 
 // Now we have a set of people (edges) and we can see if there are missing connections
 // Really want to look up anyone who has one of these people as a father or significant other
@@ -132,7 +132,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         exit;
     }
 
-    process_results($result);
+    process_results($result, false);
 
     // Get all the females who are their children and had marriages before that date
     $datestr1 = "";
@@ -157,7 +157,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         exit;
     }
 
-    process_results($result);
+    process_results($result, false);
 
     // Get all the people who are their wives
     $datestr = "";
@@ -182,7 +182,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         exit;
     }
 
-    process_results($result);
+    process_results($result, false);
 
     // Get all the people who are their parents
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
@@ -203,7 +203,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     if (!$result) {
         exit;
     }
-    process_results($result);
+    process_results($result, false);
     // have a person, need that the people who are biological children of their marriages are in the list of known people
 
     // Look up all the new males we've just added and put them in
@@ -212,7 +212,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
         LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
-        INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
+        LEFT OUTER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
         WHERE p.\"Gender\" = 'Male' AND p.\"ID\" in $newones 
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -220,7 +220,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     }
     
 
-    process_results($result);
+    process_results($result, false);
 
     // Put all the new males into the list of all males
     foreach ($newmales as $k=>$v) {
@@ -237,7 +237,7 @@ if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 
 
 
-function process_results($result) {
+function process_results($result, $wasQueried) {
     global $newmales, $nodes, $edges, $dummyCounter;
     while ($person = pg_fetch_array($result)) {
         // if they don't have a to-marriage, then add one for their ID.
@@ -259,24 +259,28 @@ function process_results($result) {
         }
 
         // set up the source
-        $childOf = null; 
+        $childOf = null;
+		$realSource = true;
         if (isset($person["ChildOf"]) && $person["ChildOf"] != null && $person["ChildOf"] != "") {
             $childOf = $person["ChildOf"];
             $newmales[$childOf] = true;
-        } else
+        } else {
             $childOf = $dummyCounter++;
-
-        // Add the person link from their marriage of birth to their marriage of adulthood
+			$realSource = false;
+		}
+        
+		// Add the person link from their marriage of birth to their marriage of adulthood
         $edge = array(
             "source" => $childOf,
             "target" => $target, 
             "label" => htmlspecialchars($person["First"] . " " . $person["Last"]),
-            "weight" => calculate_weight($person["Type"], $person["Gender"])); // get the weight from the type
+            "weight" => calculate_weight($person["Type"], $person["Gender"], $wasQueried)); // get the weight from the type
 
         // check that this edge is not already accounted for (inefficient)
         $inarray = false;
         foreach ($edges as $e) {
-            if ($edge["source"] == $e["source"] && $edge["target"] == $e["target"]) {
+            if (($edge["source"] == $e["source"] && $edge["target"] == $e["target"]) ||
+				($edge["target"] == $e["target"] && $edge["label"] == $e["label"] && !$realSource)) {
                 $inarray = true;
                 break;
             }
@@ -286,16 +290,22 @@ function process_results($result) {
     }
 }
 
-function calculate_weight($marriage_type, $gender) {
+function calculate_weight($marriage_type, $gender, $wasQueried) {
+    // For now, calculate weight by if they were in the AQ
+    if ($wasQueried)
+	return 4;
+    else
+	return 1;
+
     if ($gender == "Male")
-        return 4;
+        return 5;
     if ($marriage_type == "eternity")
-        return 3;
+        return 4;
     if ($marriage_type == "time")
-        return 2;
+        return 3;
     if ($marriage_type == "civil")
-        return 1;
-    return 0; // unknown and BYU types
+        return 2;
+    return 1; // unknown and BYU types
 }
 
 

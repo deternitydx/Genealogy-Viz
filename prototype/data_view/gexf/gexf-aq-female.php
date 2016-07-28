@@ -286,14 +286,14 @@ function process_results($result) {
 
 function calculate_weight($marriage_type, $gender) {
     if ($gender == "Female")
-        return 4;
+        return 5;
     if ($marriage_type == "eternity")
-        return 3;
+        return 4;
     if ($marriage_type == "time")
-        return 2;
+        return 3;
     if ($marriage_type == "civil")
-        return 1;
-    return 0; // unknown and BYU types
+        return 2;
+    return 1; // unknown and BYU types
 }
 
 
