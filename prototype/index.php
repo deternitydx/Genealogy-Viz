@@ -23,14 +23,15 @@
     <ul><li><a href="chord.html?id=428&temporal=1">Sample Male-Oriented Temporal Chord Diagram</a>: Chord diagram of Parley Parker Pratt and his wives and children</li>
     <li><a href="chord.html?id=1907&temporal=1">Sample Female-Oriented Temporal Chord Diagram</a>: Chord diagram of Zina Huntington and her husbands and children</li>
     </ul></li>
-	<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>
-	<li><a href="marriageflow.html">Marriage Flow Network, Chord Popup</a>: Displays a sankey-like diagram of marriages, where the
+	<!--<li><a href="multi_chord.html">Chord Diagram Comparison over Time</a>: Displays two chord diagrams (Brigham Young and Joseph Smith) with a time slider.</li>-->
+	<li><a href="marriageflow.html?id=425,428&levels=1">Lineage Flow Network</a>: Displays a sankey-like diagram of marriages, where the
 	marriage units are represented by circles in the diagram.  
     People are hyperedges between marriages, utilizing a square node to define the person in the network.  
     On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.
         <ul> 
             <li>Patriarchal Samples
                 <ul>
+                    <li><a href="marriageflow.html?id=425,428&levels=1">Orson and Parley Pratt with 1 degree of separation</a></li>
                     <li><a href="marriageflow.html?id=615,616,51049">Brigham Young and relatives</a></li>
                     <li><a href="marriageflow.html?id=495,496,12625,12626,12627,12629">Joseph Smith and relatives</a></li>
                     <li><a href="marriageflow.html?id=615,616,51049,495,496,12625,12626,12627,12629">Brigham Young, Joseph Smith, and relatives</a></li>
@@ -38,12 +39,13 @@
             </li>
             <li>Matriarchal Samples
                 <ul>
-                    <li><a href="marriageflow.html?id=1907&wife=1&levels=1">Zina Huntington and 1 level of separation</a></li>
+                    <li><a href="marriageflow.html?id=1907&wife=1&levels=1">Zina Huntington and 1 degree of separation</a></li>
+                    <li><a href="marriageflow.html?id=1907,1908&wife=1&levels=1">Zina and Prescendia Huntington and 1 degree of separation</a></li>
                 </ul>
             </li>
         </ul>
     </li>
-	<li>Samples of chord diagrams, both static and temporal, as well as flow diagrams, can be accessed for all <a href="aqlist.php">AQ Members</a> in our database.</li>
+	<li><a href="aqlist.php">View More</a>: Provides a list of AQ members in the database and provides links to chord diagrams, both static and temporal, as well as lineage flow diagrams for each of them.</li>
 </ul>
 <p>We have collaborated with BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, who have supplied an initial database. Additional research was performed to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.</p> 
 </body>

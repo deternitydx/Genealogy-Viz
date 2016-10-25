@@ -15,6 +15,7 @@
 function goSankey() {
     var vals = new Array();
     var add = "";
+    var levels = "&levels=" + $('#levels').val();
     $(':checkbox:checked[name^=ids]').val(function() { 
         if (this.value.indexOf("&wife=1") != -1) {
             add = "&wife=-1";
@@ -23,7 +24,7 @@ function goSankey() {
             vals.push(this.value); 
     });
     var goTo = vals.join(",");
-    var link = "marriageflow.html?id=" + goTo + add;
+    var link = "marriageflow.html?id=" + goTo + add + levels;
     console.log(link);
     window.location.href = link;
     return false;
@@ -39,6 +40,9 @@ $(document).ready( function () {
 </script>
 
 <h1>Members of the Annointed Quorum</h1>
+
+<p>Below is the list of all AQ members in our database.  Use the links to view chord and lineage flow diagrams for that individual's adult marriage.  To visualize lineage flows with multiple user-chosen family units, select them with the checkboxes in the second column and use the options at the bottom of the page to generate the visualization.</p>
+
 <?php
 
 include("database.php");
@@ -92,7 +96,7 @@ foreach ($arr as $mar) {
 
 echo "</tbody></table></form>";
 echo "<h3>Actions available for selected members</h3>";
-echo "<p><button onClick='goSankey();'>Combined Marriage Flow View</button> Note: this view is only available currently if all those members selected are male or female.  No mixed gender isplays are available at this time.</p>";
+echo "<p>Degrees of separation: <select id='levels'><option selected value='0'>0</option><option value='1'>1</option><option value='2'>2</option></select>  View: <button onClick='goSankey();'>Combined Lineage Flow</button> <br/>Note: this combined view is only available currently if all selected members are male or female.  No mixed gender displays are available at this time.</p>";
 ?>
 </body>
 </html>
