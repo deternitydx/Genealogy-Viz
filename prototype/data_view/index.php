@@ -3,6 +3,30 @@
 <title>Genealogy Visualizations</title>
 
 <link rel="stylesheet" href="../css/style.css">
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="../js/jquery-2.1.1.js"></script>
+  
+<script type="text/javascript">
+function goSankey() {
+    var vals = new Array();
+    var add = "";
+    var levels = "&levels=" + $('#levels').val();
+    add = $('#personid').val();
+    var link = "../marriageflow.html?id=" + add + levels;
+    console.log(link);
+    window.location.href = link;
+    return false;
+}
+function goChord() {
+    var vals = new Array();
+    var add = "";
+    add = $('#personid').val();
+    var link = "../chord.html?id=" + add;
+    console.log(link);
+    window.location.href = link;
+    return false;
+}
+</script>
 </head>
 
 <body>
@@ -53,6 +77,11 @@
 	<li><a href="documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
 	<li><a href="compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
 </ul>
+
+<h2>Run Visualizations</h2>
+<p>Type a person's UVA ID in the box below and select options to view their chord diagram or lineage flow.</p>
+<p>UVA ID: <input type='text' size="8" id="personid">  Degrees of separation: <select id='levels'><option selected value='0'>0</option><option value='1'>1</option><option value='2'>2</option></select>  View: <button onClick='goSankey();'>Lineage Flow</button> <button onClick='goChord();'>Family Unit Chord</button></p>
+
 
 <h2>REST API Service</h2>
 <p>There is an api service available for accessing the data needed for visualizations.  It always creates a JSON response.</p>
