@@ -66,6 +66,7 @@
 
 <hr style="width:100%;text-align:center;border:1px solid black;"/>
 
+<!--
 <h2>Visualization Prototypes from Initial NCP Data</h2>
 Using the initial database from the Nauvoo Community Project, we created sample visualizations to start collecting our ideas.
 <ul>
@@ -82,6 +83,7 @@ Using the initial database from the Nauvoo Community Project, we created sample 
 	that man's marriages and children in chord form.  It also allows for a "time" argument of the form "YYYY-MM-DD" as the date of the marriage
 	status to show  Links are created from women to their children in the marriage.</li>
 </ul>
+-->
 
 <h2>Data Views of Initial NCP Data</h2>
 <p>To better understand the initial NCP database and allow our researchers to easily find individuals and marriages to update, we provide a few simple data tables from our copy of the initial database.  The links below allow access to some parts of that data.</p>
