@@ -43,6 +43,8 @@ function goChord() {
 <h2>Special Queries of UVA's Database</h2>
 <p>The following are special queries generated to give specific views of our database.</p>
 <ul>
+	<li><a href="aq_age_at_first_marriage2.php">Age at First Marriage (AQ Members)</a>: Age of each person in the AQ at their first marriage</li>
+	<li><a href="age_at_first_marriage2.php">Age at First Marriage</a>: Age of each person at their first marriage</li>
 	<li><a href="query1.php">First Long Query</a>: "Display list of (A, C, set of B)s for which (Marriage between A and B for time or eternity) and (Marriage between A and C, civil) and not (Marriage between A and C for time or eternity) and C's death after A+B's sealing"</li>
 	<li><a href="sealings_pre1844.php">Sealings Before 1844</a>: List of all time and eternity sealings before 7/1/1844.</li>
 	<li><a href="sealings_pre1845.php">Sealings Before 1845</a>: List of all time and eternity sealings before 12/10/1845.</li>
