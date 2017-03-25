@@ -83,11 +83,21 @@ $db = pg_connect($db_conn_string);
 
 // Insert this person with either source or target (direction) pointing to this id
 function insertPerson($person, $direction, $id) {
-    global $people, $marriageUnits, $ids, $currentLevel;
+    global $people, $marriageUnits, $ids, $currentLevel, $db;
     
     // If they are not already there, add them
     if (!isset($people[$person["ID"]]))
-        $people[$person["ID"]] =  array("id"=>$person["ID"], "source"=>array(), "target"=>array(), "gender"=>$person["Gender"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "childOf"=>$person["BiologicalChildOfMarriage"], "birthdate"=>$person["BirthDate"], "deathdate" => $person["DeathDate"]);
+        $people[$person["ID"]] =  array(
+            "id"=>$person["ID"], 
+            "source"=>array(), 
+            "target"=>array(), 
+            "gender"=>$person["Gender"], 
+            "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], 
+            "childOf"=>$person["BiologicalChildOfMarriage"], 
+            "birthdate"=>$person["BirthDate"], 
+            "deathdate" => $person["DeathDate"]
+        );
+
         
     // If they don't have a parent marriage, then set this field to -1
     if (!isset($person["BiologicalChildOfMarriage"]) || $person["BiologicalChildOfMarriage"] == "") {
@@ -97,6 +107,26 @@ function insertPerson($person, $direction, $id) {
     //TODO Add a query here to get the person's marriages and add them with from:marriagedate -> to:deathdate|divorcedate|canceldate under
     //              $people[$person["ID"]["marriages"][topersonid] = [start=> date, end=>date]
     //     see *** below
+    
+    // Get the other marriages for this person
+    $other_type = "Wife";
+    if (is_masculine()) $other_type = "Husband";
+    $this_type = "Wife";
+    if (is_feminine()) $this_type = "Husband";
+    $result = pg_query($db, "select distinct p.\"ID\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\" from (select pm.* from \"PersonMarriage\" pm where pm.\"PersonID\"=".$person["ID"]." and pm.\"Role\" = '$this_type') mid, \"PersonMarriage\" pmw, \"Person\" p, \"Marriage\" m where mid.\"MarriageID\"=pmw.\"MarriageID\" and pmw.\"Role\" = '$other_type' and pmw.\"PersonID\" = p.\"ID\" and m.\"ID\" = pmw.\"MarriageID\" order by m.\"MarriageDate\" ASC;");
+    $arr = pg_fetch_all($result);
+    $people[$person["ID"]]["marriages"] = array();
+    if ($arr) {
+        foreach($arr as $mar) {
+            if (!isset($people[$person["ID"]]["marriages"][$mar["ID"]])) {
+                $people[$person["ID"]]["marriages"][$mar["ID"]] = array(
+                    "marriagedate" => $mar["MarriageDate"],
+                    "divorcedate" => $mar["DivorceDate"],
+                    "canceldate" => $mar["CancelledDate"]
+                );
+            }
+        }
+    }
 
     // Set the level on the marriage if we need one
     $level = $currentLevel + 1;
@@ -106,8 +136,13 @@ function insertPerson($person, $direction, $id) {
     // If this person is the gender of the marriage units, create a marriage unit for them
     if ((is_masculine() && $person["Gender"] == "Male") || (is_feminine() && $person["Gender"] == "Female")) {
         if (!array_key_exists($person["ID"], $marriageUnits))
-            $marriageUnits[$person["ID"]] =  array("id"=>$person["ID"], "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], "level"=>$level,
-                                                    "start"=>$person["BirthDate"], "end"=>$person["DeathDate"]);
+            $marriageUnits[$person["ID"]] =  array(
+                "id"=>$person["ID"], 
+                "name"=>$person["Last"] . ", " . $person["First"] . " " . $person["Middle"], 
+                "level"=>$level,
+                "start"=>$person["BirthDate"], 
+                "end"=>$person["DeathDate"]);
+
         if (!in_array($person["ID"], $people[$person["ID"]]["target"]))
             array_push($people[$person["ID"]]["target"], $person["ID"]);
     }
@@ -177,8 +212,10 @@ function processID($id) {
         exit;
     }
     $arr = pg_fetch_all($result);
-    foreach($arr as $wife) {
-        insertPerson($wife, "target", $id);    
+    if($arr) {
+        foreach($arr as $wife) {
+            insertPerson($wife, "target", $id);    
+        }
     }
 
     // Get the children for this person's marriage 
@@ -342,7 +379,7 @@ foreach ($people as $k => $person) {
 }
 $i = 0;
 foreach ($fixed as $person) {
-            echo "\n{ \n\"id\":" . $person["id"] . ", \n\"name\":\"" . $person["name"] . "\", \n\"source\": [" . implode(",",$person["source"]). "], \n\"target\": [" .implode(",",$person["target"]) ."], \n\"gender\":\"".$person["gender"] ."\", \n\"birthdate\":\"".$person["birthdate"]."\", \n\"deathdate\":\"".$person["deathdate"]."\", \n\"childOf\":\"".$person["childOf"]."\"\n}";
+            echo "\n{ \n\"id\":" . $person["id"] . ", \n\"name\":\"" . $person["name"] . "\", \n\"source\": [" . implode(",",$person["source"]). "], \n\"target\": [" .implode(",",$person["target"]) ."], \n\"gender\":\"".$person["gender"] ."\", \n\"birthdate\":\"".$person["birthdate"]."\", \n\"deathdate\":\"".$person["deathdate"]."\", \n\"childOf\":\"".$person["childOf"]."\",\n\"marriages\":".json_encode($person["marriages"], JSON_PRETTY_PRINT)."}";
             if ($i++ < count($fixed) -1) echo ",\n";
 }
 

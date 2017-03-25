@@ -170,8 +170,9 @@ d3.json(json_location, function(jsonData) {
             edge.end = person.deathdate;
             _this.links.push(edge);
         });
+        console.log(person);
         // add an edge for each target from this person
-        person.targets.forEach(function(tgt) {
+        person.targets.forEach(function(tgt, idx) {
             var edge = {};
             edge.source = i;
             edge.sourcePerc = 1;
@@ -180,6 +181,16 @@ d3.json(json_location, function(jsonData) {
             edge.gender = person.gender;
             edge.start = person.birthdate;
             edge.end = person.deathdate;
+            var realTgt = person.targetMU[idx].id;
+            console.log(realTgt);
+            if (person.marriages && person.marriages[realTgt]) {
+                if (person.marriages[realTgt].marriagedate)
+                    edge.start = person.marriages[realTgt].marriagedate;
+                if (person.marriages[realTgt].canceldate)
+                    edge.end = person.marriages[realTgt].canceldate;
+                if (person.marriages[realTgt].divorcedate)
+                    edge.end = person.marriages[realTgt].divorcedate;
+            }
             _this.links.push(edge);
         });
         
@@ -196,8 +207,8 @@ d3.json(json_location, function(jsonData) {
         edge.tvalue = edge.targetPerc;
     });
 
-    console.log(_this.nodes);
-    console.log(_this.links);
+    //console.log(_this.nodes);
+    //console.log(_this.links);
   _this.sankey = d3.sankey()
       .nodes(_this.nodes)
       .links(_this.links)
