@@ -45,6 +45,30 @@
             </li>
         </ul>
     </li>
+    <li><a href="marriageflow_temporal.html?id=425,428&levels=1">Temporal Lineage Flow Network</a>: 
+    Displays a sankey-like flow diagram of marriages, where the
+	marriage units are represented by circles in the diagram.  
+    People are hyperedges between marriages, utilizing a square node to define the person in the network. This version is <em>temporal</em>,
+    meaning that it provides a time slider to visualize which portions of the lineage are alive at any point in time.  Any marriages or
+    individuals which have no dates available will be shown "ghosted" for all time. 
+    On clicking a marriage unit, this will open up a popup frame with a chord diagram of the marriage.
+        <ul> 
+            <li>Patriarchal Samples
+                <ul>
+                    <li><a href="marriageflow_temporal.html?id=425,428&levels=1">Orson and Parley Pratt with 1 degree of separation</a></li>
+                    <li><a href="marriageflow_temporal.html?id=615,616,51049">Brigham Young and relatives</a></li>
+                    <li><a href="marriageflow_temporal.html?id=495,496,12625,12626,12627,12629">Joseph Smith and relatives</a></li>
+                    <li><a href="marriageflow_temporal.html?id=615,616,51049,495,496,12625,12626,12627,12629">Brigham Young, Joseph Smith, and relatives</a></li>
+                </ul>
+            </li>
+            <li>Matriarchal Samples
+                <ul>
+                    <li><a href="marriageflow_temporal.html?id=1907&wife=1&levels=1">Zina Huntington and 1 degree of separation</a></li>
+                    <li><a href="marriageflow_temporal.html?id=1907,1908&wife=1&levels=1">Zina and Prescendia Huntington and 1 degree of separation</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
 	<li><a href="aqlist.php">View More</a>: Provides a list of AQ members in the database and provides links to chord diagrams, both static and temporal, as well as lineage flow diagrams for each of them.</li>
 </ul>
 <p>We have collaborated with BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, who have supplied an initial database. Additional research was performed to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.</p> 
