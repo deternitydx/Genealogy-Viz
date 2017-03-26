@@ -131,8 +131,11 @@ var QueryString = function () {
 
     // Instantiate the sankey display, selecting the chart object as the target
     var sankeyDiagram = new SankeyDisplay("#chart");
-    sankeyDiagram.width = $(document).width() - 25;
-    sankeyDiagram.height = $(document).height() - 25;
+    //sankeyDiagram.width = $(document).width() - 25;
+    //sankeyDiagram.height = $(document).height() - 25;
+    sankeyDiagram.width = 20;
+    sankeyDiagram.height = 20;
+    sankeyDiagram.breadth = 225;
     //sankeyDiagram.height=1000;
     var append = "?";
     if (QueryString.wife)

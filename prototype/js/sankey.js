@@ -2,13 +2,21 @@ d3.sankey = function() {
   var sankey = {},
       nodeWidth = 24,
       nodePadding = 8,
+      nodeBreadth = 0,
       size = [1, 1],
       nodes = [],
-      links = [];
+      links = [],
+      numBreadths = 1;
 
   sankey.nodeWidth = function(_) {
     if (!arguments.length) return nodeWidth;
     nodeWidth = +_;
+    return sankey;
+  };
+
+  sankey.nodeBreadth = function(_) {
+    if (!arguments.length) return nodeBreadth;
+    nodeBreadth = +_;
     return sankey;
   };
 
@@ -41,6 +49,12 @@ d3.sankey = function() {
     computeNodeLinks();
     computeNodeValues();
     computeNodeBreadths();
+    if (nodeBreadth == 0) {
+        scaleNodeBreadths((size[0] - nodeWidth) / numBreadths);
+    } else {
+        scaleNodeBreadths(nodeBreadth);
+        updateWidth();
+    }
     updateHeight();
     computeNodeDepths(iterations);
     computeLinkDepths();
@@ -136,7 +150,7 @@ d3.sankey = function() {
     }
 
     // full depth is x - 1
-    var fullDepth = x - 1;
+    numBreadths = x - 1;
 
     var changed = true;
     while (changed) {
@@ -146,7 +160,7 @@ d3.sankey = function() {
             nextNodes = [];
             remainingNodes.forEach(function(node) {
                 // maybe we can move it
-                if (node.x < fullDepth) {
+                if (node.x < numBreadths) {
                     // if it has nodes that count it as a source, then move it forward to just next to it's closest child
                     if (node.sourceLinks.length) {
                         node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
@@ -186,7 +200,6 @@ d3.sankey = function() {
     //
     //moveSinksRight(x);
     //moveSourcesRight();
-    scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
   }
 
   function moveSourcesRight() {
@@ -214,6 +227,10 @@ d3.sankey = function() {
     nodes.forEach(function(node) {
       node.x *= kx;
     });
+  }
+  function updateWidth() {
+    var width = (numBreadths * nodeBreadth) + nodeWidth;
+    if (width > size[0]) size[0] = width;
   }
   function updateHeight() {
     var nodesByBreadth = d3.nest()

@@ -17,7 +17,8 @@ this.container = element;
 
 this.margin = {top: 1, right: 1, bottom: 6, left: 1},
     this.width = 1260 - this.margin.left - this.margin.right,
-    this.height = 800 - this.margin.top - this.margin.bottom;
+    this.height = 800 - this.margin.top - this.margin.bottom,
+    this.breadth = 0;
 
 this.formatNumber = d3.format(",.0f"),
     this.format = function(d) { return formatNumber(d) + " TWh"; },
@@ -136,6 +137,7 @@ d3.json(json_location, function(jsonData) {
       .nodes(_this.nodes)
       .links(_this.links)
       .size([_this.width, _this.height])
+      .nodeBreadth(_this.breadth)
       .layout(150);
 
   _this.path = _this.sankey.link();
