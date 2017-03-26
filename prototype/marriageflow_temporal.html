@@ -18,7 +18,7 @@ svg {
 }
 
 #chart {
-  padding-top: 60px;
+  padding-top: 70px;
   height: 500px;
 }
 
@@ -53,6 +53,10 @@ svg {
     margin-right: auto;
 }
 
+.d3-slider-axis-bottom {
+    height: 10px;
+}
+
 #bottom {
     padding-top: 0px;
     width: 95%;
@@ -64,6 +68,7 @@ svg {
     background-color: #ffffff;
     padding-left: 2%;
     margin-right: auto;
+    margin-bottom: 0px;
 }
 
 #bottom svg {
@@ -132,7 +137,7 @@ svg {
 <script src="js/d3.v3.min.js"></script>
 <script src="js/slider/d3.slider.js"></script>
 <script src="js/sankey.js"></script>
-<script src="js/display_sankey_temporal.js"></script>
+<script src="js/display_sankey_temporal2.js"></script>
 <script src="js/display_chord.js"></script>
 <script>
 var QueryString = function () {
@@ -161,8 +166,11 @@ var QueryString = function () {
 
     // Instantiate the sankey display, selecting the chart object as the target
     var sankeyDiagram = new SankeyDisplay("#chart");
-    sankeyDiagram.width = $(document).width() - 25;
-    sankeyDiagram.height = $(document).height() - 25;
+    //sankeyDiagram.width = $(document).width() - 25;
+    //sankeyDiagram.height = $(document).height() - 25;
+    sankeyDiagram.width = 20;
+    sankeyDiagram.height = 20;
+    sankeyDiagram.breadth = 225;
     //sankeyDiagram.height=1000;
     var append = "?";
     if (QueryString.wife)

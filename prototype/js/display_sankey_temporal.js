@@ -19,7 +19,8 @@ this.container = element;
 
 this.margin = {top: 1, right: 1, bottom: 6, left: 1},
     this.width = 1260 - this.margin.left - this.margin.right,
-    this.height = 800 - this.margin.top - this.margin.bottom;
+    this.height = 800 - this.margin.top - this.margin.bottom,
+    this.breadth = 0;
 
 this.formatNumber = d3.format(",.0f"),
     this.format = function(d) { return formatNumber(d) + " TWh"; },
@@ -83,7 +84,7 @@ this.temporalHighlight = function(event, time) {
     var timestr = time + "-01-01";
     console.log("updating to timestr " + timestr);
     _this.svg.selectAll(".link")
-    .filter(function(d) { console.log(d);if(d.start <= timestr && d.end >= timestr) {console.log(d); return true;} else return false; })
+    .filter(function(d) { if(d.start <= timestr && d.end >= timestr) {return true;} else return false; })
     .style("opacity", 1);
     _this.svg.selectAll(".link")
     .filter(function(d) { return d.start > timestr || d.end < timestr })
@@ -170,7 +171,6 @@ d3.json(json_location, function(jsonData) {
             edge.end = person.deathdate;
             _this.links.push(edge);
         });
-        console.log(person);
         // add an edge for each target from this person
         person.targets.forEach(function(tgt, idx) {
             var edge = {};
@@ -182,7 +182,6 @@ d3.json(json_location, function(jsonData) {
             edge.start = person.birthdate;
             edge.end = person.deathdate;
             var realTgt = person.targetMU[idx].id;
-            console.log(realTgt);
             if (person.marriages && person.marriages[realTgt]) {
                 if (person.marriages[realTgt].marriagedate)
                     edge.start = person.marriages[realTgt].marriagedate;
@@ -213,6 +212,7 @@ d3.json(json_location, function(jsonData) {
       .nodes(_this.nodes)
       .links(_this.links)
       .size([_this.width, _this.height])
+      .nodeBreadth(_this.breadth)
       .layout(150);
 
   _this.path = _this.sankey.link();
@@ -349,7 +349,7 @@ d3.json(json_location, function(jsonData) {
       .style("stroke", function(d) { return d.color; })
       .style("stroke-opacity", "0.5")
       .style("fill-opacity","0.2")
-      .on("click", function() {console.log(_this);});
+      .on("click", function() {/*console.log(_this);*/});
 //    .append("title")
 //      .text(function(d) { return d.name + "\n" + format(d.value); });
 /*
