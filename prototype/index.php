@@ -1,3 +1,26 @@
+<?php
+if (isset($_GET["q"])) {
+    $q = $_GET["q"];
+
+    if ($q == "smith") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/choose.php?id=495");
+    } else if ($q == "zina") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/choose.php?id=1907");
+    } else if ($q == "young") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/choose.php?id=615");
+    }
+    
+    if ($q == "smith-chord") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/chord.html?id=495&temporal=1");
+    } else if ($q == "zina-chord") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/chord.html?id=1907&temporal=1");
+    } else if ($q == "young-chord") {
+        header("Location: http://ford.cs.virginia.edu/nauvoo/chord.html?id=615&temporal=1");
+    }
+    exit();
+}
+?>
+
 <html>
 <head>
 <title>Genealogy Visualizations</title>
