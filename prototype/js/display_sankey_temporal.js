@@ -213,7 +213,7 @@ d3.json(json_location, function(jsonData) {
       .links(_this.links)
       .size([_this.width, _this.height])
       .nodeBreadth(_this.breadth)
-      .layout(150);
+      .layout(350);
 
   _this.path = _this.sankey.link();
      //console.log(_this.sankey.nodes);
