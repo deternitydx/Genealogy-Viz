@@ -299,6 +299,10 @@ function process_results($result) {
         } else {
             if (isset($person["MarriageDate"]))
                 $begindate = $person["MarriageDate"];
+            else
+                $begindate = $person["BirthDate"];
+
+
             if (isset($person["DivorceDate"]))
                 $enddate = $person["DivorceDate"];
             else if (isset($person["CancelledDate"]))
