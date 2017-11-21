@@ -1,4 +1,4 @@
-Geneology-Viz
+Genealogy-Viz
 =============
 
-Visualizations of Mormon Geneology with updated chord diagram and sankey.js files
+Visualizations of Mormon Genealogy with updated chord diagram and sankey.js files
