@@ -153,9 +153,9 @@ foreach ($parents as $parent) {
     $str .= "}";
 	array_push($parPrint, $str);
 } 
-echo implode(",", $parPrint);
+echo implode(",\n", $parPrint);
 
-echo "], \"children\": [";
+echo "],\n \"children\": [\n";
 
 $chiPrint = array();
 foreach ($children as $child) {
@@ -164,9 +164,9 @@ foreach ($children as $child) {
 		"\"gender\": \"". $child["Gender"] ."\", \"adoptionDate\": \"".$child["AdoptionDate"]."\"}");
 } 
 
-echo implode(",", $chiPrint);
+echo implode(",\n", $chiPrint);
 
-echo "], \"relationships\": [ " . implode(",", $relations) ."] }";
+echo "],\n \"relationships\": [ \n" . implode(",\n", $relations) ."] }\n";
 
 
 function print_empty($error) {
