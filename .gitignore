@@ -1,3 +1,4 @@
 data/
 prototype/api/*.txt
 prototype/schema/
+prototype/database.php
