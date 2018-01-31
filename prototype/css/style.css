@@ -109,3 +109,11 @@ li {
 li ul li {
     margin-bottom: 1px;
 }
+
+.callout-box {
+    background: #EEEEEE;
+    padding: 24px;
+    padding-top: 24px;
+    margin: 40px;
+    border: 1px solid #CCCCCC;
+}

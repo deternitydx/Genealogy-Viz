@@ -31,8 +31,12 @@ if (isset($_GET["q"])) {
 <body>
 <h1>Genealogy Visualizations</h1>
 <h4>Robbie Hott, <a href="http://www.cs.virginia.edu/~jh2jf/">www.cs.virginia.edu/~jh2jf</a></h4>
-<h4>Notes <a href="http://www.cs.virginia.edu/~jh2jf/notes/">www.cs.virginia.edu/~jh2jf/notes/</a></h4>
-<h2>Visualization Prototypes</h2>
+    
+<div class="callout-box">
+<h3 style="margin-bottom: 0px; padding-bottom: 0px;"><a href="aqlist.php">Explore the Anointed Quorum</a></h3><p style="margin-top: 3px; padding-top: 0px;">View a list of AQ members in the database and explore their chord diagrams, both static and temporal, as well as lineage flow diagrams.</p>
+</div>
+
+<h2>Visualization Samples</h2>
 <ul>
 	<li><a href="chord.html?id=615">Chord Diagram</a>: Displays a chord diagram of a marriage.  Given a husband's id (by argument "id") from the
     real database, it shows that man's marriages and children in chord form.  Links are created from women to their children in the marriage.
@@ -92,7 +96,6 @@ if (isset($_GET["q"])) {
             </li>
         </ul>
     </li>
-	<li><a href="aqlist.php">View More</a>: Provides a list of AQ members in the database and provides links to chord diagrams, both static and temporal, as well as lineage flow diagrams for each of them.</li>
 </ul>
 <p>We have collaborated with BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, who have supplied an initial database. Additional research was performed to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.</p> 
 </body>
