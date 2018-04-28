@@ -46,6 +46,7 @@
 $males = array();
 $newmales = array();
 $seenSources = array();
+$cleanup = array();
 $nodes = array();
 $edges = array();
 $dummyCounter = 100000000;
@@ -127,6 +128,7 @@ $males = $newmales;
 while (!empty($newmales) && $iterations++ < $maxIter) {
     $prevmales = "(" . implode(",", array_keys($newmales)) . ")";
     $newmales = array();
+    $cleanup = array();
 
     // Get all males who are their children (born before date)
     $datestr1 = "";
@@ -273,13 +275,24 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 
 
+// At the end, we need to add all the $newmales as dummy nodes:
+foreach ($cleanup as $id => $v) {
+    if (!isset($nodes[$id])) {
+        $nodes[$id] = array(
+            "id" => (int) $id,
+            "label" => "Placeholder Marriage for " .$id,
+            "begin" => "1800-01-01",
+            "end" => "1900-01-01"
+        );
+    } 
+}
 
 
 
 
 
 function process_results($result) {
-    global $newmales, $nodes, $edges, $dummyCounter, $seenSources;
+    global $newmales, $nodes, $edges, $dummyCounter, $seenSources, $cleanup;
     while ($person = pg_fetch_array($result)) {
         // if they don't have a to-marriage, then add one for their ID.
         if ($person["Gender"] == "Male") {
@@ -297,6 +310,7 @@ function process_results($result) {
             if (isset($person["SpouseID"]) && $person["SpouseID"] != null && $person["SpouseID"] != "") {
                 $target = $person["MarriageID"];
                 $newmales[$person["SpouseID"]] = true;
+                $cleanup[$person["MarriageID"]] = true;
             } else {
                 $target = $dummyCounter++;
                 $nodes[$target] = array(
@@ -313,6 +327,7 @@ function process_results($result) {
         if (isset($person["ChildOf"]) && $person["ChildOf"] != null && $person["ChildOf"] != "") {
             $childOf = $person["ChildOf"];
             $newmales[$person["Father"]] = true;
+            $cleanup[$person["ChildOf"]] = true;
         } else {
             if (isset($seenSources[$person["ID"]]))
                 $childOf = $seenSources[$person["ID"]];
@@ -329,8 +344,8 @@ function process_results($result) {
         }
         // A
         // ndd the person link from their marriage of birth to their marriage of adulthood
-        $begindate = "";
-        $enddate = "";
+        $begindate = null;
+        $enddate = null;
         if ($person["Gender"] == "Male") {
             $begindate = $person["BirthDate"];
             $enddate = $person["DeathDate"];
@@ -345,8 +360,8 @@ function process_results($result) {
                 $enddate = $person["DeathDate"];
         }
         $edge = array(
-            "source" => $childOf,
-            "target" => $target, 
+            "source" => (int) $childOf,
+            "target" => (int) $target, 
             "label" => htmlspecialchars($person["First"] . " " . $person["Last"] . " " . $person["ID"]),
             "weight" => calculate_weight($person["Type"], $person["Gender"]), // get the weight from the type
             "begin" => $begindate,
@@ -389,10 +404,13 @@ header("Content-Type: text/json");
 // Opening of the file
 
 // Nodes
+foreach ($nodes as $i => &$node) {
+    $node["id"] = (int) $node["id"];
+}
 
 // Edges
-foreach ($edges as $i => $edge) {
-    $edges[$i]["id"] = $i;
+foreach ($edges as $i => &$edge) {
+    $edge["id"] = (int) $i;
 }
 
 $output = array("nodes" => array_values($nodes), "edges"=>$edges);

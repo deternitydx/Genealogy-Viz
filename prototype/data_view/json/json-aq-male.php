@@ -238,7 +238,17 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 
 if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 
-
+// At the end, we need to add all the $newmales as dummy nodes:
+foreach ($newmales as $id => $v) {
+    if (!isset($nodes[$id])) {
+        $nodes[$id] = array(
+            "id" => (int) $id,
+            "label" => "Placeholder Marriage for " .$id,
+            "begin" => "1800-01-01",
+            "end" => "1900-01-01"
+        );
+    } 
+}
 
 
 
@@ -291,16 +301,16 @@ function process_results($result) {
             
         }
         // Add the person link from their marriage of birth to their marriage of adulthood
-        $begindate = "";
-        $enddate = "";
+        $begindate = null;
+        $enddate = null;
         if ($person["Gender"] == "Male") {
             $begindate = $person["BirthDate"];
             $enddate = $person["DeathDate"];
         } else {
             if (isset($person["MarriageDate"]))
                 $begindate = $person["MarriageDate"];
-            else
-                $begindate = $person["BirthDate"];
+            //else
+            //    $begindate = $person["BirthDate"];
 
 
             if (isset($person["DivorceDate"]))
@@ -311,8 +321,8 @@ function process_results($result) {
                 $enddate = $person["DeathDate"];
         }
         $edge = array(
-            "source" => $childOf,
-            "target" => $target, 
+            "source" => (int) $childOf,
+            "target" => (int) $target, 
             "label" => htmlspecialchars($person["First"] . " " . $person["Last"]),
             "weight" => calculate_weight($person["Type"], $person["Gender"]),
             "begin" => $begindate,
@@ -355,13 +365,16 @@ header("Content-Type: text/json");
 // Opening of the file
 
 // Nodes
+foreach ($nodes as $i => &$node) {
+    $node["id"] = (int) $node["id"];
+}
 
 // Edges
 foreach ($edges as $i => $edge) {
     $edges[$i]["id"] = $i;
 }
 
-$output = array("nodes" => $nodes, "edges"=>$edges);
+$output = array("nodes" => array_values($nodes), "edges"=>$edges);
 
 echo json_encode($output, JSON_PRETTY_PRINT);
 

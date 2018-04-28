@@ -35,7 +35,7 @@
 // Combine submarriages with same husband/wife pair or same husband (latter is better)
 // Actually, could probably just use husband ID as marriage ID in the array and gexf, but would need to look up husband ID for child of marriage ID for each person (easy join)
 //
-//  select p.*, pm.PersonID from Person p, Marriage m, PersonMarriage pm where p.Gender='Female' and p.ChildOfMarriageID=m.ID and m.ID=pm.MarriageID and pm.Role = 'Wife';
+//  select p.*, pm.PersonID from Person p, Marriage m, PersonMarriage pm where p.Gender='Male' and p.ChildOfMarriageID=m.ID and m.ID=pm.MarriageID and pm.Role = 'Husband';
 //
 // For each result
 //  add marriage if it doesn't exist (p.ID, person's name as marriage label)
@@ -50,16 +50,25 @@ $edges = array();
 $dummyCounter = 100000000;
 $iterations = 0;
 $maxIter = 0;
+
+$office = null;
+$officeID = null;
+if (isset($_GET["office"]))
+    $office = $_GET["office"];
+else if (isset($argv[1]))
+    $office = $argv[1];
+
 if (isset($_GET["level"]))
     $maxIter = $_GET["level"];
-else if (isset($argv[1]))
-    $maxIter = $argv[1];
+else if (isset($argv[2]))
+    $maxIter = $argv[2];
 
 $date = null;
 if (isset($_GET["date"]))
     $date = $_GET["date"];
-else if (isset($argv[2]))
-    $date = $argv[2];
+else if (isset($argv[3]))
+    $date = $argv[3];
+
 
 include("../../database.php");
 $db = pg_connect($db_conn_string);
@@ -68,13 +77,24 @@ $creator = "Command Line";
 if (isset($_SERVER['REQUEST_URI']))
     $creator = $_SERVER['REQUEST_URI'];
 
+// Get the Office ID
+if ($office != null) {
+    $result = pg_query($db, "select \"ID\" from \"Office\" where \"Name\" = '$office' limit 1;");
+    if (!$result) {
+        exit;
+    }
+    $tmp =  pg_fetch_array($result);
+    $officeID = $tmp["ID"];
+}
+
+
 // Query for all the main gender in the AQ
 $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
     INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
-    WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
+    WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
@@ -90,17 +110,17 @@ $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"L
     p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
     , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
     FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+    LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
     INNER JOIN public.\"ChurchOrgMembership\" c ON (c.\"PersonID\" = p.\"ID\")
     LEFT OUTER JOIN
-        (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" as \"Type\" 
+        (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" as \"Type\"
             , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
             FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' AND m2.\"Role\" = 'Wife' 
+            WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' 
                     AND m1.\"MarriageID\" = m.\"ID\" $datestr
             GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\") m
         ON (m.\"PersonID\" = p.\"ID\")
-    WHERE p.\"Gender\" = 'Male' AND c.\"ChurchOrgID\" = 1
+    WHERE p.\"Gender\" = 'Female' AND c.\"ChurchOrgID\" = 1
     ORDER BY p.\"ID\" asc");
 if (!$result) {
     exit;
@@ -108,6 +128,52 @@ if (!$result) {
 
 // For each (secondary level) person
 process_results($result);
+
+// NOW THE OFFICES
+if ($officeID != null) {
+
+    // Query for all the main gender in the Office
+    $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
+        FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+        INNER JOIN public.\"PersonOffice\" c ON (c.\"PersonID\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
+        WHERE p.\"Gender\" = 'Male' AND c.\"OfficeID\" = $officeID
+        ORDER BY p.\"ID\" asc");
+    if (!$result) {
+        exit;
+    }
+
+    process_results($result);
+
+    $datestr = "";
+    if ($date != null)
+        $datestr = "AND m.\"MarriageDate\" <= '$date'";
+    // Query for all the secondary gender in the Office
+    $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
+        p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
+        , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
+        FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
+        INNER JOIN public.\"PersonOffice\" c ON (c.\"PersonID\" = p.\"ID\")
+        LEFT OUTER JOIN
+            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" as \"Type\"
+                , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
+                FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' 
+                        AND m1.\"MarriageID\" = m.\"ID\" $datestr
+                GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\") m
+            ON (m.\"PersonID\" = p.\"ID\")
+        WHERE p.\"Gender\" = 'Female' AND c.\"OfficeID\" = $officeID
+        ORDER BY p.\"ID\" asc");
+    if (!$result) {
+        exit;
+    }
+
+    // For each (secondary level) person
+    process_results($result);
+}
+
 
 // Now we have a set of people (edges) and we can see if there are missing connections
 // Really want to look up anyone who has one of these people as a father or significant other
@@ -117,7 +183,7 @@ $males = $newmales;
 while (!empty($newmales) && $iterations++ < $maxIter) {
     $prevmales = "(" . implode(",", array_keys($newmales)) . ")";
     $newmales = array();
-    
+
     // Get all males who are their children (born before date)
     $datestr = "";
     if ($date != null)
@@ -126,8 +192,8 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm, public.\"Marriage\" m
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' $datestr
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
-            AND pm.\"PersonID\" in $prevmales AND p.\"Gender\" = 'Female' AND m.\"ID\" = pm.\"MarriageID\"
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
+            AND pm.\"PersonID\" in $prevmales AND p.\"Gender\" = 'Male' AND m.\"ID\" = pm.\"MarriageID\"
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -135,7 +201,7 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
 
     process_results($result);
 
-    // Get all the females who are their children
+    // Get all the females who are their children and had marriages before that date
     $datestr1 = "";
     $datestr2 = "";
     if ($date != null) {
@@ -146,14 +212,14 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
             , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm,
-            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" 
+            (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\"
                 , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' AND m2.\"Role\" = 'Wife' 
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' AND m2.\"Role\" = 'Husband' 
                     AND m.\"ID\" = m1.\"MarriageID\" $datestr2
                 GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\") m
-        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Male' 
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
+        WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative' AND p.\"Gender\" = 'Female' 
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
             AND m.\"PersonID\" = p.\"ID\" AND pm.\"PersonID\" in $prevmales $datestr1
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -166,21 +232,22 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $datestr = "";
     if ($date != null)
         $datestr = "AND m.\"MarriageDate\" <= '$date'";
+    //TODO: I think I need to add here the marriage dates.
     $result = pg_query($db, "
     SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"SpouseID\", m.\"Type\"
             , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
         INNER JOIN
             (SELECT DISTINCT m1.\"PersonID\" as \"PersonID\", m2.\"PersonID\" as \"SpouseID\", m.\"Type\" 
                 , m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\"
                 FROM public.\"PersonMarriage\" m1, public.\"PersonMarriage\" m2, public.\"Marriage\" m
-                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Husband' 
-                    AND m2.\"Role\" = 'Wife' AND m.\"ID\" = m1.\"MarriageID\" $datestr  
+                WHERE m1.\"MarriageID\" = m2.\"MarriageID\" AND m1.\"Role\" = 'Wife' 
+                    AND m2.\"Role\" = 'Husband' AND m.\"ID\" = m1.\"MarriageID\" $datestr 
                 GROUP BY m1.\"PersonID\", m2.\"PersonID\", m.\"Type\", m.\"MarriageDate\", m.\"DivorceDate\", m.\"CancelledDate\") m
             ON (m.\"PersonID\" = p.\"ID\")
-        WHERE p.\"Gender\" = 'Male' 
+        WHERE p.\"Gender\" = 'Female' 
             AND m.\"SpouseID\" in $prevmales
         ORDER BY p.\"ID\" asc");
     if (!$result) {
@@ -193,13 +260,13 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
         INNER JOIN
     (SELECT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\"
         FROM public.\"Person\" p, public.\"Name\" n, public.\"PersonMarriage\" pm
         WHERE p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative'
-            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife'
+            AND pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband'
         ORDER BY p.\"ID\" asc) ch ON (ch.\"ChildOf\" = p.\"ID\") INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
 
         WHERE ch.\"ID\" in $prevmales
@@ -216,9 +283,9 @@ while (!empty($newmales) && $iterations++ < $maxIter) {
     $result = pg_query($db, "SELECT DISTINCT p.\"ID\",n.\"First\",n.\"Middle\",n.\"Last\",p.\"BirthDate\",p.\"DeathDate\",
         p.\"Gender\", p.\"BirthPlaceID\", pm.\"PersonID\" as \"ChildOf\", m.\"Type\"
         FROM public.\"Person\" p INNER JOIN public.\"Name\" n ON (p.\"ID\"=n.\"PersonID\" AND n.\"Type\"='authoritative') 
-        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Wife')
+        LEFT OUTER JOIN public.\"PersonMarriage\" pm ON (pm.\"MarriageID\" = p.\"BiologicalChildOfMarriage\" AND pm.\"Role\" = 'Husband')
         INNER JOIN public.\"Marriage\" m ON m.\"ID\" = pm.\"MarriageID\"
-        WHERE p.\"Gender\" = 'Female' AND p.\"ID\" in $newones 
+        WHERE p.\"Gender\" = 'Male' AND p.\"ID\" in $newones 
         ORDER BY p.\"ID\" asc");
     if (!$result) {
         exit;
@@ -238,17 +305,6 @@ if ($iterations == 100) error_log("Went 100 iterations without stopping\n");
 
 
 
-// At the end, we need to add all the $newmales as dummy nodes:
-foreach ($newmales as $id => $v) {
-    if (!isset($nodes[$id])) {
-        $nodes[$id] = array(
-            "id" => (int) $id,
-            "label" => "Placeholder Marriage for " .$id,
-            "begin" => "1800-01-01",
-            "end" => "1900-01-01"
-        );
-    } 
-}
 
 
 
@@ -257,7 +313,7 @@ function process_results($result) {
     global $newmales, $nodes, $edges, $dummyCounter;
     while ($person = pg_fetch_array($result)) {
         // if they don't have a to-marriage, then add one for their ID.
-        if ($person["Gender"] == "Female") {
+        if ($person["Gender"] == "Male") {
             $newmales[$person["ID"]] = true;
             $nodes[$person["ID"]] = array(
                 "id" => $person["ID"],
@@ -269,7 +325,7 @@ function process_results($result) {
 
         // set up the target
         $target = $person["ID"];
-        if ($person["Gender"] == "Male") {
+        if ($person["Gender"] == "Female") {
             if (isset($person["SpouseID"]) && $person["SpouseID"] != null && $person["SpouseID"] != "") {
                 $target = $person["SpouseID"];
                 $newmales[$target] = true;
@@ -300,17 +356,18 @@ function process_results($result) {
             
         }
         // Add the person link from their marriage of birth to their marriage of adulthood
-        $begindate = null;
-        $enddate = null;
-        if ($person["Gender"] == "Female") {
+        $begindate = "";
+        $enddate = "";
+        if ($person["Gender"] == "Male") {
             $begindate = $person["BirthDate"];
             $enddate = $person["DeathDate"];
         } else {
             if (isset($person["MarriageDate"]))
                 $begindate = $person["MarriageDate"];
-            //else // added for consistency with male version
-            //    $begindate = $person["BirthDate"];
-            
+            else
+                $begindate = $person["BirthDate"];
+
+
             if (isset($person["DivorceDate"]))
                 $enddate = $person["DivorceDate"];
             else if (isset($person["CancelledDate"]))
@@ -319,8 +376,8 @@ function process_results($result) {
                 $enddate = $person["DeathDate"];
         }
         $edge = array(
-            "source" => (int) $childOf,
-            "target" => (int) $target, 
+            "source" => $childOf,
+            "target" => $target, 
             "label" => htmlspecialchars($person["First"] . " " . $person["Last"]),
             "weight" => calculate_weight($person["Type"], $person["Gender"]),
             "begin" => $begindate,
@@ -345,7 +402,7 @@ function process_results($result) {
 }
 
 function calculate_weight($marriage_type, $gender) {
-    if ($gender == "Female")
+    if ($gender == "Male")
         return 4;
     if ($marriage_type == "eternity")
         return 3;
@@ -357,27 +414,28 @@ function calculate_weight($marriage_type, $gender) {
 }
 
 
-
-
 //***************************************************************************************************
 // Print the results
-
 header("Content-Type: text/json");
 // Opening of the file
 
 // Nodes
-foreach ($nodes as $i => &$node) {
-    $node["id"] = (int) $node["id"];
-}
 
 // Edges
 foreach ($edges as $i => $edge) {
     $edges[$i]["id"] = $i;
 }
 
-$output = array("nodes" => array_values($nodes), "edges"=>$edges);
+$outNodes = array();
+$outEdges = array();
+
+foreach ($nodes as $node)
+    array_push($outNodes, $node);
+foreach ($edges as $edge)
+    array_push($outEdges, $edge);
+
+$output = array("nodes" => $outNodes, "edges"=>$outEdges);
 
 echo json_encode($output, JSON_PRETTY_PRINT);
-
 
 ?>
