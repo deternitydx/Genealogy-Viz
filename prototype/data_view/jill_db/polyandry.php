@@ -71,7 +71,7 @@ foreach ($arr as $mar) {
 		//array_push($resa,"\"$k\": \"$v\"");
 		array_push($resa, "$v");
 		if ($k == "WifeID") 
-			array_push($resa, "<a href=\"http://ford.cs.virginia.edu/nauvoo/data_view/marriages_by_woman.php?id=$v&name={$mar['Surname']}, {$mar['GivenName']}\">husbands</a>");
+			array_push($resa, "<a href=\"http://ford.cs.virginia.edu/nauvoo/api/marriages_by_woman.php?id=$v&name={$mar['Surname']}, {$mar['GivenName']}\">husbands</a>");
 	}
 	
 	

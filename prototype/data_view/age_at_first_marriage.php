@@ -1,21 +1,25 @@
 <html>
 <head>
 <title>Query View</title>
-<!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
   
 <!-- jQuery -->
 <script type="text/javascript" charset="utf8" src="../js/jquery-2.1.1.js"></script>
   
 <!-- DataTables -->
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-3.1.3/pdfmake-0.1.27/dt-1.10.15/b-1.3.1/b-colvis-1.3.1/b-flash-1.3.1/b-html5-1.3.1/b-print-1.3.1/cr-1.3.3/fc-3.2.2/fh-3.1.2/r-2.1.1/se-1.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-3.1.3/pdfmake-0.1.27/dt-1.10.15/b-1.3.1/b-colvis-1.3.1/b-flash-1.3.1/b-html5-1.3.1/b-print-1.3.1/cr-1.3.3/fc-3.2.2/fh-3.1.2/r-2.1.1/se-1.2.2/datatables.min.js"></script>
 
 </head>
 <body>
 <script>
 $(document).ready( function () {
-    $('#datatable').DataTable( {paging: false});
+    $('#datatable').DataTable( {paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
+    });
 } );
 </script>
 

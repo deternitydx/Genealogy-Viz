@@ -265,6 +265,12 @@ include("../database.php");
         $arr = pg_fetch_array($result);
         if ($arr != null && !empty($arr))
             $person["marriages"][$i]["children"] = $arr["count"];
+        
+        $result = pg_query("SELECT count(*) from public.\"NonMaritalSealings\" where \"MarriageID\"={$marriage["ID"]};");
+
+        $arr = pg_fetch_array($result);
+        if ($arr != null && !empty($arr))
+            $person["marriages"][$i]["adoptees"] = $arr["count"];
     }
 
     // Get the Offices for this person

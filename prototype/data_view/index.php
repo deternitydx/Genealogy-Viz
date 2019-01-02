@@ -13,6 +13,8 @@ function goSankey() {
     var levels = "&levels=" + $('#levels').val();
     add = $('#personid').val();
     var link = "../marriageflow.html?id=" + add + levels;
+    if ($('#temporal').prop('checked'))
+        link = "../marriageflow_temporal.html?id=" + add + levels;
     console.log(link);
     window.location.href = link;
     return false;
@@ -22,6 +24,8 @@ function goChord() {
     var add = "";
     add = $('#personid').val();
     var link = "../chord.html?id=" + add;
+    if ($('#temporal').prop('checked'))
+        link += "&temporal=1";
     console.log(link);
     window.location.href = link;
     return false;
@@ -34,10 +38,33 @@ function goChord() {
 <h4>Robbie Hott, <a href="http://www.cs.virginia.edu/~jh2jf/">www.cs.virginia.edu/~jh2jf</a></h4>
 <h4>Notes <a href="http://www.cs.virginia.edu/~jh2jf/notes/">www.cs.virginia.edu/~jh2jf/notes/</a></h4>
 
-<h2>Data Entry Points for UVA's Database</h2>
+<div class="callout-box">
+<h2>Run Visualizations</h2>
+    <p>Type a person's UVA ID in the box below and select options to view their chord diagram or lineage flow.</p>
+    <p>UVA ID: <input type='text' size="8" id="personid">  Degrees of separation: <select id='levels'><option selected value='0'>0</option><option value='1'>1</option><option value='2'>2</option></select>  Temporal: <input type='checkbox' id='temporal' checked>  View: <button onClick='goSankey();'>Lineage Flow</button> <button onClick='goChord();'>Family Unit Chord</button></p>
+</div>
+
+<h2>Visualization Links</h2>
 <ul>
+    <li><a href="../">Visualizations Homepage</a>: The home of UVA visualizations that defines the kinds of visualizations available.</li>
+    <li><a href="sealings_pre1846_viz2.php">Sealings Before 1846 Visualization</a>: Timeline layout of sealings, color-coded by first sealing, additional sealing, and re-sealing.  Attempts to show when that sealing happens with a civil wife.</li>
+</ul>
+
+<h2>UVA's Database Views</h2>
+<p>Overall Data Access</p>
+<ul>
+	<li><a href="aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
     <li><a href="people.php">All People</a>: Searchable list of all people currently in our database with links to edit.</li>
+    <!--<li><form action="search.php" method="get">Search People: Search for all people in the database by name.  Uses a fuzzy search mechanism.  Results may be clicked to find a list of children. <br/>Name <input type="text" name="q" width="25"/> <input type="Submit" value="Search"></form>
+    </li>-->
+	<li><a href="marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
+	<li><a href="places.php">All Places</a>: Searchable list of all places currently in our database (using Official Name).</li>
+</ul>
+<p>Information and Special Functions</p>
+<ul>
     <li><a href="../data_entry/individual.php?id=NEW">New Person</a>: Create a new person in the UVA database.</li>
+	<li><a href="documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
+	<!--<li><a href="compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>-->
 </ul>
 
 <h2>Special Queries of UVA's Database</h2>
@@ -67,22 +94,6 @@ function goChord() {
 	<li><a href="pdf/1846-1-13-pat.pdf">Patriarchal, before March 1846</a>: Patriarchal marriages before March 1846.  This graph as one degree of separation from the AQ, and has 13 connected components.</li>
 </ul>
 
-<h2>Data Views Of UVA's Database (derived from initial NCP data)</h2>
-<p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  The links below allow access to some parts of that data.</p>
-<ul>
-	<li><a href="aq.php">AQ Members</a>: List of Annointed Quorum members currently in our database.</li>
-    <li><a href="people.php">All People</a>: Searchable list of all people currently in our database (using Authoritative Name).</li>
-    <li><form action="search.php" method="get">Search People: Search for all people in the database by name.  Uses a fuzzy search mechanism.  Results may be clicked to find a list of children. <br/>Name <input type="text" name="q" width="25"/> <input type="Submit" value="Search"></form>
-    </li>
-	<li><a href="marriages.php">All Marriages</a>: Searchable list of all marriages currently in our database (using Authoritative First/Last Names of people and Official Name of places).</li>
-	<li><a href="places.php">All Places</a>: Searchable list of all places currently in our database (using Official Name).</li>
-	<li><a href="documentdb.php">Database Organization</a>: HTML version of the database organization document.  Use pandoc to create a PDF version.</li>
-	<li><a href="compare_excel.php">Excel Sheet Comparison</a>: Compares the Excel spreadsheet from Joseph side-by-side with our current database.</li>
-</ul>
-
-<h2>Run Visualizations</h2>
-<p>Type a person's UVA ID in the box below and select options to view their chord diagram or lineage flow.</p>
-<p>UVA ID: <input type='text' size="8" id="personid">  Degrees of separation: <select id='levels'><option selected value='0'>0</option><option value='1'>1</option><option value='2'>2</option></select>  View: <button onClick='goSankey();'>Lineage Flow</button> <button onClick='goChord();'>Family Unit Chord</button></p>
 
 
 <h2>REST API Service</h2>
@@ -95,6 +106,7 @@ function goChord() {
 </ul>
 
 
+<p>We have expanded the initial set of data from BYU's <a href="http://nauvoo.byu.edu">Nauvoo Community Project</a>, to include a richer set of data on the polygamous marriages of the Annointed Quorum and individuals linked to those members.  Below are access points to the original BYU data.</p>
 <hr style="width:100%;text-align:center;border:1px solid black;"/>
 
 <!--

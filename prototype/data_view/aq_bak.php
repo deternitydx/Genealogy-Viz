@@ -70,10 +70,10 @@ foreach ($arr as $mar) {
             //array_push($resa,"\"$k\": \"$v\"");
         if ($first) array_push($headings, "$k");
         if ($k == "ID"){
-                array_push($resa, "<a href='../data_entry/individual.php?id=$v' title='Edit'>$v</a>");
+                array_push($resa, "$v");
                 array_push($resa, "<input type=\"checkbox\" name=\"ids[]\" value=\"$v$addl\"/>");
                 array_push($resa, "<a href=\"../chord.html?id=$v&temporal=1\">Temporal</a> - <a href=\"../chord.html?id=$v\">Static</a>");
-                array_push($resa, "<a href=\"../marriageflow_temporal.html?id=$v$addl\">Temporal</a> - <a href=\"../marriageflow.html?id=$v$addl\">Static</a>");
+                array_push($resa, "<a href=\"../marriageflow.html?id=$v$addl\">View</a>");
                 if ($first) array_push($headings, " ");
                 if ($first) array_push($headings, "Chord");
                 if ($first) array_push($headings, "Lineage");

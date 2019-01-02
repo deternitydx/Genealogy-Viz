@@ -734,6 +734,14 @@ if ($person["marriages"] != null && $person["marriages"] != false) {
                                                             <p style="width:600px; margin:0px; padding:0px;">This marriage has '.$marriage["children"]. ' child(ren) in the database</p>
                                                         </div>
                                                     </div>';
+        if (is_numeric($marriage["adoptees"]) && $marriage["adoptees"] > 0)
+            echo '        
+                                                    <div class="row-area">
+                                                        <div class="frame">
+                                                            <label class="fixed">&nbsp;</label>
+                                                            <p style="width:600px; margin:0px; padding:0px;">This marriage has '.$marriage["adoptees"]. ' adoptee(s) in the database</p>
+                                                        </div>
+                                                    </div>';
 ?>
                                                     <div class="row-area">
                                                         <div class="frame">
