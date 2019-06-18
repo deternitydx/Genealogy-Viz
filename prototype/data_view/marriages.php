@@ -2,7 +2,7 @@
 <head>
 <title>Marriages</title>
 <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="../css/style.css"/>
   
 <!-- jQuery -->
 <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>

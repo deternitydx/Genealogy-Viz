@@ -2,7 +2,7 @@
 <head>
 <title>Sealings</title>
 <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="../css/style.css"/>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css"/>
   
 <!-- jQuery -->

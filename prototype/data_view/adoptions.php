@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>Query View</title>
-<link rel="stylesheet" type="text/css" href="/nauvoo/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="../css/style.css"/>
 
 <!-- jQuery -->
 <script type="text/javascript" charset="utf8" src="../js/jquery-2.1.1.js"></script>
