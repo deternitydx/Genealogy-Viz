@@ -2,6 +2,7 @@
 include("../database.php");
 
 header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 
 $where = "";
 if (isset($_GET["id"])) {

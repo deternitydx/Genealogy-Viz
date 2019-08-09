@@ -1,5 +1,6 @@
 <?php
 include("../database.php");
+header('Access-Control-Allow-Origin: *');
 
 /****
  * We must generate a JSON file following the structure below

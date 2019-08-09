@@ -1,6 +1,7 @@
 <?php
 include("../database.php");
     header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 
     /*
      * If there is no query, then we will return a default list

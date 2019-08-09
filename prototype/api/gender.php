@@ -1,6 +1,7 @@
 <?php
 include("../database.php");
 header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 
 // If not a real id, then don't return anything!
 if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {

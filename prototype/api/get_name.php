@@ -1,6 +1,7 @@
 <?php
 include("../database.php");
     header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 
     if (!isset($_GET['q'])) {
         echo "{ 'error': 'no search term given'}";

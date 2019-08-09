@@ -1,5 +1,6 @@
 <?php
 header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 include("../database.php");
 
 if (isset($_GET["id"]) && is_numeric($_GET["id"])) {

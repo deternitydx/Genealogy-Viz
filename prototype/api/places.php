@@ -1,6 +1,7 @@
 <?php
 
 header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 
 include("../database.php");
 $db = pg_connect($db_conn_string);
